@@ -6,10 +6,6 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 // load up the user model
 var User = require('../app/models/user');
-
-// load the auth variables
-require('dotenv').config({silent: true}); //for dev. In production, variables are in the environment.
-
 module.exports = function(passport) {
 
   // =========================================================================

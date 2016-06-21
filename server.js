@@ -1,3 +1,6 @@
+// load the auth variables
+require('dotenv').config({silent: true}); //for dev. In production, variables are in the environment.
+
 // set up ======================================================================
 // get all the tools we need
 var express  = require('express');
@@ -12,10 +15,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 
-var configDB = require('./config/database.js');
-
 // configuration ===============================================================
-mongoose.connect(configDB.url); // connect to our database
+mongoose.connect(process.env.mongodb_connectionURL); // connect to our database
 
 require('./config/passport')(passport); // pass passport for configuration
 
