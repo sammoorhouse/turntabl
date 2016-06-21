@@ -8,7 +8,7 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var User = require('../app/models/user');
 
 // load the auth variables
-var configAuth = require('./auth'); // use this one for testing
+require('dotenv').config(); //for dev. In production, variables are in the environment.
 
 module.exports = function(passport) {
 
@@ -130,9 +130,9 @@ module.exports = function(passport) {
   // =========================================================================
   passport.use(new FacebookStrategy({
 
-      clientID: configAuth.facebookAuth.clientID,
-      clientSecret: configAuth.facebookAuth.clientSecret,
-      callbackURL: configAuth.facebookAuth.callbackURL,
+      clientID: process.env.facebookAuth_clientID,
+      clientSecret: process.env.facebookAuth_clientSecret,
+      callbackURL: process.env.facebookAuth_callbackURL,
       passReqToCallback: true, // allows us to pass in the req from our route (lets us check if a user is logged in or not)
       profileFields: ['id', 'emails', 'name'] //This
     },
@@ -208,9 +208,9 @@ module.exports = function(passport) {
   // =========================================================================
   passport.use(new TwitterStrategy({
 
-      consumerKey: configAuth.twitterAuth.consumerKey,
-      consumerSecret: configAuth.twitterAuth.consumerSecret,
-      callbackURL: configAuth.twitterAuth.callbackURL,
+      consumerKey: process.env.twitterAuth_consumerKey,
+      consumerSecret: process.env.twitterAuth_consumerSecret,
+      callbackURL: process.env.twitterAuth_callbackURL,
       passReqToCallback: true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
 
     },
@@ -285,9 +285,9 @@ module.exports = function(passport) {
   // =========================================================================
   passport.use(new GoogleStrategy({
 
-      clientID: configAuth.googleAuth.clientID,
-      clientSecret: configAuth.googleAuth.clientSecret,
-      callbackURL: configAuth.googleAuth.callbackURL,
+      clientID: process.env.googleAuth_clientID,
+      clientSecret: process.env.googleAuth_clientSecret,
+      callbackURL: process.env.googleAuth_callbackURL,
       passReqToCallback: true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
 
     },

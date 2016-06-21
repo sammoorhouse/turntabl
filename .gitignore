@@ -5,3 +5,4 @@ local.0
 /.sass-cache
 /bower_components
 /config/auth.js
+.env

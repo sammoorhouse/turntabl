@@ -1,7 +1,7 @@
 var Event = require('../app/models/event');
 var OpenTok = require('opentok');
-var configAuth = require('../config/auth');
-var opentok = new OpenTok(configAuth.tokboxAuth.apiKey, configAuth.tokboxAuth.clientSecret)
+require('dotenv').config();
+var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 
 module.exports = function(app, passport) {
 
@@ -82,14 +82,14 @@ console.log("token: " + token)
         if (event.leader === userEmail) { // it's the leader
           return res.render('event.ejs', {
             event: event,
-            apiKey: configAuth.tokboxAuth.apiKey,
+            apiKey: process.env.tokboxAuth.apiKey,
             sessionId: sessionId,
             token: token
           });
         } else {
           return res.render('event-client.ejs', {
             event: event,
-            apiKey: configAuth.tokboxAuth.apiKey,
+            apiKey: process.env.tokboxAuth.apiKey,
             sessionId: sessionId,
             token: token
           });
