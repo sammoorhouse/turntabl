@@ -81,14 +81,14 @@ console.log("token: " + token)
         if (event.leader === userEmail) { // it's the leader
           return res.render('event.ejs', {
             event: event,
-            apiKey: process.env.tokboxAuth.apiKey,
+            apiKey: process.env.tokboxAuth_apiKey,
             sessionId: sessionId,
             token: token
           });
         } else {
           return res.render('event-client.ejs', {
             event: event,
-            apiKey: process.env.tokboxAuth.apiKey,
+            apiKey: process.env.tokboxAuth_apiKey,
             sessionId: sessionId,
             token: token
           });
