@@ -32,6 +32,7 @@ module.exports = function(app, passport) {
     newEvent.clientPaid = false
     newEvent.leaderPaid = false
     newEvent.attended = false
+    newEvent.eventValue = eventValue
 
     //create openTok session
     opentok.createSession(function(err, session) {
