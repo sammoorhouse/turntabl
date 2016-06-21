@@ -23,6 +23,7 @@ module.exports = function(app, passport) {
     var newEvent = new Event();
     var id = generateID()
     var leaderEmail = resolveEmail(req.user)
+
     newEvent.id = id
     newEvent.name = req.eventName
     newEvent.starts = req.eventDateTime
@@ -32,7 +33,7 @@ module.exports = function(app, passport) {
     newEvent.clientPaid = false
     newEvent.leaderPaid = false
     newEvent.attended = false
-    newEvent.eventValue = eventValue
+    newEvent.eventValue = req.eventValue
 
     //create openTok session
     opentok.createSession(function(err, session) {
