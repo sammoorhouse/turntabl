@@ -79,7 +79,7 @@ module.exports = function(app, passport) {
         var sessionId = event.openTokSessionId
         var token = opentok.generateToken(sessionId)
 console.log("token: " + token)
-        if ((event.leader === userEmail && (!fakeclient)) { // it's the leader
+        if ((event.leader === userEmail) && (!fakeclient)) { // it's the leader
           return res.render('event.ejs', {
             event: event,
             apiKey: process.env.tokboxAuth_apiKey,
