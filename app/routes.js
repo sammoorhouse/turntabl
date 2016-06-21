@@ -24,7 +24,7 @@ module.exports = function(app, passport) {
     var id = generateID()
     var leaderEmail = resolveEmail(req.user)
 
-    console.log("reqbody: " + req.body)
+    console.log("reqbody: " + req.body.eventTitle)
 
     newEvent.id = id
     newEvent.name = req.eventTitle
