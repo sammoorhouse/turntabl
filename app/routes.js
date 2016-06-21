@@ -24,14 +24,14 @@ module.exports = function(app, passport) {
     var id = generateID()
     var leaderEmail = resolveEmail(req.user)
 
-    console.log("req: " + req)
+    console.log("req: " + req.eventClient)
 
     newEvent.id = id
-    newEvent.name = req.eventName
+    newEvent.name = req.eventTitle
     newEvent.starts = req.eventDateTime
     newEvent.durationMins = 60
     newEvent.leader = leaderEmail
-    newEvent.client = req.client
+    newEvent.client = req.eventClient
     newEvent.clientPaid = false
     newEvent.leaderPaid = false
     newEvent.attended = false
