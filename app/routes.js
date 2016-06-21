@@ -89,13 +89,13 @@ console.log("token: " + token)
             token: token
           });
         } else {
-          var sessionValue = event.valueUSD
+          var eventValue = event.eventValue
           return res.render('event-client.ejs', {
             event: event,
             apiKey: process.env.tokboxAuth_apiKey,
             sessionId: sessionId,
             token: token,
-            sessionValue: sessionValue
+            eventValue: eventValue
           });
         }
       }
