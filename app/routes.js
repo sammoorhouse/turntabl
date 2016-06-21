@@ -57,6 +57,7 @@ module.exports = function(app, passport) {
 
   app.get('/event/:id', isLoggedIn, function(req, res) {
     var evtId = req.param('id')
+      var fakeclient = req.param('fakeclient')
     console.log("evtId: " + evtId)
     Event.findOne({
       'id': evtId
@@ -78,7 +79,7 @@ module.exports = function(app, passport) {
         var sessionId = event.openTokSessionId
         var token = opentok.generateToken(sessionId)
 console.log("token: " + token)
-        if (event.leader === userEmail) { // it's the leader
+        if ((event.leader === userEmail && (!fakeclient)) { // it's the leader
           return res.render('event.ejs', {
             event: event,
             apiKey: process.env.tokboxAuth_apiKey,
