@@ -1,6 +1,5 @@
 var Event = require('../app/models/event');
 var OpenTok = require('opentok');
-require('dotenv').config();
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 
 module.exports = function(app, passport) {
