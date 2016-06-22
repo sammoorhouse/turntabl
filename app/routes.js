@@ -6,7 +6,9 @@ var stormpath = require('express-stormpath');
 module.exports = function(app) {
   app.get('/', function(req, res) {
     var user = req.user
-    console.log("USEREMAIL: " + user.email)
+    if (typeof user != "undefined") {
+      console.log("USEREMAIL: " + user.email)
+    }
     res.render('index.ejs', {
       user: user
     });
@@ -87,7 +89,7 @@ module.exports = function(app) {
         console.log("USEREMAIL: " + user.email)
         if ((event.leader === userEmail) && (!fakeclient)) { // it's the leader
           return res.render('event.ejs', {
-            user: req.user,
+            user: user,
             event: event,
             apiKey: process.env.tokboxAuth_apiKey,
             sessionId: sessionId,
