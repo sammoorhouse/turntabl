@@ -19,8 +19,9 @@ app.use(stormpath.init(app, {
   social: {
     facebook: {
       appId: process.env.facebookAuth_clientID,
-      appSecret: process.env.facebookAuth_clientSecret,
-    },
+      appSecret: process.env.facebookAuth_clientSecret
+    }
+  }
 }));
 
 var port = process.env.PORT || 8080;
