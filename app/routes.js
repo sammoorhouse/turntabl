@@ -15,8 +15,7 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/form/create-event', stormpath.loginRequired, function(req, res) {
-    // if there is no user, create them
+  app.post('/form/create-event', stormpath.loginRequired, function(req, res) {
     var newEvent = new Event();
     var id = generateID()
     var leaderEmail = resolveEmail(req.user)
@@ -99,26 +98,6 @@ module.exports = function(app) {
       }
     });
   })
-
-  app.get('/form/create-event', function(req, res) {
-    var event = req.user;
-    user.google.token = undefined;
-    user.save(function(err) {
-      res.redirect('/create-event');
-    });
-  });
-};
-
-function resolveEmail(user) {
-  console.log("resolving email")
-  if (user.facebook.token) {
-    console.log("fb")
-    return user.facebook.email
-  } else if (user.google.token) {
-    console.log("ggl")
-    return user.google.email
-  }
-}
 
 function generateID() {
   var ALPHABET = '23456789abdegjkmnpqrvwxyz';
