@@ -15,7 +15,7 @@
         <ul class="nav navbar-nav navbar-right">
           <% if (!typeof user == 'undefined') { %>
             <li><span>Welcome, <%= user.givenname %>!</span></li>
-            <li><a onclick="document.getElementById('logout_form').submit();" style="cursor:pointer;">Log out</a></li>
+            <!--<li><a onclick="document.getElementById('logout_form').submit();" style="cursor:pointer;">Log out</a></li>-->
           <%} else {%>
             <li><a href="/login">log in!</a></li>
           <%}%>
