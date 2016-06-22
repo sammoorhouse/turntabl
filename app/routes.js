@@ -5,7 +5,8 @@ var stormpath = require('express-stormpath');
 
 module.exports = function(app) {
   app.get('/', function(req, res) {
-    res.render('index.ejs');
+    res.render('index.ejs', {
+      user: req.user});
   });
 
   // create-event SECTION =========================
@@ -80,6 +81,7 @@ module.exports = function(app) {
         var token = opentok.generateToken(sessionId)
         if ((event.leader === userEmail) && (!fakeclient)) { // it's the leader
           return res.render('event.ejs', {
+            user: req.user
             event: event,
             apiKey: process.env.tokboxAuth_apiKey,
             sessionId: sessionId,
@@ -88,6 +90,7 @@ module.exports = function(app) {
         } else {
           var eventValue = event.eventValue
           return res.render('event-client.ejs', {
+            user: req.user
             event: event,
             apiKey: process.env.tokboxAuth_apiKey,
             sessionId: sessionId,
