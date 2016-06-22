@@ -17,7 +17,6 @@
           <li><span>Welcome, <%= user.givenName %>!</span></li>
           <li><a onclick="document.getElementById('logout_form').submit();" style="cursor:pointer;">Log out</a></li>
           <%} else {%>
-            <%= user.email %>
             <li><a href="/login">log in!</a></li>
             <%}%>
 
