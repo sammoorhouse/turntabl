@@ -11,11 +11,11 @@
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <form action="/logout" method="POST" id="logout_form"></form>
       <ul class="nav navbar-nav navbar-right">
         <% if (!typeof user == 'undefined') { %>
+          <form action="/logout" method="POST" id="logout_form"></form>
           <li><span>Welcome, <%= user.givenname %>!</span></li>
-          <!--<li><a onclick="document.getElementById('logout_form').submit();" style="cursor:pointer;">Log out</a></li>-->
+          <li><a onclick="document.getElementById('logout_form').submit();" style="cursor:pointer;">Log out</a></li>
           <%} else {%>
             <li><a href="/login">log in!</a></li>
             <%}%>
