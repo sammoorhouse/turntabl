@@ -1,6 +1,7 @@
 var Event = require('../app/models/event');
 var OpenTok = require('opentok');
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
+var stormpath = require('express-stormpath');
 
 module.exports = function(app, passport) {
 
@@ -12,13 +13,13 @@ module.exports = function(app, passport) {
   });
 
   // create-event SECTION =========================
-  app.get('/create-event', isLoggedIn, function(req, res) {
+  app.get('/create-event', stormpath.loginRequired, function(req, res) {
     res.render('create-event.ejs', {
       user: req.user
     });
   });
 
-  app.get('/form/create-event', isLoggedIn, function(req, res) {
+  app.get('/form/create-event', stormpath.loginRequired, function(req, res) {
     // if there is no user, create them
     var newEvent = new Event();
     var id = generateID()
@@ -59,7 +60,7 @@ module.exports = function(app, passport) {
     });
   })
 
-  app.get('/event/:id', isLoggedIn, function(req, res) {
+  app.get('/event/:id', stormpath.loginRequired, function(req, res) {
     var evtId = req.param('id')
       var fakeclient = req.param('fakeclient')
     console.log("evtId: " + evtId)
@@ -105,7 +106,7 @@ console.log("token: " + token)
   })
 
   // profile SECTION =========================
-  app.get('/profile', isLoggedIn, function(req, res) {
+  app.get('/profile', stormpath.loginRequired, function(req, res) {
     res.render('profile.ejs', {
       user: req.user
     });
@@ -329,12 +330,4 @@ function generateID() {
     rtn += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET.length));
   }
   return rtn;
-}
-
-// route middleware to ensure user is logged in
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated())
-    return next();
-
-  res.redirect('/');
 }
