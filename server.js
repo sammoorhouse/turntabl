@@ -21,6 +21,11 @@ app.use(stormpath.init(app, {
       appId: process.env.facebookAuth_clientID,
       appSecret: process.env.facebookAuth_clientSecret
     }
+  },
+  web: {
+    register: {
+      nextUri: '/create-event'
+    }
   }
 }));
 
