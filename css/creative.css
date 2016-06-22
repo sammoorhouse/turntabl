@@ -81,7 +81,8 @@ aside {
   color: #eb3812;
 }
 .navbar-default .nav > li > a,
-.navbar-default .nav > li > a:focus {
+.navbar-default .nav > li > a:focus,
+.navbar-default .nav > li > span {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 13px;
