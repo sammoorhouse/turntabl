@@ -6,7 +6,7 @@ var stormpath = require('express-stormpath');
 module.exports = function(app) {
   app.get('/', function(req, res) {
     var user = req.user
-    console.log("USER: " + user)
+    console.log("USEREMAIL: " + user.email)
     res.render('index.ejs', {
       user: user
     });
@@ -15,7 +15,7 @@ module.exports = function(app) {
   // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function(req, res) {
     var user = req.user
-    console.log("USER: " + user)
+    console.log("USEREMAIL: " + user.email)
     res.render('create-event.ejs', {
       user: user
     });
@@ -24,7 +24,8 @@ module.exports = function(app) {
   app.post('/form/create-event', stormpath.loginRequired, function(req, res) {
     var newEvent = new Event();
     var id = generateID()
-    var leaderEmail = resolveEmail(req.user)
+    var user = req.user
+    var leaderEmail = user.email
 
     newEvent.id = id
     newEvent.name = req.eventTitle
@@ -83,7 +84,7 @@ module.exports = function(app) {
         var userEmail = user.email
         var sessionId = event.openTokSessionId
         var token = opentok.generateToken(sessionId)
-        console.log("USER: " + user)
+        console.log("USEREMAIL: " + user.email)
         if ((event.leader === userEmail) && (!fakeclient)) { // it's the leader
           return res.render('event.ejs', {
             user: req.user,
