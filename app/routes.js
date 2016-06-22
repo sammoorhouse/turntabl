@@ -57,7 +57,7 @@ module.exports = function(app) {
 
   app.get('/event/:id', stormpath.loginRequired, function(req, res) {
     var evtId = req.param('id')
-      var fakeclient = req.param('fakeclient')
+    var fakeclient = req.param('fakeclient')
     console.log("evtId: " + evtId)
     Event.findOne({
       'id': evtId
@@ -99,12 +99,13 @@ module.exports = function(app) {
     });
   })
 
-function generateID() {
-  var ALPHABET = '23456789abdegjkmnpqrvwxyz';
-  var ID_LENGTH = 8;
-  var rtn = '';
-  for (var i = 0; i < ID_LENGTH; i++) {
-    rtn += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET.length));
+  function generateID() {
+    var ALPHABET = '23456789abdegjkmnpqrvwxyz';
+    var ID_LENGTH = 8;
+    var rtn = '';
+    for (var i = 0; i < ID_LENGTH; i++) {
+      rtn += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET.length));
+    }
+    return rtn;
   }
-  return rtn;
 }
