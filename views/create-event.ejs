@@ -2,17 +2,21 @@
 <html lang="en">
 
 <head>
-<% include partials/head.ejs %>
+  <% include partials/head.ejs %>
 </head>
 
 <body id="page-top">
 
   <% include partials/header.ejs %>
+    <script type="text/javascript" src="/bower_components/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 
-  <header>
-    <div class="header-content">
-      <div class="header-content-inner">
-        <!--<div class="modal" id="loginModal">-->
+    <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <header>
+      <div class="header-content">
+        <div class="header-content-inner">
+          <!--<div class="modal" id="loginModal">-->
           <form action="form/create-event" method="post">
             <div class="form-group">
               <label for="eventTitle">What</label>
@@ -21,35 +25,35 @@
             <div class="form-group">
               <label for="datetimepicker">When</label>
               <div class="input-group date" id="datetimepicker">
-                <input type="text" class="form-control" id="eventDateTime" placeholder="foo bar"/>
+                <input type="text" class="form-control" id="eventDateTime" placeholder="foo bar" />
                 <span class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </span>
               </div>
             </div>
-              <div class="form-group">
-                <label for="eventClient">Who</label>
-                <input type="email" class="form-control" id="eventClient" placeholder="david.watts@gmail.com">
-              </div>
-                <div class="form-group">
-                  <label for="eventValue">USD</label>
-                  <input type="text" class="form-control" id="eventClient" placeholder="512">
-                </div>
+            <div class="form-group">
+              <label for="eventClient">Who</label>
+              <input type="email" class="form-control" id="eventClient" placeholder="david.watts@gmail.com">
+            </div>
+            <div class="form-group">
+              <label for="eventValue">USD</label>
+              <input type="text" class="form-control" id="eventClient" placeholder="512">
+            </div>
             <button type="submit" class="btn btn-primary">Create event</button>
           </form>
 
-    <!--    </div> -->
+          <!--    </div> -->
+        </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <script type="text/javascript">
-$(function () {
-$('#datetimepicker').datetimepicker();
-});
-</script>
+    <script type="text/javascript">
+      $(function() {
+        $('#datetimepicker').datetimepicker();
+      });
+    </script>
 
-<% include partials/footer.ejs %>
+    <% include partials/footer.ejs %>
 </body>
 
 </html>
