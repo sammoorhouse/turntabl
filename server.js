@@ -25,6 +25,9 @@ app.use(stormpath.init(app, {
   web: {
     register: {
       nextUri: '/create-event'
+    },
+    login: {
+      nextUri: '/create-event'
     }
   }
 }));
