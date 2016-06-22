@@ -3,6 +3,5 @@ local.0
 /dist
 /.tmp
 /.sass-cache
-/bower_components
 /config/auth.js
 .env
