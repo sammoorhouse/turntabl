@@ -5,15 +5,19 @@ var stormpath = require('express-stormpath');
 
 module.exports = function(app) {
   app.get('/', function(req, res) {
+    var user = req.user
+    console.log("USER: " + user)
     res.render('index.ejs', {
-      user: req.user
+      user: user
     });
   });
 
   // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function(req, res) {
+    var user = req.user
+    console.log("USER: " + user)
     res.render('create-event.ejs', {
-      user: req.user
+      user: user
     });
   });
 
@@ -21,8 +25,6 @@ module.exports = function(app) {
     var newEvent = new Event();
     var id = generateID()
     var leaderEmail = resolveEmail(req.user)
-
-    console.log("reqbody: " + req.body.eventTitle)
 
     newEvent.id = id
     newEvent.name = req.eventTitle
