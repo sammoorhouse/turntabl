@@ -62,7 +62,7 @@ module.exports = function(app) {
 
     var newEvent = new Event();
 
-    console.log('req: ' + req)
+    console.log('req: ' + JSON.stringify(req, null, 2))
     var user = req.user
     var leaderEmail = user.email
 
