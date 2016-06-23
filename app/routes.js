@@ -30,7 +30,7 @@ module.exports = function(app) {
       headers: {
         "X-API-TOKEN": process.env.TYPEFORM_APIKEY
       },
-      formData: formData
+      form: formData
     }, function(err, httpResponse, body) {
       if (err) {
         return console.error('typeform upload failed:', err);
