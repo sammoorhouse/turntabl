@@ -224,7 +224,7 @@ module.exports = function(app) {
         description: "USD. We take 5% and your client pays PayPal fees. You'll get paid once the session is over"
       }, {
         type: "legal",
-        question: "Thanks!"
+        question: "Thanks!",
         description: "That's all for now. Your session will be available for 90 days from now."
       }],
       "logic_jumps": [{
@@ -248,7 +248,7 @@ module.exports = function(app) {
   }
 
   function resolveLeaderEmail(formSubmission, formStructure) {
-    var emailFieldId = formStructure.
+    var emailFieldId = "formStructure."
   }
 
   function resolveField(refName, formSubmission, formStructure) {
