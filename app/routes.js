@@ -283,7 +283,7 @@ module.exports = function(app) {
   }
   */
   function resolveLeaderEmail(formSubmission, formStructure) {
-    var emailOverridden = resolveField(emailLogicJumpRef, formSubmission, formStructure)
+    var emailOverridden = !resolveField(emailLogicJumpRef, formSubmission, formStructure)
     if (emailOverridden) {
       return resolveField(emailOverrideRef, formSubmission, formStructure)
     } else {
