@@ -54,6 +54,8 @@ app.set('view engine', 'ejs');
 
 require('./app/routes.js')(app);
 
+//initialise typeform with a GET request to https://api.typeform.io/latest/
+
 app.on('stormpath.ready', function() {
   app.listen(port);
   console.log('The magic happens on port ' + port);

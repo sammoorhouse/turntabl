@@ -2,6 +2,8 @@ var Event = require('../app/models/event');
 var OpenTok = require('opentok');
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 var stormpath = require('express-stormpath');
+var request = require('request');
+var typeformVersionString='v1.4'
 
 module.exports = function(app) {
   app.get('/', function(req, res) {
@@ -18,9 +20,28 @@ module.exports = function(app) {
   app.get('/create-event', stormpath.loginRequired, function(req, res) {
     var user = req.user
     console.log("USEREMAIL: " + user.email)
-    res.render('create-event.ejs', {
-      user: user
+
+    //generate typeform
+    var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
+    var formData = generateForm(user)
+    request.post({
+      url: typeformUrl,
+      headers: {
+        "X-API-TOKEN" : process.env.TYPEFORM_APIKEY
+      },
+      formData: formData
+    }, function(err, httpResponse, body) {
+      if (err) {
+        return console.error('typeform upload failed:', err);
+      }
+      console.log('typeform Upload successful: ' + body);
+      res.render('create-event.ejs', {
+        formUrl: formUrl
+        user: user
+      });
     });
+
+
   });
 
   app.post('/form/create-event', stormpath.loginRequired, function(req, res) {
@@ -109,6 +130,19 @@ module.exports = function(app) {
       }
     });
   })
+
+  function generateForm(user){
+return {
+  "title": "My first typeform",
+  "fields": [
+    {
+      "type": "short_text",
+      "question": "What is your name?"
+    }
+  ]
+}
+
+  }
 
   function generateID() {
     var ALPHABET = '23456789abdegjkmnpqrvwxyz';
