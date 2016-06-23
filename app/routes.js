@@ -27,14 +27,13 @@ module.exports = function(app) {
     console.log('typeformUrl: ' + typeformUrl)
     var formData = generateForm(user)
     console.log("data: " + JSON.stringify(formData, null, 2))
-    needle.post(typeformUrl, typeformUrl, {
+    needle.post(typeformUrl, formData, {
       headers: {
         "X-API-TOKEN": process.env.TYPEFORM_APIKEY
       }
     }, function(err, resp) {
       if (!err && resp.statusCode == 200) {
         console.log('typeform Upload successful: ' + JSON.stringify(resp.body, null, 2));
-        console.log('status code: ' + resp.statusCode)
         var formLink = resp.body['links'].find(function(el) {
           el.rel === "form_render"
         }).href
