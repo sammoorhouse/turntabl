@@ -173,6 +173,7 @@ module.exports = function(app) {
       "tags": [ eventId ],
       "fields": [{
         "type": "short_text",
+        "ref": "name"
         "question": "What is your name?"
       }]
     }
