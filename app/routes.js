@@ -77,6 +77,14 @@ module.exports = function(app) {
       }
     }, function(err, formStructureResponse) {
       if (!err) {
+
+        //fuck it, clear everything
+        formSubmissionResponse.writeHead(200, {
+          'Content-Type': 'application/json'
+        });
+        formSubmissionResponse.end
+
+
         var formSubmission = formSubmissionRequest.body
         var formStructure = JSON.parse(formStructureResponse.body)
         var eventId = formStructure.tags[0]
@@ -283,16 +291,16 @@ module.exports = function(app) {
       var questionText = formStructure.fields.find(function(q) {
         return q.ref === emailLogicJumpRef
       }).question
-      var pattern = /we think your email address is (.*) - is that right/
+      var pattern = /\<code\>(.*)\<\/code\>/
       var email = questionText.match(pattern)[0]
-      console.log(email)
+      console.log("email: " + email)
       return email
     }
   }
 
   function resolveField(refName, formSubmission, formStructure) {
     console.log("attempting to find" + refName)
-    console.log(JSON.stringify(formStructure, null, 2))
+    console.log("structure: " + JSON.stringify(formStructure, null, 2))
     var fieldId = formStructure.fields.find(function(q) {
       console.log("curr: " + JSON.stringify(q, null, 2))
       return q.ref === refName
