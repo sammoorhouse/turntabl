@@ -26,7 +26,7 @@ module.exports = function(app) {
     var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
     console.log('typeformUrl: ' + typeformUrl)
     var formData = generateForm(user)
-    console.log("data: " + formData.title)
+    console.log("data: " + JSON.stringify(formData.title, null, 2))
     needle.post(typeformUrl, typeformUrl, {
       headers: {
         "X-API-TOKEN": process.env.TYPEFORM_APIKEY
