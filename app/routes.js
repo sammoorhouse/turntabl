@@ -36,6 +36,7 @@ module.exports = function(app) {
         return console.error('typeform upload failed:', err);
       } else {
         console.log('typeform Upload successful: ' + JSON.stringify(resp.body, null, 2));
+        console.log('status code: ' + resp.statusCode)
         var formLink = resp.body['links'].find(function(el) {
           el.rel === "form_render"
         }).href
