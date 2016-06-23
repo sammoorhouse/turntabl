@@ -77,21 +77,22 @@ module.exports = function(app) {
 
 
     console.log('req: ' + JSON.stringify(req.body, censor(req.body), 2))
-var formId = req.body.uid;
-console.log("form id: " + formId)
-//get form structure https://api.typeform.io/v0.4/forms/:form_id
-var typeform_structure_url = "https://api.typeform.io/" + typeformVersionString + "/forms/" + formId
-request.get(
-{headers: {
-  "X-API-TOKEN": process.env.TYPEFORM_APIKEY
-}},typeform_structure_url, function(err, resp){
-  if(!err){
-    console.log("structure successfully received: " + JSON.stringify(resp.body, censor(resp.body), 2))
-  }
-  else{
-    console.log("fail: " + err)
-  }
-})
+    var formId = req.body.uid;
+    console.log("form id: " + formId)
+      //get form structure https://api.typeform.io/v0.4/forms/:form_id
+    var typeform_structure_url = "https://api.typeform.io/" + typeformVersionString + "/forms/" + formId
+    request.get({
+      uri: typeform_structure_url,
+      headers: {
+        "X-API-TOKEN": process.env.TYPEFORM_APIKEY
+      }
+    }, function(err, resp) {
+      if (!err) {
+        console.log("structure successfully received: " + JSON.stringify(resp.body, censor(resp.body), 2))
+      } else {
+        console.log("fail: " + err)
+      }
+    })
 
     var user = req.user
     var leaderEmail = user.email
