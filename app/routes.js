@@ -3,7 +3,12 @@ var OpenTok = require('opentok');
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 var stormpath = require('express-stormpath');
 var request = require('request');
+
 var typeformVersionString = 'v0.4'
+var eventTitleRef = "eventTitle"
+var eventDurationRef = "eventDuration"
+var eventPriceRef = "eventPrice"
+var emailLogicJumpRef = "emailLogicJump"
   //var typeformVersionString = 'latest'
 
 module.exports = function(app) {
@@ -53,7 +58,7 @@ module.exports = function(app) {
       })
   })
 
-  app.post('/form/create-event', function(req, res) {
+  app.post('/form/create-event', function(formSubmissionRequest, res) {
     console.log("CREATE EVENT WAS CALLED!!")
 
     var newEvent = new Event();
@@ -76,8 +81,8 @@ module.exports = function(app) {
 
 
 
-    console.log('req: ' + JSON.stringify(req.body, censor(req.body), 2))
-    var formId = req.body.uid;
+    console.log('req: ' + JSON.stringify(formSubmissionRequest.body, censor(formSubmissionRequest.body), 2))
+    var formId = formSubmissionRequest.body.uid;
     console.log("form id: " + formId)
       //get form structure https://api.typeform.io/v0.4/forms/:form_id
     var typeform_structure_url = "https://api.typeform.io/" + typeformVersionString + "/forms/" + formId
@@ -86,54 +91,55 @@ module.exports = function(app) {
       headers: {
         "X-API-TOKEN": process.env.TYPEFORM_APIKEY
       }
-    }, function(err, resp) {
+    }, function(err, formStructureResponse) {
       if (!err) {
-        console.log("structure successfully received: " + JSON.stringify(resp.body, censor(resp.body), 2))
+        console.log("structure successfully received: " + JSON.parse(formStructureResponse.body, censor(formStructureResponse.body), 2))
+        var eventId = formStructureResponse.body.tags[0]
+        var leaderEmail = resolveLeaderEmail(formSubmissionRequest, formStructureResponse)
+        var eventTitle = resolveField(eventTitleRef, formSubmissionRequest, formStructureResponse)
+        var eventDuration = resolveField(eventDurationRef, formSubmissionRequest, formStructureResponse)
+        var eventPrice = resolveField(eventPriceRef, formSubmissionRequest, formStructureResponse)
+
+
+        newEvent.id = eventId
+        newEvent.name = eventTitle
+        newEvent.durationMins = eventDuration
+        newEvent.leader = leaderEmail
+        newEvent.clientPaid = false
+        newEvent.leaderPaid = false
+        newEvent.attended = false
+        newEvent.eventPrice = eventPrice
+
+        //create openTok session
+        opentok.createSession(function(err, session) {
+          if (err) {
+            console.log("sessionId creation error: " + err)
+            throw err;
+          } else {
+            console.log("sessionId: " + session.sessionId)
+            newEvent.openTokSessionId = session.sessionId
+
+            newEvent.save(function(err) {
+              if (err) {
+                throw err;
+                response.writeHead(400, {
+                  'Content-Type': 'application/json'
+                });
+                response.end
+              } else {
+                console.log("newEvent.id = " + newEvent.id)
+                response.writeHead(200, {
+                  'Content-Type': 'application/json'
+                });
+                response.end
+              }
+            });
+          }
+        });
       } else {
         console.log("fail: " + err)
       }
     })
-
-    var user = req.user
-    var leaderEmail = user.email
-
-    newEvent.id = req.eventID
-    newEvent.name = req.eventTitle
-    newEvent.starts = req.eventDateTime
-    newEvent.durationMins = 60
-    newEvent.leader = leaderEmail
-    newEvent.client = req.eventClient
-    newEvent.clientPaid = false
-    newEvent.leaderPaid = false
-    newEvent.attended = false
-    newEvent.eventValue = req.eventValue
-
-    //create openTok session
-    opentok.createSession(function(err, session) {
-      if (err) {
-        console.log("sessionId creation error: " + err)
-        throw err;
-      } else {
-        console.log("sessionId: " + session.sessionId)
-        newEvent.openTokSessionId = session.sessionId
-
-        newEvent.save(function(err) {
-          if (err) {
-            throw err;
-            response.writeHead(400, {
-              'Content-Type': 'application/json'
-            });
-            response.end
-          } else {
-            console.log("newEvent.id = " + newEvent.id)
-            response.writeHead(200, {
-              'Content-Type': 'application/json'
-            });
-            response.end
-          }
-        });
-      }
-    });
   })
 
   app.get('/event/:id', stormpath.loginRequired, function(req, res) {
@@ -193,8 +199,8 @@ module.exports = function(app) {
       "fields": [{
         type: "yes_no",
         required: true,
-        ref: "email_logic_jump",
-        question: "Hey " + user.givenName + ", we're going to get started! First, we think your email address is " + user.email + " - is that right?",
+        ref: emailLogicJumpRef,
+        question: "Hey " + user.givenName + ", we're going to get started! First, we think your email address is `" + user.email + "` - is that right?",
         description: "We promise not to give your address away, but we might need to get in touch if there's a payment issue"
       }, {
         type: "email",
@@ -202,22 +208,28 @@ module.exports = function(app) {
         description: "Seriously, we totally promise not to give away your email"
       }, {
         type: "short_text",
-        ref: "email_success",
+        ref: eventTitleRef,
         question: "Great! What do you want to call this session?",
         description: "Sam / George life coaching"
       }, {
         type: "number",
+        ref: eventDurationRef,
         question: "How many minutes is the session going to last?",
         description: "We'll show you a warning when your time is almost up",
         min_value: 5
       }, {
         type: "number",
+        ref: eventPriceRef,
         question: "How much are you charging for the session?",
-        description: "USD. We take 5% and your client pays transfer fees. You'll get paid once the session is over"
-      }, ],
+        description: "USD. We take 5% and your client pays PayPal fees. You'll get paid once the session is over"
+      }, {
+        type: "legal",
+        question: "Thanks!"
+        description: "That's all for now. Your session will be available for 90 days from now."
+      }],
       "logic_jumps": [{
-        "from": "email_logic_jump",
-        "to": "email_success",
+        "from": emailLogicJumpRef,
+        "to": eventTitleRef,
         "if": true
       }]
     }
@@ -234,4 +246,14 @@ module.exports = function(app) {
     }
     return rtn;
   }
+
+  function resolveLeaderEmail(formSubmission, formStructure) {
+    var emailFieldId = formStructure.
+  }
+
+  function resolveField(refName, formSubmission, formStructure) {
+
+  }
+
+
 }
