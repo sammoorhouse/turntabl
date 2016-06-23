@@ -20,14 +20,11 @@ module.exports = function(app) {
   // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function(req, res) {
     var user = req.user
-    console.log("USEREMAIL: " + user.email)
 
     //generate typeform
     var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
-    console.log('typeformUrl: ' + typeformUrl)
     var eventId = generateID()
     var formData = generateForm(user, eventId)
-    console.log("data: " + JSON.stringify(formData, null, 2))
     request.post({
         url: typeformUrl,
         json: formData,
@@ -86,7 +83,7 @@ console.log("form id: " + formId)
 var typeform_structure_url = "https://api.typeform.io/" + typeformVersionString + "/forms/" + formId
 request.get(typeform_structure_url, function(err, resp){
   if(!err){
-    console.log("structure successfully received: " + resp)
+    console.log("structure successfully received: " + JSON.stringify(resp.body, censor(resp.body), 2))
   }
   else{
     console.log("fail: " + err)
