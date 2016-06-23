@@ -292,7 +292,7 @@ module.exports = function(app) {
         return q.ref === emailLogicJumpRef
       }).question
       var pattern = /\<code\>(.*)\<\/code\>/
-      var email = questionText.match(pattern)[0]
+      var email = questionText.match(pattern)[1]
       console.log("email: " + email)
       return email
     }
@@ -307,10 +307,14 @@ module.exports = function(app) {
     console.log("found id: " + fieldId)
 
     console.log("submission: " + JSON.stringify(formSubmission, censor(formSubmission), 2))
-    var result = formSubmission.answers.find(function(a) {
+    var block = formSubmission.answers.find(function(a) {
       return a.field_id === fieldId
-    }).value
-    return result
+    })
+    if (block.type === "number") {
+      return block.value.amount
+    } else {
+      return block.value
+    }
   }
 
 
