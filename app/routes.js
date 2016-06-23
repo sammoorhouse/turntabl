@@ -25,7 +25,8 @@ module.exports = function(app) {
     //generate typeform
     var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
     console.log('typeformUrl: ' + typeformUrl)
-    var formData = generateForm(user)
+    var eventId = generateID()
+    var formData = generateForm(user, eventId)
     console.log("data: " + JSON.stringify(formData, null, 2))
     request.debug = true
     request.post({
@@ -45,6 +46,7 @@ module.exports = function(app) {
 
           res.render('create-event.ejs', {
             typeformUrl: formLink,
+            eventId: eventId,
             user: user
           });
         } else if (err) {
@@ -55,13 +57,14 @@ module.exports = function(app) {
       })
   })
 
-  app.post('/form/create-event', stormpath.loginRequired, function(req, res) {
+  app.post('/form/create-event', function(req, res) {
+    console.log("CREATE EVENT WAS CALLED!!")
+
     var newEvent = new Event();
-    var id = generateID()
     var user = req.user
     var leaderEmail = user.email
 
-    newEvent.id = id
+    newEvent.id = req.eventID
     newEvent.name = req.eventTitle
     newEvent.starts = req.eventDateTime
     newEvent.durationMins = 60
@@ -84,10 +87,12 @@ module.exports = function(app) {
         newEvent.save(function(err) {
           if (err) {
             throw err;
-            res.redirect('/')
+            response.writeHead(400, { 'Content-Type' : 'application/json' });
+            response.end
           } else {
             console.log("newEvent.id = " + newEvent.id)
-            res.redirect('/event/' + newEvent.id)
+            response.writeHead(200, { 'Content-Type' : 'application/json' });
+            response.end
           }
         });
       }
@@ -142,17 +147,19 @@ module.exports = function(app) {
     });
   })
 
-  function generateForm(user) {
-    console.log('generating user form for ' + user.givenName)
+  function generateForm(user, eventId) {
     var formData = {
       "title": "My first typeform",
+      "webhook_submit_url": process.env.typeform_webhook_submit_url,
+      "tags": [{
+        eventId: eventId
+      }, "so-tags"],
       "fields": [{
         "type": "short_text",
         "question": "What is your name?"
       }]
     }
 
-    console.log("data after generation: " + formData)
     return formData
   }
 
