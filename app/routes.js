@@ -105,6 +105,7 @@ module.exports = function(app) {
 
         newEvent.id = eventId
         newEvent.name = eventTitle
+        newEvent.creationDate = new Date()
         newEvent.durationMins = eventDuration
         newEvent.leader = leaderEmail
         newEvent.clientPaid = false
