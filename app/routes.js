@@ -81,6 +81,19 @@ module.exports = function(app) {
 
 
     console.log('req: ' + JSON.stringify(req.body, censor(req.body), 2))
+var formId = req.body.uid;
+console.log("form id: " + formId)
+//get form structure https://api.typeform.io/v0.4/forms/:form_id
+var typeform_structure_url = "https://api.typeform.io/" + typeformVersionString + "/forms/" + formId
+request.get(typeform_structure_url, function(err, resp){
+  if(!err){
+    console.log("structure successfully received: " + resp)
+  }
+  else{
+    console.log("fail: " + err)
+  }
+})
+
     var user = req.user
     var leaderEmail = user.email
 
@@ -205,7 +218,7 @@ module.exports = function(app) {
       "logic_jumps": [{
         "from": "email_logic_jump",
         "to": "email_success",
-        "if": false
+        "if": true
       }]
     }
 
