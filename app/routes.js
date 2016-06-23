@@ -93,7 +93,7 @@ module.exports = function(app) {
       }
     }, function(err, formStructureResponse) {
       if (!err) {
-        console.log("structure successfully received: " + JSON.parse(formStructureResponse.body, censor(formStructureResponse.body), 2))
+        console.log("structure successfully received: " + formStructureResponse.body)
         var eventId = formStructureResponse.body.tags[0]
         var leaderEmail = resolveLeaderEmail(formSubmissionRequest, formStructureResponse)
         var eventTitle = resolveField(eventTitleRef, formSubmissionRequest, formStructureResponse)
