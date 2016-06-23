@@ -95,7 +95,7 @@ module.exports = function(app) {
       if (!err) {
         console.log("structure successfully received: " + formStructureResponse.body)
         var formStructure = JSON.parse(formStructureResponse.body)
-        console.log("parsed structure: " + formStructure)
+        console.log("parsed structure: " + JSON.stringify(formStructure, null, 2)
         var eventId = formStructure.tags[0]
         var leaderEmail = resolveLeaderEmail(formSubmissionRequest, formStructureResponse)
         var eventTitle = resolveField(eventTitleRef, formSubmissionRequest, formStructureResponse)
@@ -206,26 +206,31 @@ module.exports = function(app) {
         description: "We promise not to give your address away, but we might need to get in touch if there's a payment issue"
       }, {
         type: "email",
+        required: true,
         question: "Disaster! Looks like we messed up, sorry about that. So... what's your email?",
         description: "Seriously, we totally promise not to give away your email"
       }, {
         type: "short_text",
+        required: true,
         ref: eventTitleRef,
         question: "Great! What do you want to call this session?",
         description: "Sam / George life coaching"
       }, {
         type: "number",
+        required: true,
         ref: eventDurationRef,
         question: "How many minutes is the session going to last?",
         description: "We'll show you a warning when your time is almost up",
         min_value: 5
       }, {
         type: "number",
+        required: true,
         ref: eventPriceRef,
         question: "How much are you charging for the session?",
         description: "USD. We take 5% and your client pays PayPal fees. You'll get paid once the session is over"
       }, {
         type: "legal",
+        required: true,
         question: "Thanks!",
         description: "That's all for now. Your session will be available for 90 days from now."
       }],
