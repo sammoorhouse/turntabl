@@ -36,8 +36,11 @@ module.exports = function(app) {
         return console.error('typeform upload failed:', err);
       }
       console.log('typeform Upload successful: ' + body);
+var formLink = body['links'].find(function(el){el.rel === "form_render"}).href
+console.log('typeform url: ' + formLink)
+
       res.render('create-event.ejs', {
-        formUrl: formUrl,
+        formUrl: body['_links'],
         user: user
       });
     });
@@ -143,6 +146,7 @@ module.exports = function(app) {
     }
 
     console.log("data after generation: " + formData)
+    return formData
   }
 
   function generateID() {
