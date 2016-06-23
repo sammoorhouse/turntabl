@@ -239,49 +239,50 @@ module.exports = function(app) {
   }
 
 
-      function censor(censor) {
-        var i = 0;
+  function censor(censor) {
+    var i = 0;
 
-        return function(key, value) {
-          if (i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
-            return '[Circular]';
+    return function(key, value) {
+      if (i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
+        return '[Circular]';
 
-          if (i >= 29) // seems to be a harded maximum of 30 serialized objects?
-            return '[Unknown]';
+      if (i >= 29) // seems to be a harded maximum of 30 serialized objects?
+        return '[Unknown]';
 
-          ++i; // so we know we aren't using the original object anymore
+      ++i; // so we know we aren't using the original object anymore
 
-          return value;
-        }
-      }
+      return value;
+    }
+  }
 
 
 
-/*
-{
-  "id": 16528857,
-  "type": "number",
-  "question": "How many minutes is the session going to last?",
-  "description": "We&#39;ll show you a warning when your time is almost up",
-  "required": true,
-  "ref": "eventDuration",
-  "min_value": 5
-},
+  /*
+  {
+    "id": 16528857,
+    "type": "number",
+    "question": "How many minutes is the session going to last?",
+    "description": "We&#39;ll show you a warning when your time is almost up",
+    "required": true,
+    "ref": "eventDuration",
+    "min_value": 5
+  },
 
-{
-  "field_id": 16520581,
-  "type": "boolean",
-  "value": true
-}
-*/
+  {
+    "field_id": 16520581,
+    "type": "boolean",
+    "value": true
+  }
+  */
   function resolveLeaderEmail(formSubmission, formStructure) {
     var emailOverridden = resolveField(emailLogicJumpRef, formSubmission, formStructure)
-    if(emailOverridden){
+    if (emailOverridden) {
       return resolveField(emailOverrideRef, formSubmission, formStructure)
-    }
-    else{
+    } else {
       // :( parse from question
-      var questionText = formStructure.fields.find(function(q){return q.ref === emailLogicJumpRef}).question
+      var questionText = formStructure.fields.find(function(q) {
+        return q.ref === emailLogicJumpRef
+      }).question
       var pattern = /we think your email address is (.*) - is that right/
       var email = questionText.match(pattern)[0]
       console.log(email)
@@ -290,12 +291,15 @@ module.exports = function(app) {
   }
 
   function resolveField(refName, formSubmission, formStructure) {
-    console.log("attempting to find" + refName )
-    console.log(JSON.stringify(formStructure,null,2))
-    var fieldId = formStructure.fields.find(function(q){
-console.log(JSON.stringify(q,null,2))
-      return q.ref === refName}).id
-    var result = formSubmission.answers.find(function(a){return a.field_id === id}).value
+    console.log("attempting to find" + refName)
+    console.log(JSON.stringify(formStructure, null, 2))
+    var fieldId = formStructure.fields.find(function(q) {
+      console.log("curr: " + JSON.stringify(q, null, 2))
+      return q.ref === refName
+    }).id
+    var result = formSubmission.answers.find(function(a) {
+      return a.field_id === id
+    }).value
     return result
   }
 
