@@ -30,7 +30,8 @@ module.exports = function(app) {
     needle.post(typeformUrl, formData, {
       headers: {
         "X-API-TOKEN": process.env.TYPEFORM_APIKEY
-      }
+      },
+      json: true
     }, function(err, resp) {
       if (!err && resp.statusCode == 200) {
         console.log('typeform Upload successful: ' + JSON.stringify(resp.body, null, 2));
