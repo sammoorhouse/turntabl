@@ -3,7 +3,7 @@ var OpenTok = require('opentok');
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 var stormpath = require('express-stormpath');
 var request = require('request');
-var typeformVersionString='v1.4'
+var typeformVersionString = 'v1.4'
 
 module.exports = function(app) {
   app.get('/', function(req, res) {
@@ -27,7 +27,7 @@ module.exports = function(app) {
     request.post({
       url: typeformUrl,
       headers: {
-        "X-API-TOKEN" : process.env.TYPEFORM_APIKEY
+        "X-API-TOKEN": process.env.TYPEFORM_APIKEY
       },
       formData: formData
     }, function(err, httpResponse, body) {
@@ -131,16 +131,15 @@ module.exports = function(app) {
     });
   })
 
-  function generateForm(user){
-return {
-  "title": "My first typeform",
-  "fields": [
-    {
-      "type": "short_text",
-      "question": "What is your name?"
+  function generateForm(user) {
+    console.log('generating user form for ' + user.givenName)
+    return {
+      "title": "My first typeform",
+      "fields": [{
+        "type": "short_text",
+        "question": "What is your name?"
+      }]
     }
-  ]
-}
 
   }
 
