@@ -12,10 +12,6 @@ var pusher = new Pusher({
   encrypted: true
 });
 
-pusher.trigger('test_channel', 'my_event', {
-  "message": "hello world"
-});
-
 var typeformVersionString = 'v0.4'
 var eventTitleRef = "eventTitle"
 var eventDurationRef = "eventDuration"
