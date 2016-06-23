@@ -124,7 +124,7 @@ module.exports = function(app) {
               if (err) {
                 throw err;
                 console.error('triggering failure message to client')
-                pusher.trigger(eventId, 'failed', {
+                pusher.trigger(eventId, 'failure', {
                   "reason": "err"
                 });
                 formSubmissionResponse.writeHead(400, {
@@ -133,6 +133,7 @@ module.exports = function(app) {
                 formSubmissionResponse.end
               } else {
                 console.log("sending success message to client")
+                console.log("pusher eventid: " + eventId)
                 pusher.trigger(eventId, 'success');
                   /*formSubmissionResponse.writeHead(200, {
                     'Content-Type': 'application/json'

@@ -58,7 +58,7 @@
         });
 
         var channel = pusher.subscribe('<%= eventId %>');
-        channel.bind('fail', function(data) {
+        channel.bind('failure', function(data) {
           console.error('event creation failed')
           window.location = '/eventcreationfailed/<%= eventId %>'
         });
