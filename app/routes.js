@@ -121,10 +121,10 @@ module.exports = function(app) {
                 formSubmissionResponse.end
               } else {
                 console.log("newEvent.id = " + newEvent.id)
-                formSubmissionResponse.writeHead(200, {
+                /*formSubmissionResponse.writeHead(200, {
                   'Content-Type': 'application/json'
                 });
-                formSubmissionResponse.end
+                formSubmissionResponse.end*/
               }
             });
           }
@@ -299,7 +299,7 @@ module.exports = function(app) {
   }
 
   function resolveField(refName, formSubmission, formStructure) {
-    console.log("attempting to find" + refName)
+    console.log("attempting to find " + refName)
     var fieldId = formStructure.fields.find(function(q) {
       return q.ref === refName
     }).id
