@@ -3,7 +3,8 @@ var OpenTok = require('opentok');
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 var stormpath = require('express-stormpath');
 var request = require('request');
-var typeformVersionString = 'v0.4'
+//var typeformVersionString = 'v0.4'
+var typeformVersionString = 'latest'
 
 module.exports = function(app) {
   app.get('/', function(req, res) {
