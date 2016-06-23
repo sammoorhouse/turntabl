@@ -3,6 +3,18 @@ var OpenTok = require('opentok');
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 var stormpath = require('express-stormpath');
 var request = require('request');
+var Pusher = require('pusher');
+
+var pusher = new Pusher({
+  appId: process.env.pusher_AppId,
+  key: process.env.pusher_Key,
+  secret: process.env.pusher_Secret,
+  encrypted: true
+});
+
+pusher.trigger('test_channel', 'my_event', {
+  "message": "hello world"
+});
 
 var typeformVersionString = 'v0.4'
 var eventTitleRef = "eventTitle"
@@ -115,16 +127,20 @@ module.exports = function(app) {
             newEvent.save(function(err) {
               if (err) {
                 throw err;
+                pusher.trigger(eventId, 'failed', {
+                  "reason": "err"
+                });
                 formSubmissionResponse.writeHead(400, {
                   'Content-Type': 'application/json'
                 });
                 formSubmissionResponse.end
               } else {
                 console.log("newEvent.id = " + newEvent.id)
-                /*formSubmissionResponse.writeHead(200, {
-                  'Content-Type': 'application/json'
-                });
-                formSubmissionResponse.end*/
+                pusher.trigger(eventId, 'success');
+                  /*formSubmissionResponse.writeHead(200, {
+                    'Content-Type': 'application/json'
+                  });
+                  formSubmissionResponse.end*/
               }
             });
           }
@@ -316,8 +332,8 @@ module.exports = function(app) {
       result = block.value
     }
 
-      console.log(refName + " = " + result)
-      return result
+    console.log(refName + " = " + result)
+    return result
   }
 
 
