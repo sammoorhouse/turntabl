@@ -88,10 +88,10 @@ module.exports = function(app) {
         var formSubmission = formSubmissionRequest.body
         var formStructure = JSON.parse(formStructureResponse.body)
         var eventId = formStructure.tags[0]
-        var leaderEmail = resolveLeaderEmail(formSubmissionRequest, formStructure)
-        var eventTitle = resolveField(eventTitleRef, formSubmissionRequest, formStructure)
-        var eventDuration = resolveField(eventDurationRef, formSubmissionRequest, formStructure)
-        var eventPrice = resolveField(eventPriceRef, formSubmissionRequest, formStructure)
+        var leaderEmail = resolveLeaderEmail(formSubmission, formStructure)
+        var eventTitle = resolveField(eventTitleRef, formSubmission, formStructure)
+        var eventDuration = resolveField(eventDurationRef, formSubmission, formStructure)
+        var eventPrice = resolveField(eventPriceRef, formSubmission, formStructure)
 
         newEvent.id = eventId
         newEvent.name = eventTitle
