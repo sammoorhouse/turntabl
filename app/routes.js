@@ -79,7 +79,7 @@ module.exports = function(app) {
 
 
 
-    console.log('req: ' + JSON.stringify(req, censor(req), 2))
+    console.log('req: ' + JSON.stringify(req.body, censor(req.body), 2))
     var user = req.user
     var leaderEmail = user.email
 
@@ -169,7 +169,7 @@ module.exports = function(app) {
   function generateForm(user, eventId) {
     var formData = {
       "title": "My first typeform",
-      "webhook_submit_url": "http://requestb.in/um9wh5um",//process.env.typeform_webhook_submit_url,
+      "webhook_submit_url": process.env.typeform_webhook_submit_url,//"http://requestb.in/um9wh5um",//
       "tags": [ eventId ],
       "fields": [{
         "type": "short_text",
