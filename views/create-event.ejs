@@ -49,7 +49,7 @@
         $(document).ready(function() {
           $(window).on('message', function(ev) {
             if (ev.originalEvent.data === "form-submit") {
-              response.redirect('/event/<%= eventId %>')
+              window.location='/event/<%= eventId %>'
             }
           });
         });
