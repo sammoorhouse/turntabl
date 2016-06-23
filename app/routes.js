@@ -134,7 +134,7 @@ module.exports = function(app) {
 
   function generateForm(user) {
     console.log('generating user form for ' + user.givenName)
-    return {
+    var formData =  {
       "title": "My first typeform",
       "fields": [{
         "type": "short_text",
@@ -142,6 +142,7 @@ module.exports = function(app) {
       }]
     }
 
+    console.log("data after generation: " + formData)
   }
 
   function generateID() {
