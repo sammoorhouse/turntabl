@@ -171,9 +171,11 @@ module.exports = function(app) {
       "title": "My first typeform",
       "webhook_submit_url": process.env.typeform_webhook_submit_url,//"http://requestb.in/um9wh5um",//
       "tags": [ eventId ],
+      "branding": false,
       "fields": [{
         "type": "short_text",
         "ref": "name",
+        "required": true,
         "question": "What is your name?"
       }]
     }
