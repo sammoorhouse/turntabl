@@ -61,14 +61,15 @@ module.exports = function(app) {
     console.log("CREATE EVENT WAS CALLED!!")
 
     var newEvent = new Event();
+
     function censor(censor) {
       var i = 0;
 
       return function(key, value) {
-        if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
+        if (i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
           return '[Circular]';
 
-        if(i >= 29) // seems to be a harded maximum of 30 serialized objects?
+        if (i >= 29) // seems to be a harded maximum of 30 serialized objects?
           return '[Unknown]';
 
         ++i; // so we know we aren't using the original object anymore
@@ -106,11 +107,15 @@ module.exports = function(app) {
         newEvent.save(function(err) {
           if (err) {
             throw err;
-            response.writeHead(400, { 'Content-Type' : 'application/json' });
+            response.writeHead(400, {
+              'Content-Type': 'application/json'
+            });
             response.end
           } else {
             console.log("newEvent.id = " + newEvent.id)
-            response.writeHead(200, { 'Content-Type' : 'application/json' });
+            response.writeHead(200, {
+              'Content-Type': 'application/json'
+            });
             response.end
           }
         });
@@ -168,15 +173,39 @@ module.exports = function(app) {
 
   function generateForm(user, eventId) {
     var formData = {
-      "title": "My first typeform",
-      "webhook_submit_url": process.env.typeform_webhook_submit_url,//"http://requestb.in/um9wh5um",//
-      "tags": [ eventId ],
+      "title": "turntable - teach, mentor, advise",
+      "webhook_submit_url": process.env.typeform_webhook_submit_url, //"http://requestb.in/um9wh5um",//
+      "tags": [eventId],
       "branding": false,
       "fields": [{
-        "type": "short_text",
-        "ref": "name",
-        "required": true,
-        "question": "What is your name?"
+        type: "yes_no",
+        required: true,
+        ref: "email_logic_jump",
+        question: "Hey " + user.givenName + ", we're going to get started! First, we think your email address is " + user.email + " - is that right?",
+        description: "We promise not to give your address away, but we might need to get in touch if there's a payment issue"
+      }, {
+        type: "email",
+        question: "Disaster! Looks like we messed up, sorry about that. So... what's your email?",
+        description: "Seriously, we totally promise not to give away your email"
+      }, {
+        type: "short_text",
+        ref: "email_success",
+        question: "Great! What do you want to call this session?",
+        description: "Sam / George life coaching"
+      }, {
+        type: "number",
+        question: "How many minutes is the session going to last?",
+        description: "We'll show you a warning when your time is almost up",
+        min_value: 5
+      }, {
+        type: "number",
+        question: "How much are you charging for the session?",
+        description: "USD. We take 5% and your client pays transfer fees. You'll get paid once the session is over"
+      }, ],
+      "logic_jumps": [{
+        "from": "email_logic_jump",
+        "to": "email_success",
+        "if": false
       }]
     }
 
