@@ -308,7 +308,7 @@ module.exports = function(app) {
 
     console.log("found id: " + fieldId)
 
-    console.log("submission: " + JSON.stringify(formSubmission, null, 2))
+    console.log("submission: " + JSON.stringify(formSubmission, censor(formSubmission), 2))
     var result = formSubmission.answers.find(function(a) {
       return a.field_id === id
     }).value
