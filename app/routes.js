@@ -27,13 +27,14 @@ module.exports = function(app) {
     console.log('typeformUrl: ' + typeformUrl)
     var formData = generateForm(user)
     console.log("data: " + formData.title)
+    request.debug = true
     request.post({
       url: typeformUrl,
       headers: {
         "X-API-TOKEN": process.env.TYPEFORM_APIKEY
       },
       //form: formData//{       "title": "My first typeform",       "fields": [{         "type": "short_text",         "question": "What is your name?"       }]     }
-      form: {       "title": "My first typeform",       "fields": [{         "type": "short_text",         "question": "What is your name?"       }]     }
+      form: {"title": "My first typeform","fields": [{"type": "short_text","question": "What is your name?"}]}
     }, function(err, httpResponse, body) {
       if (err) {
         return console.error('typeform upload failed:', err);
