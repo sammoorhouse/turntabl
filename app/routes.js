@@ -39,7 +39,7 @@ module.exports = function(app) {
         if (!err && resp.statusCode == 201) { //201 CREATED
           console.log('typeform Upload successful: ' + JSON.stringify(resp.body, null, 2));
           var formLink = resp.body['_links'].find(function(el) {
-            console.log('rel: ' + el.rel + ' & href: ' + href)
+            console.log('rel: ' + el.rel + ' & href: ' + el.href)
             el['rel'] === "form_render"
           }).href
           console.log('typeform url: ' + formLink)
