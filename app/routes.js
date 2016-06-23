@@ -3,8 +3,8 @@ var OpenTok = require('opentok');
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 var stormpath = require('express-stormpath');
 var request = require('request');
-//var typeformVersionString = 'v0.4'
-var typeformVersionString = 'latest'
+var typeformVersionString = 'v0.4'
+//var typeformVersionString = 'latest'
 
 module.exports = function(app) {
   app.get('/', function(req, res) {
@@ -26,13 +26,14 @@ module.exports = function(app) {
     var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
     console.log('typeformUrl: ' + typeformUrl)
     var formData = generateForm(user)
-    console.log("data: " + formData)
+    console.log("data: " + formData.title)
     request.post({
       url: typeformUrl,
       headers: {
         "X-API-TOKEN": process.env.TYPEFORM_APIKEY
       },
-      form: formData
+      //form: formData//{       "title": "My first typeform",       "fields": [{         "type": "short_text",         "question": "What is your name?"       }]     }
+      form: {       "title": "My first typeform",       "fields": [{         "type": "short_text",         "question": "What is your name?"       }]     }
     }, function(err, httpResponse, body) {
       if (err) {
         return console.error('typeform upload failed:', err);
