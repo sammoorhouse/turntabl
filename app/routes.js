@@ -81,7 +81,10 @@ var formId = req.body.uid;
 console.log("form id: " + formId)
 //get form structure https://api.typeform.io/v0.4/forms/:form_id
 var typeform_structure_url = "https://api.typeform.io/" + typeformVersionString + "/forms/" + formId
-request.get(typeform_structure_url, function(err, resp){
+request.get(
+{headers: {
+  "X-API-TOKEN": process.env.TYPEFORM_APIKEY
+}},typeform_structure_url, function(err, resp){
   if(!err){
     console.log("structure successfully received: " + JSON.stringify(resp.body, censor(resp.body), 2))
   }
