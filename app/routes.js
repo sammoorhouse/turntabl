@@ -61,8 +61,25 @@ module.exports = function(app) {
     console.log("CREATE EVENT WAS CALLED!!")
 
     var newEvent = new Event();
+    function censor(censor) {
+      var i = 0;
 
-    console.log('req: ' + JSON.stringify(req, null, 2))
+      return function(key, value) {
+        if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
+          return '[Circular]';
+
+        if(i >= 29) // seems to be a harded maximum of 30 serialized objects?
+          return '[Unknown]';
+
+        ++i; // so we know we aren't using the original object anymore
+
+        return value;
+      }
+    }
+
+
+
+    console.log('req: ' + JSON.stringify(req, censor(req), 2))
     var user = req.user
     var leaderEmail = user.email
 
@@ -153,7 +170,7 @@ module.exports = function(app) {
     var formData = {
       "title": "My first typeform",
       "webhook_submit_url": process.env.typeform_webhook_submit_url,
-      "tags": [ eventId ],
+      "tags": [ user, eventId ],
       "fields": [{
         "type": "short_text",
         "question": "What is your name?"
