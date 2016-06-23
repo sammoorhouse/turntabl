@@ -9,6 +9,7 @@ var eventTitleRef = "eventTitle"
 var eventDurationRef = "eventDuration"
 var eventPriceRef = "eventPrice"
 var emailLogicJumpRef = "emailLogicJump"
+var emailOverrideRef = "emailOverride"
   //var typeformVersionString = 'latest'
 
 module.exports = function(app) {
@@ -188,6 +189,7 @@ module.exports = function(app) {
       }, {
         type: "email",
         required: true,
+        ref: emailOverrideRef,
         question: "Disaster! Looks like we messed up, sorry about that. So... what's your email?",
         description: "Seriously, we totally promise not to give away your email"
       }, {
@@ -252,12 +254,44 @@ module.exports = function(app) {
         }
       }
 
+
+
+/*
+{
+  "id": 16528857,
+  "type": "number",
+  "question": "How many minutes is the session going to last?",
+  "description": "We&#39;ll show you a warning when your time is almost up",
+  "required": true,
+  "ref": "eventDuration",
+  "min_value": 5
+},
+
+{
+  "field_id": 16520581,
+  "type": "boolean",
+  "value": true
+}
+*/
   function resolveLeaderEmail(formSubmission, formStructure) {
-    var emailFieldId = "formStructure."
+    var emailOverridden = resolveField(emailLogicJumpRef, formSubmission, formStructure)
+    if(emailOverridden){
+      return resolveField(emailOverrideRef, formSubmission, formStructure)
+    }
+    else{
+      // :( parse from question
+      var questionText = formStructure.questions.find(function(q){return q.ref === emailLogicJumpRef}).question
+      var pattern = /we think your email address is (.*) - is that right/
+      var email = questionText.match(pattern)[0]
+      console.log(email)
+      return email
+    }
   }
 
   function resolveField(refName, formSubmission, formStructure) {
-
+    var fieldId = formStructure.questions.find(function(q){return q.ref === refName}).id
+    var result = formSubmission.answers.find(function(a){return a.field_id === id}).value
+    return result
   }
 
 
