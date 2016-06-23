@@ -44,7 +44,7 @@ module.exports = function(app) {
           console.log('typeform url: ' + formLink)
 
           res.render('create-event.ejs', {
-            formUrl: body['_links'],
+            typeformUrl: formLink
             user: user
           });
         } else if (err) {
