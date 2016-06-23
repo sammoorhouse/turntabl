@@ -39,7 +39,7 @@ module.exports = function(app) {
       },
       function(err, resp) {
         if (!err && resp.statusCode == 201) { //201 CREATED
-          console.log('typeform Upload successful: ' + JSON.stringify(resp.body, null, 2));
+          console.log('typeform Upload successful');
           var formLink = resp.body['_links'].find(function(el) {
             return el.rel === "form_render"
           }).href
@@ -59,33 +59,16 @@ module.exports = function(app) {
   })
 
   app.post('/form/create-event', function(formSubmissionRequest, formSubmissionResponse) {
-    console.log("CREATE EVENT WAS CALLED!!")
 
-    var newEvent = new Event();
+    console.log("form submission webhook invoked")
 
-    function censor(censor) {
-      var i = 0;
-
-      return function(key, value) {
-        if (i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
-          return '[Circular]';
-
-        if (i >= 29) // seems to be a harded maximum of 30 serialized objects?
-          return '[Unknown]';
-
-        ++i; // so we know we aren't using the original object anymore
-
-        return value;
-      }
-    }
-
-
-
-    console.log('req: ' + JSON.stringify(formSubmissionRequest.body, censor(formSubmissionRequest.body), 2))
     var formId = formSubmissionRequest.body.uid;
     console.log("form id: " + formId)
-      //get form structure https://api.typeform.io/v0.4/forms/:form_id
+    var newEvent = new Event();
+
+    //get form structure https://api.typeform.io/v0.4/forms/:form_id
     var typeform_structure_url = "https://api.typeform.io/" + typeformVersionString + "/forms/" + formId
+
     request.get({
       uri: typeform_structure_url,
       headers: {
@@ -93,15 +76,12 @@ module.exports = function(app) {
       }
     }, function(err, formStructureResponse) {
       if (!err) {
-        console.log("structure successfully received: " + formStructureResponse.body)
         var formStructure = JSON.parse(formStructureResponse.body)
-        console.log("parsed structure: " + JSON.stringify(formStructure, null, 2))
         var eventId = formStructure.tags[0]
         var leaderEmail = resolveLeaderEmail(formSubmissionRequest, formStructureResponse)
         var eventTitle = resolveField(eventTitleRef, formSubmissionRequest, formStructureResponse)
         var eventDuration = resolveField(eventDurationRef, formSubmissionRequest, formStructureResponse)
         var eventPrice = resolveField(eventPriceRef, formSubmissionRequest, formStructureResponse)
-
 
         newEvent.id = eventId
         newEvent.name = eventTitle
@@ -116,7 +96,7 @@ module.exports = function(app) {
         //create openTok session
         opentok.createSession(function(err, session) {
           if (err) {
-            console.log("sessionId creation error: " + err)
+            console.error("sessionId creation error: " + err)
             throw err;
           } else {
             console.log("sessionId: " + session.sessionId)
@@ -254,6 +234,23 @@ module.exports = function(app) {
     }
     return rtn;
   }
+
+
+      function censor(censor) {
+        var i = 0;
+
+        return function(key, value) {
+          if (i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
+            return '[Circular]';
+
+          if (i >= 29) // seems to be a harded maximum of 30 serialized objects?
+            return '[Unknown]';
+
+          ++i; // so we know we aren't using the original object anymore
+
+          return value;
+        }
+      }
 
   function resolveLeaderEmail(formSubmission, formStructure) {
     var emailFieldId = "formStructure."
