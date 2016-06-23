@@ -300,9 +300,7 @@ module.exports = function(app) {
 
   function resolveField(refName, formSubmission, formStructure) {
     console.log("attempting to find" + refName)
-    console.log("structure: " + JSON.stringify(formStructure, null, 2))
     var fieldId = formStructure.fields.find(function(q) {
-      console.log("curr: " + JSON.stringify(q, null, 2))
       return q.ref === refName
     }).id
 
@@ -310,7 +308,7 @@ module.exports = function(app) {
 
     console.log("submission: " + JSON.stringify(formSubmission, censor(formSubmission), 2))
     var result = formSubmission.answers.find(function(a) {
-      return a.field_id === id
+      return a.field_id === fieldId
     }).value
     return result
   }
