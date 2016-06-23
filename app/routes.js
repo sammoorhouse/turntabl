@@ -280,7 +280,7 @@ module.exports = function(app) {
     }
     else{
       // :( parse from question
-      var questionText = formStructure.questions.find(function(q){return q.ref === emailLogicJumpRef}).question
+      var questionText = formStructure.fields.find(function(q){return q.ref === emailLogicJumpRef}).question
       var pattern = /we think your email address is (.*) - is that right/
       var email = questionText.match(pattern)[0]
       console.log(email)
@@ -289,7 +289,8 @@ module.exports = function(app) {
   }
 
   function resolveField(refName, formSubmission, formStructure) {
-    var fieldId = formStructure.questions.find(function(q){return q.ref === refName}).id
+    console.log(JSON.stringify(formStructure))
+    var fieldId = formStructure.fields.find(function(q){return q.ref === refName}).id
     var result = formSubmission.answers.find(function(a){return a.field_id === id}).value
     return result
   }
