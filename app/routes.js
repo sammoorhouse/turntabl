@@ -36,7 +36,7 @@ module.exports = function(app) {
       }
       console.log('typeform Upload successful: ' + body);
       res.render('create-event.ejs', {
-        formUrl: formUrl
+        formUrl: formUrl,
         user: user
       });
     });
