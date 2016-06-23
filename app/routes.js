@@ -61,6 +61,8 @@ module.exports = function(app) {
     console.log("CREATE EVENT WAS CALLED!!")
 
     var newEvent = new Event();
+
+    console.log('req: ' + req)
     var user = req.user
     var leaderEmail = user.email
 
