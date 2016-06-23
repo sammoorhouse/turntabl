@@ -86,16 +86,10 @@ module.exports = function(app) {
     }, function(err, formStructureResponse) {
       if (!err) {
 
-        //fuck it, clear everything
-        formSubmissionResponse.writeHead(200, {
-          'Content-Type': 'application/json'
-        });
-        formSubmissionResponse.end
-
-
         var formSubmission = formSubmissionRequest.body
         var formStructure = JSON.parse(formStructureResponse.body)
         var eventId = formStructure.tags[0]
+        console.log("found eventId: " + eventId)
         var leaderEmail = resolveLeaderEmail(formSubmission, formStructure)
         var eventTitle = resolveField(eventTitleRef, formSubmission, formStructure)
         var eventDuration = resolveField(eventDurationRef, formSubmission, formStructure)
@@ -134,11 +128,12 @@ module.exports = function(app) {
               } else {
                 console.log("sending success message to client")
                 console.log("pusher eventid: " + eventId)
-                pusher.trigger(eventId, 'success');
-                  /*formSubmissionResponse.writeHead(200, {
-                    'Content-Type': 'application/json'
-                  });
-                  formSubmissionResponse.end*/
+                pusher.trigger(eventId, 'success', {});
+
+                formSubmissionResponse.writeHead(200, {
+                  'Content-Type': 'application/json'
+                });
+                formSubmissionResponse.end
               }
             });
           }
