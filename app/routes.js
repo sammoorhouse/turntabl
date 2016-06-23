@@ -290,7 +290,7 @@ module.exports = function(app) {
   }
 
   function resolveField(refName, formSubmission, formStructure) {
-    console.log("attempting to find" + refName + )
+    console.log("attempting to find" + refName )
     console.log(JSON.stringify(formStructure,null,2))
     var fieldId = formStructure.fields.find(function(q){
 console.log(JSON.stringify(q,null,2))
