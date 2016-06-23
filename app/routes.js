@@ -32,9 +32,7 @@ module.exports = function(app) {
         "X-API-TOKEN": process.env.TYPEFORM_APIKEY
       }
     }, function(err, resp) {
-      if (err) {
-        return console.error('typeform upload failed:', err);
-      } else {
+      if (!err && resp.statusCode == 200) {
         console.log('typeform Upload successful: ' + JSON.stringify(resp.body, null, 2));
         console.log('status code: ' + resp.statusCode)
         var formLink = resp.body['links'].find(function(el) {
@@ -46,6 +44,10 @@ module.exports = function(app) {
           formUrl: body['_links'],
           user: user
         });
+      }else  if(err){
+        return console.error('typeform upload failed:', err);
+      }else{
+        return console.error('typeform upload failed:', resp);
       }
     })
   })
