@@ -293,7 +293,7 @@ module.exports = function(app) {
       }).question
       var pattern = /\<code\>(.*)\<\/code\>/
       var email = questionText.match(pattern)[1]
-      console.log("email: " + email)
+      console.log("email = " + email)
       return email
     }
   }
@@ -305,16 +305,19 @@ module.exports = function(app) {
     }).id
 
     console.log("found id: " + fieldId)
-
-    console.log("submission: " + JSON.stringify(formSubmission, censor(formSubmission), 2))
     var block = formSubmission.answers.find(function(a) {
       return a.field_id === fieldId
     })
+
+    var result
     if (block.type === "number") {
-      return block.value.amount
+      result = block.value.amount
     } else {
-      return block.value
+      result = block.value
     }
+
+      console.log(refName + " = " + result)
+      return result
   }
 
 
