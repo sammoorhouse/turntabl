@@ -28,7 +28,6 @@ module.exports = function(app) {
     var eventId = generateID()
     var formData = generateForm(user, eventId)
     console.log("data: " + JSON.stringify(formData, null, 2))
-    request.debug = true
     request.post({
         url: typeformUrl,
         json: formData,
