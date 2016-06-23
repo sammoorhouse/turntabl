@@ -305,6 +305,10 @@ module.exports = function(app) {
       console.log("curr: " + JSON.stringify(q, null, 2))
       return q.ref === refName
     }).id
+
+    console.log("found id: " + fieldId)
+
+    console.log("submission: " + JSON.stringify(formSubmission, null, 2))
     var result = formSubmission.answers.find(function(a) {
       return a.field_id === id
     }).value
