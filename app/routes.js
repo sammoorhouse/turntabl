@@ -58,7 +58,7 @@ module.exports = function(app) {
       })
   })
 
-  app.post('/form/create-event', function(formSubmissionRequest, res) {
+  app.post('/form/create-event', function(formSubmissionRequest, formSubmissionResponse) {
     console.log("CREATE EVENT WAS CALLED!!")
 
     var newEvent = new Event();
@@ -124,16 +124,16 @@ module.exports = function(app) {
             newEvent.save(function(err) {
               if (err) {
                 throw err;
-                response.writeHead(400, {
+                formSubmissionResponse.writeHead(400, {
                   'Content-Type': 'application/json'
                 });
-                response.end
+                formSubmissionResponse.end
               } else {
                 console.log("newEvent.id = " + newEvent.id)
-                response.writeHead(200, {
+                formSubmissionResponse.writeHead(200, {
                   'Content-Type': 'application/json'
                 });
-                response.end
+                formSubmissionResponse.end
               }
             });
           }
