@@ -2,9 +2,9 @@ var Event = require('../app/models/event');
 var OpenTok = require('opentok');
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 var stormpath = require('express-stormpath');
-var request = require('request');
+var needle = require('needle');
 var typeformVersionString = 'v0.4'
-//var typeformVersionString = 'latest'
+  //var typeformVersionString = 'latest'
 
 module.exports = function(app) {
   app.get('/', function(req, res) {
@@ -27,38 +27,27 @@ module.exports = function(app) {
     console.log('typeformUrl: ' + typeformUrl)
     var formData = generateForm(user)
     console.log("data: " + formData.title)
-    request.debug = true
-    request.post({
-      url: typeformUrl,
+    needle.post(typeformUrl, typeformUrl, {
       headers: {
         "X-API-TOKEN": process.env.TYPEFORM_APIKEY
-      },
-      //form: formData//{       "title": "My first typeform",       "fields": [{         "type": "short_text",         "question": "What is your name?"       }]     }
-      form: {
-        title: "My first typeform",
-        fields: [
-          {
-            type: "short_text",
-            question: "What is your name?"
-          }
-        ]
       }
-    }, function(err, httpResponse, body) {
+    }, function(err, resp) {
       if (err) {
         return console.error('typeform upload failed:', err);
+      } else {
+        console.log('typeform Upload successful: ' + resp.body);
+        var formLink = body['links'].find(function(el) {
+          el.rel === "form_render"
+        }).href
+        console.log('typeform url: ' + formLink)
+
+        res.render('create-event.ejs', {
+          formUrl: body['_links'],
+          user: user
+        });
       }
-      console.log('typeform Upload successful: ' + body);
-var formLink = body['links'].find(function(el){el.rel === "form_render"}).href
-console.log('typeform url: ' + formLink)
-
-      res.render('create-event.ejs', {
-        formUrl: body['_links'],
-        user: user
-      });
-    });
-
-
-  });
+    })
+  })
 
   app.post('/form/create-event', stormpath.loginRequired, function(req, res) {
     var newEvent = new Event();
@@ -149,7 +138,7 @@ console.log('typeform url: ' + formLink)
 
   function generateForm(user) {
     console.log('generating user form for ' + user.givenName)
-    var formData =  {
+    var formData = {
       "title": "My first typeform",
       "fields": [{
         "type": "short_text",
