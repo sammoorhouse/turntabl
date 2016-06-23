@@ -59,10 +59,12 @@
 
         var channel = pusher.subscribe('<%= eventId %>');
         channel.bind('fail', function(data) {
-          alert(data.reason);
+          console.error('event creation failed')
+          window.location = '/eventcreationfailed/<%= eventId %>'
         });
-        channel.bind('success', function(){
-          window.location='/event/<%= eventId %>'
+        channel.bind('success', function() {
+          console.log('event creation succeeded')
+          window.location = '/event/<%= eventId %>'
         })
       </script>
 
