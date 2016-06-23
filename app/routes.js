@@ -151,9 +151,7 @@ module.exports = function(app) {
     var formData = {
       "title": "My first typeform",
       "webhook_submit_url": process.env.typeform_webhook_submit_url,
-      "tags": [{
-        eventId: eventId
-      }, "so-tags"],
+      "tags": [ eventId ],
       "fields": [{
         "type": "short_text",
         "question": "What is your name?"
