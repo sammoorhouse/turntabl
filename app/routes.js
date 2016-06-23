@@ -169,7 +169,7 @@ module.exports = function(app) {
   function generateForm(user, eventId) {
     var formData = {
       "title": "My first typeform",
-      "webhook_submit_url": "http://requestb.in/um9wh5um"//process.env.typeform_webhook_submit_url,
+      "webhook_submit_url": "http://requestb.in/um9wh5um",//process.env.typeform_webhook_submit_url,
       "tags": [ eventId ],
       "fields": [{
         "type": "short_text",
