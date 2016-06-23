@@ -24,6 +24,7 @@ module.exports = function(app) {
     //generate typeform
     var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
     var formData = generateForm(user)
+    console.log("data: " + formData)
     request.post({
       url: typeformUrl,
       headers: {
