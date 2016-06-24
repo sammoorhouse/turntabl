@@ -197,7 +197,8 @@ module.exports = function(app) {
       } else {
         console.log("error retrieving event " + eventId + ": " + err)
       }
-    }) res.end()
+    })
+    res.end()
   })
 
   app.get('/event/:id', stormpath.loginRequired, function(req, res) {
