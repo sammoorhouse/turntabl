@@ -193,7 +193,7 @@ module.exports = function(app) {
             } else {
               console.log("error retrieving event " + eventId)
             }
-          }
+          })
           res.end()
         })
 
