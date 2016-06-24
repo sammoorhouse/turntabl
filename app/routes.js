@@ -151,6 +151,7 @@ module.exports = function(app) {
         console.log("fail: " + err)
       }
     })
+    formSubmissionResponse.end()
   })
 
   app.post('/pusher/auth', function(req, res) {
@@ -163,11 +164,13 @@ module.exports = function(app) {
 
     var auth = pusher.authenticate(socketId, channel, presenceData);
     res.send(auth);
+    res.end()
   });
 
   app.post('/pusher/beginSession', function(req, res) {
     var eventId = req.body.eventId
     pusher.trigger("presence-event-" + eventId, 'begin', {});
+    res.end()
   })
 
   app.get('/event/:id', stormpath.loginRequired, function(req, res) {
