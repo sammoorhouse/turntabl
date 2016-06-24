@@ -179,7 +179,7 @@ module.exports = function(app) {
           });
         } else {*/
           var eventValue = event.eventValue
-          return res.render('client.ejs', {
+          return res.render('event.ejs', {
             user: req.user,
             event: event,
             apiKey: process.env.tokboxAuth_apiKey,
