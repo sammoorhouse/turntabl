@@ -29,7 +29,7 @@
       //just us; subscribe to member_added and wait...
       presenceChannel.bind('pusher:member_added', function(member) {
         console.log('member added: ' + member.toString())
-        channel.unBind('pusher:member_added')
+        presenceChannel.unBind('pusher:member_added')
         start()
       })
     } else {
