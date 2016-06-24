@@ -104,7 +104,7 @@
 
     }
 
-    var timeRemainingHuman = moment(sessionEndTime).from(moment(now), true)
+    var timeRemainingHuman = moment(sessionEndTime).from(now)
     $('#countdownClock').text(timeRemainingHuman)
   }
 </script>
