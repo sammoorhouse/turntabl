@@ -99,7 +99,7 @@
       $('#event-progress-clock').addClass('alarm')
 
     }
-    var timeRemainingHuman = moment.duration(timeRemainingMillis, "minutes").humanize();
+    var timeRemainingHuman = moment.duration(timeRemainingMillis, "millis").humanize();
     $('#countdownClock').text(timeRemainingHuman)
   }
 </script>
