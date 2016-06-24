@@ -1,6 +1,6 @@
 <script src="/js/nanobar.min.js"></script>
 <script>
-  var sessionDurationMillis = <%= event.durationMins %> * 1000
+  var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
   var intervalMillis = 15 * 1000 //15 seconds
   var timerToken
   var timeRemaining = <%= event.durationMins %>
@@ -22,6 +22,8 @@
       id: "event-progress-nanobar",
       className: "nanobar"
     });
+
+    nanobar.go(0)
 
     presenceChannel = pusher.subscribe('presence-event-<%= event.id %>');
 
