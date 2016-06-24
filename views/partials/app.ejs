@@ -57,7 +57,6 @@
         pause()
       })
     })
-
   })
 
   function triggerStart() {
@@ -73,6 +72,7 @@
 
   function start() {
     console.log('SESSION START')
+    console.log("this: " + this)
     var sessionStartTimeMillis = Date.now()
     sessionEndTimeMillis = sessionStartTimeMillis + sessionDurationMillis
     timerToken = setInterval(tick, intervalMillis)
@@ -82,6 +82,7 @@
 
   function stop() {
     console.log('SESSION STOP')
+    console.log("this: " + this)
     if (typeof timerToken != "undefined") {
       console.log("stopping timer: " + timerToken)
       clearInterval(timerToken)
