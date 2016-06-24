@@ -24,27 +24,30 @@
     });
 
     presenceChannel = pusher.subscribe('presence-event-<%= event.id %>');
-    //are we alone?
-    var members = presenceChannel.members
-    console.log("members: " + members.toString())
-    console.log("members count" + members.count)
-    if (members.count <= 1) {
-      //just us; subscribe to member_added and wait...
-      presenceChannel.bind('pusher:member_added', function(member) {
-        console.log('member added: ' + member.toString())
-        //presenceChannel.unbind('pusher:member_added')
-        start()
-      })
 
-      presenceChannel.bind('pusher:member_removed', function(member){
-        console.log('member removed: ' + member.toString())
-        stop()
-      })
-    } else {
-      console.log('everyone in!')
-        //great! start the clock
-      start()
-    }
+    presenceChannel.bind('pusher:subscription_succeeded', function(members){
+      //are we alone?
+      console.log("subscription successful! members: " + members.each(function(mem){console.log(mem.toString())}))
+      console.log("members count" + members.count)
+      if (members.count <= 1) {
+        //just us; subscribe to member_added and wait...
+        presenceChannel.bind('pusher:member_added', function(member) {
+          console.log('member added: ' + member.toString())
+          //presenceChannel.unbind('pusher:member_added')
+          start()
+        })
+
+        presenceChannel.bind('pusher:member_removed', function(member){
+          console.log('member removed: ' + member.toString())
+          stop()
+        })
+      } else {
+        console.log('everyone in!')
+          //great! start the clock
+        start()
+      }
+    })
+
   })
 
   function start() {
