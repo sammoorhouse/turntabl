@@ -72,20 +72,18 @@
 
   function start() {
     console.log('SESSION START')
-    console.log("this: " + this)
     var sessionStartTimeMillis = Date.now()
     sessionEndTimeMillis = sessionStartTimeMillis + sessionDurationMillis
-    timerToken = setInterval(tick, intervalMillis)
+    timerToken = window.setInterval(tick, intervalMillis)
     console.log("timer: " + timerToken)
     tick()
   }
 
   function stop() {
     console.log('SESSION STOP')
-    console.log("this: " + this)
     if (typeof timerToken != "undefined") {
       console.log("stopping timer: " + timerToken)
-      clearInterval(timerToken)
+      window.clearInterval(timerToken)
     }
   }
 
