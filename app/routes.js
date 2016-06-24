@@ -76,7 +76,7 @@ module.exports = function(app) {
       'Content-Type': 'application/json'
     });
     formSubmissionResponse.end
-
+console.log('form submission complete')
     return;
     /*================*/
 
@@ -118,7 +118,6 @@ module.exports = function(app) {
         opentok.createSession(function(err, session) {
           if (err) {
             console.error("sessionId creation error: " + err)
-            throw err;
           } else {
             console.log("sessionId: " + session.sessionId)
             newEvent.openTokSessionId = session.sessionId
