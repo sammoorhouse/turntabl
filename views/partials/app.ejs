@@ -5,6 +5,11 @@
   var timerToken
   var timeRemaining = <%= event.durationMins %>
   var sessionStartTime
+  var pusher = new Pusher('45387f244d056952dda4', {
+    encrypted: true
+  });
+
+  var presenceChannel
 
   // Enable pusher logging - don't include this in production
   Pusher.logToConsole = true;
@@ -17,11 +22,7 @@
       className: "nanobar"
     });
 
-    var pusher = new Pusher('45387f244d056952dda4', {
-      encrypted: true
-    });
-
-    var presenceChannel = pusher.subscribe('presence-event-<%= event.id %>');
+    presenceChannel = pusher.subscribe('presence-event-<%= event.id %>');
     //are we alone?
     var members = presenceChannel.members
     console.log("members: " + members.toString())
@@ -32,12 +33,16 @@
         presenceChannel.unbind('pusher:member_added')
         start()
       })
+
+      presenceChannel.bind('pusher:member_removed', function(member){
+        console.log('member removed: ' + member.toString())
+        stop()
+      })
     } else {
       console.log('everyone in!')
         //great! start the clock
       start()
     }
-
   })
 
   function start() {
