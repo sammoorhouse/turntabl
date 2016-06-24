@@ -24,7 +24,7 @@
     var presenceChannel = pusher.subscribe('presence-event-<%= event.id %>');
     //are we alone?
     var members = presenceChannel.members
-console.log("members: "members.toString())
+    console.log("members: " + members.toString())
     if (members.count === 1) {
       //just us; subscribe to member_added and wait...
       presenceChannel.bind('pusher:member_added', function(member) {
@@ -34,7 +34,7 @@ console.log("members: "members.toString())
       })
     } else {
       console.log('everyone in!')
-      //great! start the clock
+        //great! start the clock
       start()
     }
 
