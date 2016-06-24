@@ -21,7 +21,7 @@
       encrypted: true
     });
 
-    var presenceChannel = pusher.subscribe('presence-event-<%= eventId %>');
+    var presenceChannel = pusher.subscribe('presence-event-<%= event.id %>');
     //are we alone?
     var members = presenceChannel.members
     if (members.count === 1) {
