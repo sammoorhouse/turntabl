@@ -132,7 +132,7 @@ console.log('form submission complete')
                 formSubmissionResponse.writeHead(400, {
                   'Content-Type': 'application/json'
                 });
-                formSubmissionResponse.end
+                formSubmissionResponse.end()
               } else {
                 console.log("sending success message to client")
                 console.log("pusher eventid: " + eventId)
@@ -141,7 +141,7 @@ console.log('form submission complete')
                 formSubmissionResponse.writeHead(200, {
                   'Content-Type': 'application/json'
                 });
-                formSubmissionResponse.end
+                formSubmissionResponse.end()
               }
             });
           }

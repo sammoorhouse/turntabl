@@ -82,9 +82,8 @@
 
   function stop() {
     console.log('SESSION STOP')
-    if (typeof timerToken != "undefined") {
+      console.log("stopping timer: " + timerToken)
       clearInterval(timerToken)
-    }
   }
 
   function pause() {
