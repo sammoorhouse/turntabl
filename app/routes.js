@@ -173,11 +173,12 @@ module.exports = function(app) {
       'id': eventId
     }, function(err, event) {
       if (!err) {
-
         var proposedStartTimeMillis = Date.now()
+        var proposedEndTimeMillis = proposedStartTimeMillis + event.durationMins * 1000
+
         if (typeof event.endTime == "undefined") {
           //never started!
-          event.endTime = proposedStartTimeMillis + event.durationMins * 1000
+          event.endTime = proposedEndTimeMillis
 
           //writeBack
           event.save(function(error) {
@@ -186,7 +187,7 @@ module.exports = function(app) {
             }
           })
         }
-        if ((typeof event.endTime != "undefined") && (event.endTime.getTime() > eventStartTimeMillis)) {
+        if ((typeof event.endTime != "undefined") && (proposedStartTimeMillis > event.endTime )) {
           //already over
           pusher.trigger("presence-event-" + eventId, 'completed')
         } else {
