@@ -4,9 +4,7 @@
   var intervalMillis = 15 * 1000 //15 seconds
   var timerToken
   var sessionStartTime
-  var sessionStartTimeMoment
-  var sessionEndTimeMillis
-  var sessionEndTimeMoment
+  var sessionEndTime
   var pusher = new Pusher('45387f244d056952dda4', {
     encrypted: true
   });
@@ -57,11 +55,9 @@
     console.log('SESSION START')
     sessionStartTimeMillis = Date.now()
     sessionStartTime = new Date(sessionStartTimeMillis)
-
-    sessionEndTimeMillis = sessionStartTimeMillis + sessionDurationMillis
-    sessionEndTimeMoment = moment(sessionEndTimeMillis)
-    sessionStartTimeMoment = moment(sessionStartTime)
+    sessionEndTime = new Date(sessionStartTimeMillis + sessionDurationMillis)
     timerToken = setInterval(tick, intervalMillis)
+
     tick()
   }
 
@@ -81,7 +77,6 @@
   function tick() {
     //recalc timeRemaining
     var now = new Date()
-    var nowMoment = moment(now)
     timeUsedMillis = now - sessionStartTime//millis
     timeRemainingMillis = sessionDurationMillis - timeUsedMillis
     var timeRemainingPercent = (timeRemainingMillis / sessionDurationMillis) * 100
@@ -109,7 +104,7 @@
 
     }
 
-    var timeRemainingHuman = sessionEndTimeMoment.from(nowMoment, true)
+    var timeRemainingHuman = moment(sessionEndTime).from(moment(now), true)
     $('#countdownClock').text(timeRemainingHuman)
   }
 </script>
