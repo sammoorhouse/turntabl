@@ -4,7 +4,7 @@
   var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
   var isLeader = <%= isLeader %>
   var intervalMillis = 15 * 1000 //15 seconds
-  var timerToken
+  var timerToken = 0
   var sessionEndTimeMillis
   var pusher = new Pusher('45387f244d056952dda4', {
     encrypted: true
@@ -82,8 +82,13 @@
 
   function stop() {
     console.log('SESSION STOP')
+    if (typeof timerToken != "undefined") {
       console.log("stopping timer: " + timerToken)
       clearInterval(timerToken)
+    } else {
+
+      console.log("other weirdness");
+    }
   }
 
   function pause() {
@@ -125,16 +130,17 @@
   }
 </script>
 <style>
-.nanobar.warn > .bar {
-  width: 0;
-  height: 100%;
-  transition: height .3s;
-  background:#9F6000;
-}
-.nanobar.alarm > .bar {
-  width: 0;
-  height: 100%;
-  transition: height .3s;
-  background:#D8000C;
-}
+  .nanobar.warn > .bar {
+    width: 0;
+    height: 100%;
+    transition: height .3s;
+    background: #9F6000;
+  }
+
+  .nanobar.alarm > .bar {
+    width: 0;
+    height: 100%;
+    transition: height .3s;
+    background: #D8000C;
+  }
 </style>
