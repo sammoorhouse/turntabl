@@ -170,7 +170,7 @@ console.log('form submission complete')
     var eventId = req.body.eventId
     pusher.trigger("presence-event-" + eventId, 'begin',
     {
-      startTime: new Date();
+      startTime: new Date()
     });
     res.end()
   })
