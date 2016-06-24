@@ -156,7 +156,7 @@ module.exports = function(app) {
   app.post('/pusher/auth', function(req, res) {
     var socketId = req.body.socket_id;
     var channel = req.body.channel_name;
-    console.log("req: " + JSON.stringify(req, null, 2))
+    console.log("req: " + JSON.stringify(req, censor(req), 2))
     var presenceData = {
       user_id: socketId
     };
