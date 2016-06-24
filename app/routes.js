@@ -118,7 +118,7 @@ module.exports = function(app) {
               if (err) {
                 throw err;
                 console.error('triggering failure message to client')
-                pusher.trigger(eventId, 'failure', {
+                pusher.trigger("event-creation-" + eventId, 'failure', {
                   "reason": "err"
                 });
                 formSubmissionResponse.writeHead(400, {
@@ -128,7 +128,7 @@ module.exports = function(app) {
               } else {
                 console.log("sending success message to client")
                 console.log("pusher eventid: " + eventId)
-                pusher.trigger(eventId, 'success', {});
+                pusher.trigger("event-creation-" + eventId, 'success', {});
 
                 formSubmissionResponse.writeHead(200, {
                   'Content-Type': 'application/json'
@@ -169,7 +169,7 @@ module.exports = function(app) {
         var sessionId = event.openTokSessionId
         var token = opentok.generateToken(sessionId)
         console.log("USEREMAIL: " + user.email)
-        if ((event.leader === userEmail) && (!fakeclient)) { // it's the leader
+        /*if ((event.leader === userEmail) && (!fakeclient)) { // it's the leader
           return res.render('event.ejs', {
             user: user,
             event: event,
@@ -177,9 +177,9 @@ module.exports = function(app) {
             sessionId: sessionId,
             token: token
           });
-        } else {
+        } else {*/
           var eventValue = event.eventValue
-          return res.render('event-client.ejs', {
+          return res.render('client.ejs', {
             user: req.user,
             event: event,
             apiKey: process.env.tokboxAuth_apiKey,
@@ -187,7 +187,7 @@ module.exports = function(app) {
             token: token,
             eventValue: eventValue
           });
-        }
+        //}
       }
     });
   })

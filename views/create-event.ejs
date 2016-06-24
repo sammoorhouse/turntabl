@@ -21,7 +21,7 @@
       }
     </style>
 
-    <script src="https://js.pusher.com/3.1/pusher.min.js"></script>
+      <% include partials/rt.ejs %>
 </head>
 
 <body id="page-top">
@@ -58,13 +58,15 @@
           encrypted: true
         });
 
-        var channel = pusher.subscribe('<%= eventId %>');
+        var channel = pusher.subscribe('event-creation-<%= eventId %>');
         channel.bind('failure', function(data) {
           console.error('event creation failed')
+          pusher.disconnect();
           window.location = '/eventcreationfailed/<%= eventId %>'
         });
         channel.bind('success', function() {
           console.log('event creation succeeded')
+          pusher.disconnect();
           window.location = '/event/<%= eventId %>'
         })
       </script>

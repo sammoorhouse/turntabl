@@ -1,11 +1,31 @@
 <script src="/js/nanobar.min.js"></script>
 <script>
+  var sessionDurationMinutes = <%= event.durationMins %>
+  var intervalMillis = 15 * 1000 //15 seconds
+
+  // Enable pusher logging - don't include this in production
+  Pusher.logToConsole = true;
+
+  var pusher = new Pusher('45387f244d056952dda4', {
+    encrypted: true
+  });
+
+  var channel = pusher.subscribe('event-creation-<%= eventId %>');
+  channel.bind('failure', function(data) {
+    console.error('event creation failed')
+    pusher.disconnect();
+    window.location = '/eventcreationfailed/<%= eventId %>'
+  });
+  channel.bind('success', function() {
+    console.log('event creation succeeded')
+    pusher.disconnect();
+    window.location = '/event/<%= eventId %>'
+  })
+
   $(function() {
     var nanobar = new Nanobar({
       id: "event-progress",
       className: "nanobar"
     });
-
-    nanobar.go(20)
   })
 </script>
