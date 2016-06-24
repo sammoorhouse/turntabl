@@ -49,7 +49,7 @@
       //everyone
       presenceChannel.bind('begin', function(data) {
         console.log('begin message received')
-        var sessionStartTimeMillis = data.startTime
+        var sessionStartTimeMillis = data.startTimeMillis
         sessionEndTimeMillis = sessionStartTimeMillis + sessionDurationMillis
         start()
       })
