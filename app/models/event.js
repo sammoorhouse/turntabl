@@ -9,6 +9,7 @@ var eventSchema = mongoose.Schema({
   name: String,
   creationDate: Date,
   durationMins: Number,
+  endTime: Date,
   leader: String,
   clientPaid: Boolean,
   leaderPaid: Boolean,
