@@ -156,7 +156,6 @@ module.exports = function(app) {
     app.post('/pusher/auth', function(req, res) {
       var socketId = req.body.socket_id;
       var channel = req.body.channel_name;
-      console.log("req: " + JSON.stringify(req, censor(req), 2))
       var presenceData = {
         user_id: socketId
       };
@@ -186,12 +185,12 @@ module.exports = function(app) {
                 })
 
                 //writeBack
-                event.save(function(err){
-                  console.log("error updating event " + eventId)
+                event.save(function(error){
+                  console.log("error updating event " + eventId + ": " + error)
                 })
               }
             } else {
-              console.log("error retrieving event " + eventId)
+              console.log("error retrieving event " + eventId + ": " + err)
             }
           })
           res.end()
