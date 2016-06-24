@@ -74,7 +74,8 @@
   function tick() {
     //recalc timeRemaining
     var now = new Date()
-    timeRemainingMillis = now - sessionStartTime//millis
+    timeUsedMillis = now - sessionStartTime//millis
+    timeRemainingMillis = sessionDurationMillis - timeUsedMillis
     var timeRemainingPercent = (timeRemainingMillis / sessionDurationMillis) * 100
     console.log("timeRemainingPercent: " + timeRemainingPercent)
       //is the session over?
