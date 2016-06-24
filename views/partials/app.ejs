@@ -1,6 +1,6 @@
 <script src="/js/nanobar.min.js"></script>
 <script>
-  var eventId = <%= event.id %>
+  var eventId = "<%= event.id %>"
   var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
   var isLeader = <%= isLeader %>
   var intervalMillis = 15 * 1000 //15 seconds
