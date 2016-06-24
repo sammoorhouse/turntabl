@@ -13,7 +13,6 @@ var eventSchema = mongoose.Schema({
   leader: String,
   clientPaid: Boolean,
   leaderPaid: Boolean,
-  attended: Boolean,
   openTokSessionId: String,
   eventPrice: Number
 });
