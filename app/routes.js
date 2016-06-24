@@ -71,13 +71,14 @@ module.exports = function(app) {
 
     console.log("form submission webhook invoked")
 
+    /*================*/
+    formSubmissionResponse.writeHead(200, {
+      'Content-Type': 'application/json'
+    });
+    formSubmissionResponse.end
 
-                    formSubmissionResponse.writeHead(200, {
-                      'Content-Type': 'application/json'
-                    });
-                    formSubmissionResponse.end
-
-                    
+    return;
+    /*================*/
 
     var formId = formSubmissionRequest.body.uid;
     console.log("form id: " + formId)
@@ -156,8 +157,7 @@ module.exports = function(app) {
     var socketId = req.body.socket_id;
     var channel = req.body.channel_name;
     console.log(JSON.stringify(req.body, null, 2))
-    var presenceData = {
-    };
+    var presenceData = {};
 
     var auth = pusher.authenticate(socketId, channel, presenceData);
     res.send(auth);
@@ -188,24 +188,24 @@ module.exports = function(app) {
         var sessionId = event.openTokSessionId
         var token = opentok.generateToken(sessionId)
         console.log("USEREMAIL: " + user.email)
-        /*if ((event.leader === userEmail) && (!fakeclient)) { // it's the leader
-          return res.render('event.ejs', {
-            user: user,
-            event: event,
-            apiKey: process.env.tokboxAuth_apiKey,
-            sessionId: sessionId,
-            token: token
-          });
-        } else {*/
-          var eventValue = event.eventValue
-          return res.render('event.ejs', {
-            user: req.user,
-            event: event,
-            apiKey: process.env.tokboxAuth_apiKey,
-            sessionId: sessionId,
-            token: token,
-            eventValue: eventValue
-          });
+          /*if ((event.leader === userEmail) && (!fakeclient)) { // it's the leader
+            return res.render('event.ejs', {
+              user: user,
+              event: event,
+              apiKey: process.env.tokboxAuth_apiKey,
+              sessionId: sessionId,
+              token: token
+            });
+          } else {*/
+        var eventValue = event.eventValue
+        return res.render('event.ejs', {
+          user: req.user,
+          event: event,
+          apiKey: process.env.tokboxAuth_apiKey,
+          sessionId: sessionId,
+          token: token,
+          eventValue: eventValue
+        });
         //}
       }
     });
