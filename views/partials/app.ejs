@@ -76,7 +76,7 @@
     var sessionStartTimeMillis = Date.now()
     sessionEndTimeMillis = sessionStartTimeMillis + sessionDurationMillis
     timerToken = setInterval(tick, intervalMillis)
-
+clearInterval(timerToken)
     tick()
   }
 
@@ -85,9 +85,6 @@
     if (typeof timerToken != "undefined") {
       console.log("stopping timer: " + timerToken)
       clearInterval(timerToken)
-    } else {
-
-      console.log("other weirdness");
     }
   }
 
