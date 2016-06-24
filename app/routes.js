@@ -168,7 +168,10 @@ console.log('form submission complete')
 
   app.post('/pusher/beginSession', function(req, res) {
     var eventId = req.body.eventId
-    pusher.trigger("presence-event-" + eventId, 'begin', {});
+    pusher.trigger("presence-event-" + eventId, 'begin',
+    {
+      startTime: new Date();
+    });
     res.end()
   })
 
