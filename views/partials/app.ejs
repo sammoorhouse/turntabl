@@ -27,7 +27,6 @@
 
     presenceChannel.bind('pusher:subscription_succeeded', function(members){
       //are we alone?
-      console.log("subscription successful! members: " + members.each(function(mem){console.log(mem.toString())}))
       console.log("members count" + members.count)
       if (members.count <= 1) {
         //just us; subscribe to member_added and wait...
@@ -39,7 +38,7 @@
 
         presenceChannel.bind('pusher:member_removed', function(member){
           console.log('member removed: ' + member.toString())
-          stop()
+          pause()
         })
       } else {
         console.log('everyone in!')
@@ -54,6 +53,7 @@
     console.log('SESSION START')
     sessionStartTime = new Date()
     timerToken = setInterval(tick, intervalMillis)
+    tick()
   }
 
   function stop() {
@@ -64,10 +64,15 @@
     }
   }
 
+  function pause(){
+    console.log("SESSION PAUSED")
+
+  }
+
   function tick() {
     //recalc timeRemaining
     var now = new Date()
-    timeRemainingMillis = sessionStartTime - now //millis
+    timeRemainingMillis = now - sessionStartTime//millis
     var timeRemainingPercent = (timeRemainingMillis / sessionDurationMillis) * 100
     console.log("timeRemainingPercent: " + timeRemainingPercent)
       //is the session over?
