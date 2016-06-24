@@ -3,7 +3,6 @@
   var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
   var intervalMillis = 15 * 1000 //15 seconds
   var timerToken
-  var timeRemaining = <%= event.durationMins %>
   var sessionStartTime
   var pusher = new Pusher('45387f244d056952dda4', {
     encrypted: true
@@ -85,14 +84,14 @@
     } else {
       nanobar.go(100 - timeRemainingPercent)
         //is it nearly over? 5% or 5 minutes
-      if ((timeRemainingPercent < 5) || timeRemaining <= 5 * 60 * 1000) {
+      if ((timeRemainingPercent < 5) || timeRemainingMillis <= 5 * 60 * 1000) {
 
         //set the warn class on the nanobar
         $('#event-progress-nanobar').removeClass('alarm').addClass('warn')
       }
 
       //is it very nearly over? 1% or 1 minute
-      if ((timeRemainingPercent < 1) || timeRemaining <= 1 * 60 * 1000) {
+      if ((timeRemainingPercent < 1) || timeRemainingMillis <= 1 * 60 * 1000) {
         $('#event-progress-nanobar').removeClass('warn').addClass('alarm')
       }
 
@@ -100,6 +99,7 @@
       $('#event-progress-clock').addClass('alarm')
 
     }
-    $('#countdownClock').text(timeRemaining)
+    var timeRemainingHuman = moment.duration(timeRemainingMillis, "minutes").humanize();
+    $('#countdownClock').text(timeRemainingHuman)
   }
 </script>
