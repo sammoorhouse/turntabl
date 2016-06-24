@@ -147,7 +147,12 @@ module.exports = function(app) {
   app.post('/pusher/auth', function(req, res) {
     var socketId = req.body.socket_id;
     var channel = req.body.channel_name;
-    var auth = pusher.authenticate(socketId, channel);
+    var user = req.body.user;
+    var presenceData = {
+      user_givenName: user.givenName
+    };
+
+    var auth = pusher.authenticate(socketId, channel, presenceData);
     res.send(auth);
   });
 
