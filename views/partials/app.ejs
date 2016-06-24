@@ -1,6 +1,6 @@
 <script src="/js/nanobar.min.js"></script>
 <script>
-  var sessionDurationMinutes = <%= event.durationMins %>
+  var sessionDurationMillis = <%= event.durationMins %> * 1000
   var intervalMillis = 15 * 1000 //15 seconds
   var timerToken
   var timeRemaining = <%= event.durationMins %>
@@ -54,25 +54,30 @@
   function tick() {
     //recalc timeRemaining
     var now = new Date()
-    timeRemaining = sessionStartTime - now //millis
+    timeRemainingMillis = sessionStartTime - now //millis
+    var timeRemainingPercent = (timeRemainingMillis / sessionDurationMinutes) * 100
       //is the session over?
-    if (timeRemaining <= 0) {
+    if (timeRemainingPercent <= 0) {
+      nanobar.go(100)
       stop()
-    }
+    } else {
+      nanobar.go(100 - timeRemainingPercent)
+        //is it nearly over? 5% or 5 minutes
+      if ((timeRemainingPercent < 5) || timeRemaining <= 5 * 60 * 1000) {
 
-    //is it nearly over? 5% or 5 minutes
-    if ((timeRemaining <= ((sessionDurationMinutes / 100) * 5)) || timeRemaining <= 5 * 60 * 1000) {
-      $('event-progress-nanobar').removeClass('alarm').addClass('warn')
         //set the warn class on the nanobar
-    }
+        $('#event-progress-nanobar').removeClass('alarm').addClass('warn')
+      }
 
-    //is it very nearly over? 1% or 1 minute
-    if ((timeRemaining <= ((sessionDurationMinutes / 100) * 1)) || timeRemaining <= 1 * 60 * 1000)
-    //
-      $('event-progress-nanobar').removeClass('warn').addClass('alarm')
+      //is it very nearly over? 1% or 1 minute
+      if ((timeRemainingPercent < 1) || timeRemaining <= 1 * 60 * 1000) {
+        $('#event-progress-nanobar').removeClass('warn').addClass('alarm')
+      }
+      
       //update the clock
-    $('event-progress-clock').addClass('alarm')
+      $('#event-progress-clock').addClass('alarm')
 
+    }
     $('#countdownClock').text(timeRemaining)
   }
 </script>
