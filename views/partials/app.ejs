@@ -53,7 +53,10 @@
 
   function stop() {
     console.log('SESSION STOP')
-    timerToken.clearInterval()
+    if(typeof timerToken != "undefined")
+    {
+      clearInterval(timerToken)
+    }
   }
 
   function tick() {
