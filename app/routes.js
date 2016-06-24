@@ -71,6 +71,14 @@ module.exports = function(app) {
 
     console.log("form submission webhook invoked")
 
+
+                    formSubmissionResponse.writeHead(200, {
+                      'Content-Type': 'application/json'
+                    });
+                    formSubmissionResponse.end
+
+                    
+
     var formId = formSubmissionRequest.body.uid;
     console.log("form id: " + formId)
     var newEvent = new Event();
