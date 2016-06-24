@@ -30,7 +30,7 @@
       //just us; subscribe to member_added and wait...
       presenceChannel.bind('pusher:member_added', function(member) {
         console.log('member added: ' + member.toString())
-        presenceChannel.unbind('pusher:member_added')
+        //presenceChannel.unbind('pusher:member_added')
         start()
       })
 
@@ -63,7 +63,8 @@
     //recalc timeRemaining
     var now = new Date()
     timeRemainingMillis = sessionStartTime - now //millis
-    var timeRemainingPercent = (timeRemainingMillis / sessionDurationMinutes) * 100
+    var timeRemainingPercent = (timeRemainingMillis / sessionDurationMillis) * 100
+    console.log("timeRemainingPercent: " + timeRemainingPercent)
       //is the session over?
     if (timeRemainingPercent <= 0) {
       nanobar.go(100)
