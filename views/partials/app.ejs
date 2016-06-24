@@ -1,5 +1,6 @@
 <script src="/js/nanobar.min.js"></script>
 <script>
+  var eventId = <%= event.id %>
   var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
   var isLeader = <%= isLeader %>
   var intervalMillis = 15 * 1000 //15 seconds
@@ -25,7 +26,7 @@
 
     nanobar.go(0)
 
-    presenceChannel = pusher.subscribe('presence-event-<%= event.id %>');
+    presenceChannel = pusher.subscribe('presence-event-' + eventId);
 
     presenceChannel.bind('pusher:subscription_succeeded', function(members) {
       if (isLeader) {
@@ -58,6 +59,17 @@
     })
 
   })
+
+  function triggerStart() {
+    $.ajax({
+      url: "/pusher/beginSession",
+      type: "post",
+      dataType: "json",
+      data: {
+        eventId: eventId
+      }
+    })
+  }
 
   function start() {
     console.log('SESSION START')
