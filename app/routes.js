@@ -171,7 +171,7 @@ console.log('form submission complete')
     pusher.trigger("presence-event-" + eventId, 'begin',
     {
       startTime: new Date()
-    });
+    })
     res.end()
   })
 
