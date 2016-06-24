@@ -1,6 +1,7 @@
 <script src="/js/nanobar.min.js"></script>
 <script>
   var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
+  var isLeader = <%= isLeader %>
   var intervalMillis = 15 * 1000 //15 seconds
   var timerToken
   var sessionEndTimeMillis
@@ -26,26 +27,34 @@
 
     presenceChannel = pusher.subscribe('presence-event-<%= event.id %>');
 
-    presenceChannel.bind('pusher:subscription_succeeded', function(members){
-      //are we alone?
-      console.log("members count" + members.count)
-      if (members.count <= 1) {
-        //just us; subscribe to member_added and wait...
-        presenceChannel.bind('pusher:member_added', function(member) {
-          console.log('member added: ' + member.toString())
-          //presenceChannel.unbind('pusher:member_added')
-          start()
-        })
-
-        presenceChannel.bind('pusher:member_removed', function(member){
-          console.log('member removed: ' + member.toString())
-          pause()
-        })
-      } else {
-        console.log('everyone in!')
-          //great! start the clock
-        start()
+    presenceChannel.bind('pusher:subscription_succeeded', function(members) {
+      if (isLeader) {
+        //monitor the situation
+        console.log("members count" + members.count)
+        if (members.count <= 1) {
+          //just us; subscribe to member_added and wait...
+          presenceChannel.bind('pusher:member_added', function(member) {
+            console.log('member added: ' + member.toString())
+              //presenceChannel.unbind('pusher:member_added')
+            triggerStart()
+          })
+        } else {
+          console.log('everyone in!')
+            //great! start the clock
+          triggerStart()
+        }
       }
+
+      //everyone
+      presenceChannel.bind('begin', function() {
+        console.log('begin message received')
+        start()
+      })
+
+      presenceChannel.bind('pusher:member_removed', function(member) {
+        console.log('member removed: ' + member.toString())
+        pause()
+      })
     })
 
   })
@@ -61,13 +70,12 @@
 
   function stop() {
     console.log('SESSION STOP')
-    if(typeof timerToken != "undefined")
-    {
+    if (typeof timerToken != "undefined") {
       clearInterval(timerToken)
     }
   }
 
-  function pause(){
+  function pause() {
     console.log("SESSION PAUSED")
 
   }

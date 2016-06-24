@@ -153,15 +153,22 @@ module.exports = function(app) {
     })
   })
 
-  app.post('/pusher/auth', function(req, res) {
+  app.post('/pusher/auth', stormpath.loginRequired, function(req, res) {
     var socketId = req.body.socket_id;
     var channel = req.body.channel_name;
-    console.log(JSON.stringify(req.body, null, 2))
-    var presenceData = {user_id: socketId};
+    console.log(JSON.stringify(req, null, 2))
+    var presenceData = {
+      user_id: socketId
+    };
 
     var auth = pusher.authenticate(socketId, channel, presenceData);
     res.send(auth);
   });
+
+  app.post('/pusher/beginSession', stormpath.loginRequired, function(req, res) {
+    var eventId = req.body.eventId
+    pusher.trigger("presence-event-" + eventId, 'begin', {});
+  })
 
   app.get('/event/:id', stormpath.loginRequired, function(req, res) {
     var evtId = req.param('id')
@@ -199,6 +206,7 @@ module.exports = function(app) {
           } else {*/
         var eventValue = event.eventValue
         return res.render('event.ejs', {
+          isLeader: event.leader === userEmail,
           user: req.user,
           event: event,
           apiKey: process.env.tokboxAuth_apiKey,
