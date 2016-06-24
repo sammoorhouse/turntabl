@@ -8,6 +8,7 @@
   var pusher = new Pusher('45387f244d056952dda4', {
     encrypted: true
   });
+  var nanobar
 
   var presenceChannel
 
@@ -17,7 +18,7 @@
 
   $(function() { //on load
 
-    var nanobar = new Nanobar({
+    nanobar = new Nanobar({
       id: "event-progress-nanobar",
       className: "nanobar"
     });
@@ -26,6 +27,7 @@
     //are we alone?
     var members = presenceChannel.members
     console.log("members: " + members.toString())
+    console.log("members count" + members.count)
     if (members.count <= 1) {
       //just us; subscribe to member_added and wait...
       presenceChannel.bind('pusher:member_added', function(member) {
