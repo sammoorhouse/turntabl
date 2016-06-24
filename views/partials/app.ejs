@@ -2,30 +2,73 @@
 <script>
   var sessionDurationMinutes = <%= event.durationMins %>
   var intervalMillis = 15 * 1000 //15 seconds
+  var timerToken
+  var timeRemaining = <%= event.durationMins %>
+  var sessionStartTime
 
   // Enable pusher logging - don't include this in production
   Pusher.logToConsole = true;
 
-  var pusher = new Pusher('45387f244d056952dda4', {
-    encrypted: true
-  });
 
-  var channel = pusher.subscribe('event-creation-<%= eventId %>');
-  channel.bind('failure', function(data) {
-    console.error('event creation failed')
-    pusher.disconnect();
-    window.location = '/eventcreationfailed/<%= eventId %>'
-  });
-  channel.bind('success', function() {
-    console.log('event creation succeeded')
-    pusher.disconnect();
-    window.location = '/event/<%= eventId %>'
-  })
+  $(function() { //on load
 
-  $(function() {
     var nanobar = new Nanobar({
-      id: "event-progress",
+      id: "event-progress-nanobar",
       className: "nanobar"
     });
+
+    var pusher = new Pusher('45387f244d056952dda4', {
+      encrypted: true
+    });
+
+    var presenceChannel = pusher.subscribe('presence-event-<%= eventId %>');
+    //are we alone?
+    var members = presenceChannel.members
+    if (members.count === 1) {
+      //just us; subscribe to member_added and wait...
+      presenceChannel.bind('pusher:member_added', function(member) {
+        channel.unBind('pusher:member_added')
+        start()
+      })
+    } else {
+      //great! start the clock
+      start()
+    }
+
   })
+
+  function start() {
+    console.log('SESSION START')
+    sessionStartTime = new Date()
+    timerToken = setInterval(tick, intervalMillis)
+  }
+
+  function stop() {
+    console.log('SESSION STOP')
+  }
+
+  function tick() {
+    //recalc timeRemaining
+    var now = new Date()
+    timeRemaining = sessionStartTime - now //millis
+      //is the session over?
+    if (timeRemaining <= 0) {
+      stop()
+    }
+
+    //is it nearly over? 5% or 5 minutes
+    if ((timeRemaining <= ((sessionDurationMinutes / 100) * 5)) || timeRemaining <= 5 * 60 * 1000) {
+      $('event-progress-nanobar').removeClass('alarm').addClass('warn')
+        //set the warn class on the nanobar
+    }
+
+    //is it very nearly over? 1% or 1 minute
+    if ((timeRemaining <= ((sessionDurationMinutes / 100) * 1)) || timeRemaining <= 1 * 60 * 1000)
+    //
+      $('event-progress-nanobar').removeClass('warn').addClass('alarm')
+      //update the clock
+    $('event-progress-clock').addClass('alarm')
+
+    $('#countdownClock').text(timeRemaining)
+  }
 </script>
