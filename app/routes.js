@@ -144,6 +144,13 @@ module.exports = function(app) {
     })
   })
 
+  app.post('/pusher/auth', function(req, res) {
+    var socketId = req.body.socket_id;
+    var channel = req.body.channel_name;
+    var auth = pusher.authenticate(socketId, channel);
+    res.send(auth);
+  });
+
   app.get('/event/:id', stormpath.loginRequired, function(req, res) {
     var evtId = req.param('id')
     var fakeclient = req.param('fakeclient')
