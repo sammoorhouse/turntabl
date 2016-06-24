@@ -76,7 +76,7 @@
     var sessionStartTimeMillis = Date.now()
     sessionEndTimeMillis = sessionStartTimeMillis + sessionDurationMillis
     timerToken = setInterval(tick, intervalMillis)
-clearInterval(timerToken)
+    console.log("timer: " + timerToken)
     tick()
   }
 
