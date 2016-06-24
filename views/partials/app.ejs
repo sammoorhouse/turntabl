@@ -5,6 +5,8 @@
   var timerToken
   var sessionStartTime
   var sessionStartTimeMoment
+  var sessionEndTimeMillis
+  var sessionEndTimeMoment
   var pusher = new Pusher('45387f244d056952dda4', {
     encrypted: true
   });
@@ -53,7 +55,11 @@
 
   function start() {
     console.log('SESSION START')
-    sessionStartTime = new Date()
+    sessionStartTimeMillis = Date.now()
+    sessionStartTime = new Date(sessionStartTimeMillis)
+
+    sessionEndTimeMillis = sessionStartTimeMillis + sessionDurationMillis
+    sessionEndTimeMoment = moment(sessionEndTimeMillis)
     sessionStartTimeMoment = moment(sessionStartTime)
     timerToken = setInterval(tick, intervalMillis)
     tick()
@@ -103,7 +109,7 @@
 
     }
 
-    var timeRemainingHuman = nowMoment.from(sessionStartTimeMoment, true)
+    var timeRemainingHuman = sessionEndTimeMoment.from(nowMoment, true)
     $('#countdownClock').text(timeRemainingHuman)
   }
 </script>
