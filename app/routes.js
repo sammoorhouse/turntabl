@@ -153,10 +153,10 @@ module.exports = function(app) {
     })
   })
 
-  app.post('/pusher/auth', stormpath.loginRequired, function(req, res) {
+  app.post('/pusher/auth', function(req, res) {
     var socketId = req.body.socket_id;
     var channel = req.body.channel_name;
-    console.log(JSON.stringify(req, null, 2))
+    console.log("req: " + JSON.stringify(req, null, 2))
     var presenceData = {
       user_id: socketId
     };
@@ -165,7 +165,7 @@ module.exports = function(app) {
     res.send(auth);
   });
 
-  app.post('/pusher/beginSession', stormpath.loginRequired, function(req, res) {
+  app.post('/pusher/beginSession', function(req, res) {
     var eventId = req.body.eventId
     pusher.trigger("presence-event-" + eventId, 'begin', {});
   })
