@@ -2,26 +2,25 @@
 <html lang="en">
 
 <head>
-<% include partials/head.ejs %>
+  <% include partials/head.ejs %>
 </head>
 
 <body id="page-top">
-<% include partials/header.ejs %>
+  <% include partials/header.ejs %>
 
-  <header>
-    <div class="header-content">
-      <div class="header-content-inner">
-        <h1>turntable</h1>
-        <hr>
-        <p>Teach one-to-one video classes online using Turntable:</p>
-        <p> You do the talking.</p>
-        <!--<a data-toggle="modal" class="btn btn-primary btn-xl" href="javascript:void(0)" onclick="openLoginModal();">Get Started</a>-->
-        <a class="btn btn-primary btn-xl" href="/login">Get Started</a>
+    <header>
+      <div class="header-content">
+        <div class="header-content-inner">
+          <h1>turntable</h1>
+          <hr>
+          <h2>teach &middot; mentor &middot; advise</h2>
+          <!--<a data-toggle="modal" class="btn btn-primary btn-xl" href="javascript:void(0)" onclick="openLoginModal();">Get Started</a>-->
+          <a class="btn btn-primary btn-xl" href="/login">Get Started</a>
+        </div>
+
       </div>
 
-    </div>
-
-    <!-- Modal
+      <!-- Modal
     <div class="modal fade login" id="loginModal">
       <div class="modal-dialog login animated">
         <div class="modal-content">
@@ -35,24 +34,71 @@
         </div>
       </div>
     </div>-->
-  </header>
-  <section id="contact">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 text-center">
-          <h2 class="section-heading">We're hiring!</h2>
-          <hr class="primary">
-          <p>Ready to start your next project with us? That's great! Send us an email and we will get back to you as soon as possible!</p>
-        </div>
-        <div class="col-lg-4 text-center">
-          <i class="fa fa-envelope-o fa-3x wow bounceIn" data-wow-delay=".1s"></i>
-          <p><a href="mailto:feedback@turntabl.io">feedback@turntabl.io</a></p>
+    </header>
+    <section class="bg-primary" id="about">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 text-center">
+            <h2 class="section-heading">mentoring made simple.</h2>
+            <hr class="light">
+            <p class="text-faded">turntable is a online mentoring platform for tutors, teachers, and coaches. We make it easy to create and host mentoring sessions, share documents and notes, and get paid!</p>
+            <a href="/login" class="page-scroll btn btn-default btn-xl sr-button">Get Started!</a>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+    <section id="services">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="section-heading">How does it work!</h2>
+            <hr class="primary">
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-4 text-center">
+            <div class="service-box">
+              <i class="fa fa-4x fa-calendar text-primary sr-icons" data-sr-id="3" style="; visibility: visible;  -webkit-transform: scale(1); opacity: 1;transform: scale(1); opacity: 1;-webkit-transition: -webkit-transform 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s; transition: transform 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s; "></i>
+              <h3>You create the event</h3>
+              <p class="text-muted">Set the price, upload materials</p>
+            </div>
+          </div>
+          <div class="col-xs-4 text-center">
+            <div class="service-box">
+              <i class="fa fa-4x fa-money text-primary sr-icons" data-sr-id="4" style="; visibility: visible;  -webkit-transform: scale(1); opacity: 1;transform: scale(1); opacity: 1;-webkit-transition: -webkit-transform 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s; transition: transform 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s; "></i>
+              <h3>Your client picks up the tab</h3>
+              <p class="text-muted">We make getting paid easy</p>
+            </div>
+          </div>
+          <div class="col-xs-4 text-center">
+            <div class="service-box">
+              <i class="fa fa-4x fa-commenting-o text-primary sr-icons" data-sr-id="5" style="; visibility: visible;  -webkit-transform: scale(1); opacity: 1;transform: scale(1); opacity: 1;-webkit-transition: -webkit-transform 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s; transition: transform 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s, opacity 0.6s cubic-bezier(0.6, 0.2, 0.1, 1) 0s; "></i>
+              <h3>We provide the glue</h3>
+              <p class="text-muted">teach </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="contact">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 text-center">
+            <h2 class="section-heading">We're hiring!</h2>
+            <hr class="primary">
+            <p>Ready to start your next project with us? That's great! Send us an email and we will get back to you as soon as possible!</p>
+          </div>
+          <div class="col-lg-4 text-center">
+            <i class="fa fa-envelope-o fa-3x wow bounceIn" data-wow-delay=".1s"></i>
+            <p><a href="mailto:feedback@turntabl.io">feedback@turntabl.io</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<% include partials/footer.ejs %>
+    <% include partials/footer.ejs %>
 
 </body>
 
