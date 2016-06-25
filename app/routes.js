@@ -18,14 +18,10 @@ var eventDurationRef = "eventDuration"
 var eventPriceRef = "eventPrice"
 var emailLogicJumpRef = "emailLogicJump"
 var emailOverrideRef = "emailOverride"
-  //var typeformVersionString = 'latest'
 
 module.exports = function(app) {
   app.get('/', function(req, res) {
     var user = req.user
-    if (typeof user != "undefined") {
-      console.log("USEREMAIL: " + user.email)
-    }
     res.render('index.ejs', {
       user: user
     });
@@ -70,15 +66,6 @@ module.exports = function(app) {
   app.post('/form/create-event', function(formSubmissionRequest, formSubmissionResponse) {
 
     console.log("form submission webhook invoked")
-
-    /*================*/
-    formSubmissionResponse.writeHead(200, {
-      'Content-Type': 'application/json'
-    });
-    formSubmissionResponse.end()
-    console.log('form submission complete')
-    return;
-    /*================*/
 
     var formId = formSubmissionRequest.body.uid;
     console.log("form id: " + formId)
