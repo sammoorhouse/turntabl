@@ -4,12 +4,25 @@ var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_
 var stormpath = require('express-stormpath');
 var request = require('request');
 var Pusher = require('pusher');
-
 var pusher = new Pusher({
   appId: process.env.pusher_AppId,
   key: process.env.pusher_Key,
   secret: process.env.pusher_Secret,
   encrypted: true
+});
+var Graphite = require('graphite-client');
+var graphite = new Graphite(process.env.HOSTEDGRAPHITE_ENDPOINT_TCP_HOST, process.env.HOSTEDGRAPHITE_ENDPOINT_TCP_PORT, 'UTF-8', 3000, function() {
+  log.info("Graphite server connection timeout");
+});
+
+graphite.on('end', function() {
+  log.info('Graphite client disconnected');
+});
+graphite.on('error', function(error) {
+  log.info('Graphite connection failure. ' + error);
+});
+graphite.connect(function() { //'connect' listener
+  log.info('Connected to Graphite server');
 });
 
 var typeformVersionString = 'v0.4'
@@ -35,6 +48,17 @@ module.exports = function(app) {
     var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
     var eventId = generateID()
     var formData = generateForm(user, eventId)
+
+    var metrics = {
+      'eventCreation' : {
+        'eventId' : eventId
+      },
+    };
+        
+    graphite.write(metrics, Date.now(), function(err) {
+      log.warn("Failed to write metrics to metrics server. err: " + err)
+    });
+
     request.post({
         url: typeformUrl,
         json: formData,
