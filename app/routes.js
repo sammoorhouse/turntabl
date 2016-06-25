@@ -137,7 +137,6 @@ module.exports = function(app) {
         console.log("fail: " + err)
       }
     })
-    formSubmissionResponse.end()
   })
 
   app.post('/pusher/auth', function(req, res) {
