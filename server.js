@@ -35,7 +35,7 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-mongoose.connect(process.env.mongodb_connectionURL);
+mongoose.connect(process.env.MONGODB_URI);
 
 //js,css
 app.use('/js', express.static('js'));
