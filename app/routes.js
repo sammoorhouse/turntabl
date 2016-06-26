@@ -10,20 +10,6 @@ var pusher = new Pusher({
   secret: process.env.pusher_Secret,
   encrypted: true
 });
-var Graphite = require('graphite-client');
-var graphite = new Graphite(process.env.HOSTEDGRAPHITE_ENDPOINT_TCP_HOST, process.env.HOSTEDGRAPHITE_ENDPOINT_TCP_PORT, 'UTF-8', 3000, function() {
-  console.log("Graphite server connection timeout");
-});
-
-graphite.on('end', function() {
-  console.log('Graphite client disconnected');
-});
-graphite.on('error', function(error) {
-  console.log('Graphite connection failure. ' + error);
-});
-graphite.connect(function() { //'connect' listener
-  console.log('Connected to Graphite server');
-});
 
 var typeformVersionString = 'v0.4'
 var eventTitleRef = "eventTitle"
@@ -48,16 +34,6 @@ module.exports = function(app) {
     var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
     var eventId = generateID()
     var formData = generateForm(user, eventId)
-
-    var metrics = {
-      'eventCreation' : {
-        'eventId' : eventId
-      },
-    };
-
-    graphite.write(metrics, Date.now(), function(err) {
-      console.error("Failed to write metrics to metrics server. err: " + err)
-    });
 
     request.post({
         url: typeformUrl,
@@ -287,7 +263,7 @@ module.exports = function(app) {
         required: true,
         ref: eventPriceRef,
         question: "How much are you charging for the session?",
-        description: "USD. We take 5% and your client pays PayPal fees. You'll get paid once the session is over"
+        description: "USD. We take &dollar;10; you'll get paid once the session is over"
       }, {
         type: "legal",
         required: true,
