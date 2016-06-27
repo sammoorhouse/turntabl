@@ -42,9 +42,10 @@
         });
 
         myDropzone.on("accept", function(file, done) {
+          console.log("dropzone accept")
             file.postData = [];
             $.ajax({
-              url: /sign-s3,
+              url: "/sign-s3",
               data: {
                 name: file.name,
                 type: file.type,
@@ -74,6 +75,7 @@
           )
 
           myDropzone.on("addedfile", function(file) {
+            console.log("dropzone addedfile")
             // Hookup the start button
             file.previewElement.querySelector(".start").onclick = function() {
               myDropzone.enqueueFile(file);
@@ -82,10 +84,12 @@
 
           // Update the total progress bar
           myDropzone.on("totaluploadprogress", function(progress) {
+            console.log("dropzone totaluploadprogress")
             document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
           });
 
           myDropzone.on("sending", function(file) {
+            console.log("dropzone sending")
             // Show the total progress bar when upload starts
             document.querySelector("#total-progress").style.opacity = "1";
             // And disable the start button
@@ -94,6 +98,7 @@
 
           // Hide the total progress bar when nothing's uploading anymore
           myDropzone.on("queuecomplete", function(progress) {
+            console.log("dropzone queuecomplete")
             document.querySelector("#total-progress").style.opacity = "0";
           });
 
