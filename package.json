@@ -2,6 +2,7 @@
   "name": "turntable",
   "version": "0.0.0",
   "dependencies": {
+    "aws-sdk": "^2.4.2",
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.0.0",
     "connect-flash": "~0.1.1",
