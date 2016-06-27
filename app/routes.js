@@ -4,8 +4,8 @@ var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_
 var stormpath = require('express-stormpath');
 var request = require('request');
 var Pusher = require('pusher');
-var policy = require('s3-policy'),
-  var uuid = require('node-uuid');
+var policy = require('s3-policy');
+var uuid = require('node-uuid');
 var pusher = new Pusher({
   appId: process.env.pusher_AppId,
   key: process.env.pusher_Key,
