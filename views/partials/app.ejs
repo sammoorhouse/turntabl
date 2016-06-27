@@ -43,7 +43,7 @@
     });
 
     function dropzoneAccept(file, done) {
-      console.log("dropzone accept")
+      console.log("dropzone accept: " + file)
       file.postData = [];
       $.ajax({
         url: "/sign-s3",
