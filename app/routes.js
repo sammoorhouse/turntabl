@@ -139,6 +139,36 @@ module.exports = function(app) {
     })
   })
 
+  app.get('/sign-s3', (req, res) => {
+    const s3 = new aws.S3();
+    const fileName = req.query['name'];
+    const fileType = req.query['type'];
+    const s3Params = {
+      Bucket: S3_BUCKET,
+      Key: fileName,
+      Expires: 60,
+      ContentType: fileType,
+      ACL: 'public-read'
+    };
+
+    s3.getSignedUrl('putObject', s3Params, (err, data) => {
+      if(err){
+        console.log(err);
+        return res.end();
+      }
+      const returnData = {
+        signedRequest: data,
+        url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+      };
+      res.write(JSON.stringify(returnData));
+      res.end();
+    });
+  });
+
+  app.post('/save-details', (req, res) => {
+  // TODO: Read POSTed form data and do something useful
+});
+
   app.post('/pusher/auth', function(req, res) {
     var socketId = req.body.socket_id;
     var channel = req.body.channel_name;
@@ -173,7 +203,7 @@ module.exports = function(app) {
             }
           })
         }
-        if ((typeof event.endTime != "undefined") && (proposedStartTimeMillis > event.endTime )) {
+        if ((typeof event.endTime != "undefined") && (proposedStartTimeMillis > event.endTime)) {
           //already over
           pusher.trigger("presence-event-" + eventId, 'completed')
         } else {
