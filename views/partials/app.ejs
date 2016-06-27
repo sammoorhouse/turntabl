@@ -37,7 +37,7 @@
       previewTemplate: previewTemplate,
       autoQueue: false, // Make sure the files aren't queued until manually added
       previewsContainer: "#dropzone-previews", // Define the container to display the previews
-      clickable: false // Define the element that should be used as click trigger to select files.
+      clickable: "#dropzone-clickable" // Define the element that should be used as click trigger to select files.
     });
 
     myDropzone.on("addedfile", function(file) {
@@ -199,8 +199,8 @@
   }
 </style>
 
+<div id="dropzone-clickable"></div>
 <div class="table table-striped" class="files" id="dropzone-previews">
-
   <div id="dropzone-template" class="file-row">
     <!-- This is used as the file preview template -->
     <div>
