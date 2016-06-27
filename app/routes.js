@@ -144,6 +144,7 @@ module.exports = function(app) {
 
   app.get('/sign-s3', (req, res) => {
     const s3 = new aws.S3();
+    aws.config.logger = process.stdout
     const filename = req.query['name'];
     const fileType = req.query['type'];
     var generatedFilename = generateID()
