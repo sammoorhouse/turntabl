@@ -52,7 +52,6 @@
           type: file.type,
           size: file.size
         },
-        type: 'POST',
         success: function jQAjaxSuccess(response) {
           response = JSON.parse(response);
           file.custom_status = 'ready';
