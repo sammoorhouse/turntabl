@@ -146,7 +146,7 @@ module.exports = function(app) {
     const s3 = new aws.S3();
     const filename = req.query['name'];
     const fileType = req.query['type'];
-    var generatedFileName = generateID()
+    var generatedFilename = generateID()
     const s3Params = {
       Bucket: s3BucketName,
       Key: generatedFilename,
