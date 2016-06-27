@@ -144,11 +144,12 @@ module.exports = function(app) {
 
   app.get('/sign-s3', (req, res) => {
     const s3 = new aws.S3();
-    const fileName = req.query['name'];
+    const filename = req.query['name'];
     const fileType = req.query['type'];
+    var generatedFileName = generateID()
     const s3Params = {
       Bucket: s3BucketName,
-      Key: fileName,
+      Key: generatedFilename,
       Expires: 60,
       ContentType: fileType,
       ACL: 'public-read'
@@ -161,7 +162,8 @@ module.exports = function(app) {
       }
       console.log("return data: " + data)
       const returnData = {
-        key: generateID(),
+        key: generatedFilename,
+        originalFilename: filename,
         signedRequest: data,
         url: "https://" + s3BucketName + ".s3.amazonaws.com/" + fileName
       };
