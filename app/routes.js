@@ -147,10 +147,10 @@ module.exports = function(app) {
     aws.config.logger = process.stdout
     const filename = req.query['name'];
     const fileType = req.query['type'];
-    var generatedFilename = generateID()
+    //var generatedFilename = generateID()
     const s3Params = {
       Bucket: s3BucketName,
-      Key: generatedFilename,
+      Key: filename,
       Expires: 60,
       ContentType: fileType,
       ACL: 'public-read'
@@ -163,10 +163,10 @@ module.exports = function(app) {
       }
       console.log("return data: " + data)
       const returnData = {
-        key: generatedFilename,
+        key: filename,
         originalFilename: filename,
         signedRequest: data,
-        url: "https://" + s3BucketName + ".s3.amazonaws.com/" + generatedFilename
+        url: s3BucketUrl + "/" + filename
       };
       res.write(JSON.stringify(returnData));
       res.end();

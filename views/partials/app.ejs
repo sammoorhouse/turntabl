@@ -93,6 +93,11 @@
       $.each(file.postData, function(k, v) {
         formData.append(k, v);
       });
+
+      formData.append('Content-type', '');
+      formData.append('Content-length', '');
+      formData.append('acl', 'public-read');
+      
       // Show the total progress bar when upload starts
       document.querySelector("#total-progress").style.opacity = "1";
       // And disable the start button
