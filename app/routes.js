@@ -13,6 +13,7 @@ var pusher = new Pusher({
 });
 
 var s3BucketName = process.env.S3_BUCKET
+var s3BucketUrl = "//" + s3BucketName + ".s3.amazonaws.com/"
 var typeformVersionString = 'v0.4'
 var eventTitleRef = "eventTitle"
 var eventDurationRef = "eventDuration"
@@ -248,7 +249,7 @@ module.exports = function(app) {
         var token = opentok.generateToken(sessionId)
         var eventValue = event.eventValue
         return res.render('event.ejs', {
-          s3Bucket: s3BucketName,
+          s3Bucket: s3BucketUrl,
           isLeader: event.leader === userEmail,
           user: req.user,
           event: event,
