@@ -147,7 +147,7 @@ module.exports = function(app) {
     const fileName = req.query['name'];
     const fileType = req.query['type'];
     const s3Params = {
-      Bucket: S3_BUCKET,
+      Bucket: s3Bucket,
       Key: fileName,
       Expires: 60,
       ContentType: fileType,
