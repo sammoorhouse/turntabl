@@ -148,6 +148,7 @@ module.exports = function(app) {
     const fileName = req.params['name'];
     const fileType = req.params['type'];
     console.log("params: " + req.params.toString())
+    console.log("params: " + JSON.stringify(req.params))
     const s3Params = {
       Bucket: s3Bucket,
       Key: fileName,
