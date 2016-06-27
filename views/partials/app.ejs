@@ -57,6 +57,7 @@
           file.custom_status = 'ready';
           file.postData = response;
           file.s3 = response.key;
+          file.key = response.key;
           $(file.previewTemplate).addClass('uploading');
           done();
         },
