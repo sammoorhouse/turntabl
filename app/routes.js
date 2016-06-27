@@ -160,6 +160,7 @@ module.exports = function(app) {
       }
       console.log("return data: " + data)
       const returnData = {
+        key: generateID(),
         signedRequest: data,
         url: "https://" + s3BucketName + ".s3.amazonaws.com/" + fileName
       };
