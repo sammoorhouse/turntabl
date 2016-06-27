@@ -40,11 +40,8 @@ mongoose.connect(process.env.MONGODB_URI);
 //js,css
 app.use('/js', express.static('js'));
 app.use('/css', express.static('css'));
-app.use('/bootstrap3', express.static('bootstrap3'));
-app.use('/bootstrap', express.static('bootstrap'));
 app.use('/fontawesome', express.static('fontawesome'));
 app.use('/font-awesome', express.static('font-awesome'));
-app.use('/bower_components', express.static('bower_components'));
 app.use('/fonts', express.static('fonts'));
 app.use('/img', express.static('img'));
 
