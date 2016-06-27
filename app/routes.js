@@ -151,6 +151,7 @@ module.exports = function(app) {
       acl: acl,
       secret: process.env.AWS_SECRET_ACCESS_KEY,
       bucket: s3BucketName,
+      expires: new Date(Date.now() + 600000),
     })
     var result = {
       'AWSAccessKeyId': process.env.AWS_ACCESS_KEY_ID,
