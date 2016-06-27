@@ -141,7 +141,7 @@ module.exports = function(app) {
     })
   })
 
-  app.get('/sign-s3', (req, res) => {
+  app.post('/sign-s3', (req, res) => {
     const s3 = new aws.S3();
     const fileName = req.query['name'];
     const fileType = req.query['type'];
