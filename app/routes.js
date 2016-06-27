@@ -11,6 +11,8 @@ var pusher = new Pusher({
   encrypted: true
 });
 
+
+var s3Bucket = "//" + process.env.S3_BUCKET + ".s3.amazonaws.com/"
 var typeformVersionString = 'v0.4'
 var eventTitleRef = "eventTitle"
 var eventDurationRef = "eventDuration"
@@ -152,7 +154,7 @@ module.exports = function(app) {
     };
 
     s3.getSignedUrl('putObject', s3Params, (err, data) => {
-      if(err){
+      if (err) {
         console.log(err);
         return res.end();
       }
@@ -166,8 +168,8 @@ module.exports = function(app) {
   });
 
   app.post('/save-details', (req, res) => {
-  // TODO: Read POSTed form data and do something useful
-});
+    // TODO: Read POSTed form data and do something useful
+  });
 
   app.post('/pusher/auth', function(req, res) {
     var socketId = req.body.socket_id;
@@ -244,7 +246,7 @@ module.exports = function(app) {
         var token = opentok.generateToken(sessionId)
         var eventValue = event.eventValue
         return res.render('event.ejs', {
-          s3Bucket: process.env.S3_BUCKET,
+          s3Bucket: s3Bucket,
           isLeader: event.leader === userEmail,
           user: req.user,
           event: event,
