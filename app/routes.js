@@ -144,8 +144,6 @@ module.exports = function(app) {
 
   app.get('/sign-s3', (req, res) => {
     const s3 = new aws.S3();
-    console.log("/sign-s3")
-    console.log("req: " + JSON.stringify(req, censor(req), 2))
     const fileName = req.query['name'];
     const fileType = req.query['type'];
     const s3Params = {
@@ -161,6 +159,7 @@ module.exports = function(app) {
         console.log(err);
         return res.end();
       }
+      console.log("return data: " + data)
       const returnData = {
         signedRequest: data,
         url: "https://" + s3Bucket + ".s3.amazonaws.com/" + fileName
