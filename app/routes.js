@@ -144,8 +144,7 @@ module.exports = function(app) {
   })
 
   app.get('/sign-s3', (req, res) => {
-    var fileExtension = getExtension(req.body.name)
-    var filename = generateID() + fileExtension
+    var filename = generateID()
     var acl = 'public-read'
     var p = policy({
       acl: acl,
@@ -309,11 +308,6 @@ module.exports = function(app) {
     }
 
     return formData
-  }
-
-  function getExtension(filename) {
-    var i = filename.lastIndexOf('.');
-    return (i < 0) ? '' : filename.substr(i);
   }
 
   function generateID() {
