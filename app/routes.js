@@ -248,7 +248,7 @@ module.exports = function(app) {
         var token = opentok.generateToken(sessionId)
         var eventValue = event.eventValue
         return res.render('event.ejs', {
-          s3Bucket: s3Bucket,
+          s3Bucket: s3BucketName,
           isLeader: event.leader === userEmail,
           user: req.user,
           event: event,
