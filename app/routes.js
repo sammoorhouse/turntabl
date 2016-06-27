@@ -150,7 +150,7 @@ module.exports = function(app) {
       acl: acl,
       secret: process.env.AWS_SECRET_ACCESS_KEY,
       length: 5000000, // in bytes?
-      bucket: S3_BUCKET,
+      bucket: s3BucketName,
       key: filename,
       expires: new Date(Date.now() + 60000),
     })
@@ -162,10 +162,6 @@ module.exports = function(app) {
     };
     res.write(JSON.stringify(result));
     res.end();
-  });
-
-  app.post('/save-details', (req, res) => {
-    // TODO: Read POSTed form data and do something useful
   });
 
   app.post('/pusher/auth', function(req, res) {
