@@ -37,7 +37,7 @@
       previewTemplate: previewTemplate,
       autoQueue: false, // Make sure the files aren't queued until manually added
       previewsContainer: "#dropzone-previews", // Define the container to display the previews
-      clickable: "#dropzone-clickable" // Define the element that should be used as click trigger to select files.
+      clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
     });
 
     myDropzone.on("addedfile", function(file) {
@@ -198,8 +198,34 @@
     background: #D8000C;
   }
 </style>
+<div id="actions" class="row">
 
-<div id="dropzone-clickable"></div>
+  <div class="col-lg-7">
+    <!-- The fileinput-button span is used to style the file input field as button -->
+    <span class="btn btn-success fileinput-button">
+        <i class="glyphicon glyphicon-plus"></i>
+        <span>Add files...</span>
+    </span>
+    <button type="submit" class="btn btn-primary start">
+        <i class="glyphicon glyphicon-upload"></i>
+        <span>Start upload</span>
+    </button>
+    <button type="reset" class="btn btn-warning cancel">
+        <i class="glyphicon glyphicon-ban-circle"></i>
+        <span>Cancel upload</span>
+    </button>
+  </div>
+
+  <div class="col-lg-5">
+    <!-- The global file processing state -->
+    <span class="fileupload-process">
+      <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+      </div>
+    </span>
+  </div>
+
+</div>
 <div class="table table-striped" class="files" id="dropzone-previews">
   <div id="dropzone-template" class="file-row">
     <!-- This is used as the file preview template -->
