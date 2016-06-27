@@ -263,7 +263,7 @@ module.exports = function(app) {
         required: true,
         ref: eventPriceRef,
         question: "How much are you charging for the session?",
-        description: "USD. We take &dollar;10; you'll get paid once the session is over"
+        description: "USD. We take $10; you'll get paid once the session is over"
       }, {
         type: "legal",
         required: true,
