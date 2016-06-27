@@ -57,7 +57,6 @@
           file.custom_status = 'ready';
           file.postData = response;
           file.s3 = response.key;
-          file.key = response.key;
           $(file.previewTemplate).addClass('uploading');
           done();
         },
@@ -89,9 +88,12 @@
       document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
     });
 
-    myDropzone.on("sending", function(file) {
+    myDropzone.on("sending", function(file, xhr, formData) {
       console.log("dropzone sending")
-        // Show the total progress bar when upload starts
+      $.each(file.postData, function(k, v) {
+        formData.append(k, v);
+      });
+      // Show the total progress bar when upload starts
       document.querySelector("#total-progress").style.opacity = "1";
       // And disable the start button
       file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
