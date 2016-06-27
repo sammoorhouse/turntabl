@@ -146,13 +146,11 @@ module.exports = function(app) {
   app.get('/sign-s3', (req, res) => {
     var filename = generateID()
     var acl = 'public-read'
+    console.log('bucket name: ' + s3BucketName)
     var p = policy({
       acl: acl,
       secret: process.env.AWS_SECRET_ACCESS_KEY,
-      length: 5000000, // in bytes?
       bucket: s3BucketName,
-      key: filename,
-      expires: new Date(Date.now() + 60000),
     })
     var result = {
       'AWSAccessKeyId': process.env.AWS_ACCESS_KEY_ID,
