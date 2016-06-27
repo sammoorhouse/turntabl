@@ -38,10 +38,11 @@
       acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
       autoQueue: false, // Make sure the files aren't queued until manually added
       previewsContainer: "#dropzone-previews", // Define the container to display the previews
-      clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+      clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+      accept: dropzoneAccept
     });
 
-    myDropzone.on("accept", function(file, done) {
+    function dropzoneAccept(file, done) {
       console.log("dropzone accept")
       file.postData = [];
       $.ajax({
