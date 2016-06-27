@@ -165,7 +165,7 @@ module.exports = function(app) {
         key: generatedFilename,
         originalFilename: filename,
         signedRequest: data,
-        url: "https://" + s3BucketName + ".s3.amazonaws.com/" + filename
+        url: "https://" + s3BucketName + ".s3.amazonaws.com/" + generatedFilename
       };
       res.write(JSON.stringify(returnData));
       res.end();
