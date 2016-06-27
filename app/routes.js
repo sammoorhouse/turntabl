@@ -163,7 +163,7 @@ module.exports = function(app) {
       }
       const returnData = {
         signedRequest: data,
-        url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+        url: "https://" + s3Bucket + ".s3.amazonaws.com/" + fileName
       };
       res.write(JSON.stringify(returnData));
       res.end();
