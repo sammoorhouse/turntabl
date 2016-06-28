@@ -38,6 +38,7 @@ body {
 }
 .footer> .container-fluid .col-sm-2 {
   display: inline-block;
+  vertical-align: top;
   float: none;
 }
 
