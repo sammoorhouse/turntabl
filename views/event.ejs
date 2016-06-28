@@ -3,10 +3,24 @@
 
 <head>
   <% include partials/head.ejs %>
+
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/nanobar/0.4.2/nanobar.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
+  <script type="text/javascript" src="//js.pusher.com/3.1/pusher.min.js"></script>
+  <script type="text/javascript" src="/js/app.js"></script>
+  <script type="text/javascript">
+    var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
+    var eventId = "<%= event.id %>"
+    var s3Bucket = "<%= s3Bucket %>"
+    var isLeader = <%= isLeader %>
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css" />
+  <link rel="stylesheet" type="text/css" href="/css/app.css" />
+
 </head>
 
 <body>
-  <% include partials/app.ejs %>
     <div class="row-sm-2">
       <div class="col-sm-2" style="background-color:red;">foo</div>
       <div class="col-sm-8" style="background-color:blue;">bar</div>
@@ -21,9 +35,73 @@
       <div class="col-sm-2" style="background-color:red;">foo</div>
       <div class="col-sm-8" style="background-color:blue;">
         <ul class="nav nav-tabs">
-          <li role="presentation" class="active"><a href="#">Files</a></li>
+          <li data-toggle="tab" href="#event-resources-files"><a href="#">Files</a></li>
           <li role="presentation"><a href="#">Uploads</a></li>
         </ul>
+        <div class="tab-content">
+          <div id="event-resources-files" class="tab-pane fade in active">
+          </div>
+          <div id="event-resources-upload" class="tab-pane fade">
+            <div id="actions" class="row">
+
+              <div class="col-lg-7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                  <i class="glyphicon glyphicon-plus"></i>
+                  <span>Add files...</span>
+                </span>
+                <button type="submit" class="btn btn-primary start">
+                  <i class="glyphicon glyphicon-upload"></i>
+                  <span>Start upload</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel">
+                  <i class="glyphicon glyphicon-ban-circle"></i>
+                  <span>Cancel upload</span>
+                </button>
+              </div>
+
+              <div class="col-lg-5">
+                <!-- The global file processing state -->
+                <span class="fileupload-process">
+                <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                  <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                </div>
+              </span>
+              </div>
+
+            </div>
+            <div class="table table-striped" class="files" id="dropzone-previews">
+              <div id="dropzone-template" class="file-row">
+                <!-- This is used as the file preview template -->
+                <div>
+                  <span class="dropzone-preview"><img data-dz-thumbnail /></span>
+                </div>
+                <div>
+                  <p class="name" data-dz-name></p>
+                  <strong class="error text-danger" data-dz-errormessage></strong>
+                </div>
+                <div>
+                  <p class="size" data-dz-size></p>
+                  <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                  </div>
+                </div>
+                <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+
+                <div>
+                  <button class="btn btn-primary start">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                  </button>
+                  <button data-dz-remove class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col-sm-2" style="background-color:red;">baz</div>
     </div>
