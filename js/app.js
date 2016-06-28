@@ -29,7 +29,7 @@ $(function() { //on load
     thumbnailWidth: 80,
     thumbnailHeight: 80,
     parallelUploads: 20,
-    previewTemplate: previewTemplate,
+    //previewTemplate: previewTemplate,
     acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
     autoQueue: false, // Make sure the files aren't queued until manually added
     previewsContainer: "#dropzone-previews", // Define the container to display the previews
