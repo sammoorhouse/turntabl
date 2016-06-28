@@ -1,7 +1,5 @@
 
-  var eventId = "<%= event.id %>"
-  var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
-  var isLeader = <%= isLeader %>
+
   var intervalMillis = 15 * 1000 //15 seconds
   var timerToken = 0
   var sessionEndTimeMillis
@@ -24,7 +22,7 @@
     previewNode.parentNode.removeChild(previewNode);
 
     var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-      url: "<%= s3Bucket %>", // Set the url
+      url: s3Bucket, // Set the url
       method: "post",
       thumbnailWidth: 80,
       thumbnailHeight: 80,

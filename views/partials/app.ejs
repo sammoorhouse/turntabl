@@ -4,6 +4,9 @@
 <script type="text/javascript" src="/js/app.js"></script>
 <script type="text/javascript">
   var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
+  var eventId = "<%= event.id %>"
+  var s3Bucket = "<%= s3Bucket %>"
+  var isLeader = <%= isLeader %>
 </script>
 
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css" />
