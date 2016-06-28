@@ -147,18 +147,18 @@ module.exports = function(app) {
     var filename = generateID(8)
     var firstChar = filename[0]
     var secondChar = filename[1]
-    var filepath = firstChar + "/" + secondChar + "/" + filename
+    var filePath = firstChar + "/" + secondChar + "/" + filename
     var acl = 'public-read'
-    console.log('bucket name: ' + s3BucketName)
     var p = policy({
       acl: acl,
       secret: process.env.AWS_SECRET_ACCESS_KEY,
       bucket: s3BucketName,
+      key: filePath,
       expires: new Date(Date.now() + 600000),
     })
     var result = {
       'AWSAccessKeyId': process.env.AWS_ACCESS_KEY_ID,
-      'key': filepath,
+      'key': filePath,
       'policy': p.policy,
       'signature': p.signature
     };
