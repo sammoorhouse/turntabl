@@ -3,15 +3,15 @@
 
 <head>
   <% include partials/head.ejs %>
-  <script type="text/javascript">
-    var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
-    var eventId = "<%= event.id %>"
-    var s3Bucket = "<%= s3Bucket %>"
-    var isLeader = <%= isLeader %>
-    var openTokSessionId = "<%= openTokSessionId %>"
-    var openTokApiKey = "<%= openTokApiKey %>"
-    var openTokToken = "<%= openTokToken %>"
-  </script>
+    <script type="text/javascript">
+      var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
+      var eventId = "<%= event.id %>"
+      var s3Bucket = "<%= s3Bucket %>"
+      var isLeader = <%= isLeader %>
+      var openTokSessionId = "<%= openTokSessionId %>"
+      var openTokApiKey = "<%= openTokApiKey %>"
+      var openTokToken = "<%= openTokToken %>"
+    </script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/nanobar/0.4.2/nanobar.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
     <!--<script type="text/javascript" src="//js.pusher.com/3.1/pusher.min.js"></script>-->
@@ -36,8 +36,16 @@
   <div class="row-sm-8">
     <div class="col-sm-2" style="background-color:blue;">foo</div>
     <div class="col-sm-8" style="background-color:red;">
-      <div id="subscribers"></div></div>
-    <div class="col-sm-2" style="background-color:blue;">baz</div>
+      <div id="subscribers"></div>
+    </div>
+    <div class="col-sm-2" style="background-color:blue;">
+      <div id="textchat">
+        <p id="history"></p>
+        <form id="text-chat">
+          <input type="text" placeholder="Input your text here" id="msgTxt"></input>
+        </form>
+      </div>
+    </div>
   </div>
   <div class="row-sm-2">
     <div class="col-sm-2" style="background-color:red;">foo</div>
