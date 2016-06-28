@@ -36,7 +36,7 @@ module.exports = function(app) {
 
     //generate typeform
     var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
-    var eventId = generateID()
+    var eventId = generateID(8)
     var formData = generateForm(user, eventId)
 
     request.post({
@@ -144,7 +144,10 @@ module.exports = function(app) {
   })
 
   app.get('/sign-s3', (req, res) => {
-    var filename = generateID()
+    var filename = generateID(8)
+    var firstChar = filename[0]
+    var secondChar = filename[1]
+    var filepath = firstChar + "/" + secondChar + "/" + filename
     var acl = 'public-read'
     console.log('bucket name: ' + s3BucketName)
     var p = policy({
@@ -155,7 +158,7 @@ module.exports = function(app) {
     })
     var result = {
       'AWSAccessKeyId': process.env.AWS_ACCESS_KEY_ID,
-      'key': filename,
+      'key': filepath,
       'policy': p.policy,
       'signature': p.signature
     };
@@ -305,11 +308,10 @@ module.exports = function(app) {
     return formData
   }
 
-  function generateID() {
+  function generateID(length) {
     var ALPHABET = '23456789abdegjkmnpqrvwxyz';
-    var ID_LENGTH = 8;
     var rtn = '';
-    for (var i = 0; i < ID_LENGTH; i++) {
+    for (var i = 0; i < length; i++) {
       rtn += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET.length));
     }
     return rtn;
