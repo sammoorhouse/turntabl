@@ -32,19 +32,22 @@ body {
 
 /*footer images*/
 
-footer> .row-fluid {
+.footer> .row-fluid {
+  overflow-x: scroll;
   white-space: nowrap;
 }
-footer> .row-fluid .col-lg-3 {
+.footer> .row-fluid .col-lg-3 {
   display: inline-block;
+  vertical-align: top;
+  float: none;
 }
 
 /*dropzone*/
 
-footer.dz-drag-hover {
+.footer.dz-drag-hover {
   border-style: solid;
 }
-footer.dz-drag-hover .dz-message {
+.footer.dz-drag-hover .dz-message {
   opacity: 0.5;
 }
 
