@@ -1,8 +1,8 @@
 //log at DEBUG
   OT.setLogLevel(OT.DEBUG);
 
-var session = TB.initSession(sessionId);
-var publisher = TB.initPublisher(apiKey, 'publisher');
+var session = TB.initSession(openTokSessionId);
+var publisher = TB.initPublisher(openTokApiKey, 'publisher');
 
 // Attach event handlers
 session.on({
@@ -22,4 +22,4 @@ session.on({
 });
 
 // Connect to the Session using the 'apiKey' of the application and a 'token' for permission
-session.connect(apiKey, token);
+session.connect(openTokApiKey, openTokToken);

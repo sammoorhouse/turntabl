@@ -245,9 +245,9 @@ module.exports = function(app) {
           isLeader: event.leader === userEmail,
           user: req.user,
           event: event,
-          apiKey: process.env.tokboxAuth_apiKey,
-          sessionId: sessionId,
-          token: token,
+          openTokApiKey: process.env.tokboxAuth_apiKey,
+          openTokSessionId: sessionId,
+          openTokToken: token,
           eventValue: eventValue
         });
         //}
