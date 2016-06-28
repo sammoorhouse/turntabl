@@ -71,16 +71,12 @@ $(function() { //on load
 
   myDropzone.on("addedfile", function(file) {
     console.log("dropzone addedfile")
-      // Hookup the start button
-    file.previewElement.querySelector(".start").onclick = function() {
-      myDropzone.enqueueFile(file);
-    };
   });
 
   // Update the total progress bar
   myDropzone.on("totaluploadprogress", function(progress) {
     console.log("dropzone totaluploadprogress")
-    document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+      //document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
   });
 
   myDropzone.on("sending", function(file, xhr, formData) {
@@ -94,19 +90,19 @@ $(function() { //on load
     formData.append('acl', 'public-read');
 
     // Show the total progress bar when upload starts
-    document.querySelector("#total-progress").style.opacity = "1";
+    //document.querySelector("#total-progress").style.opacity = "1";
     // And disable the start button
-    file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+    //file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
   });
   myDropzone.on("complete", function(file) {
     console.log("dropzone complete")
-    $(file.previewTemplate).removeClass('uploading');
+      //$(file.previewTemplate).removeClass('uploading');
   });
 
   // Hide the total progress bar when nothing's uploading anymore
   myDropzone.on("queuecomplete", function(progress) {
     console.log("dropzone queuecomplete")
-    document.querySelector("#total-progress").style.opacity = "0";
+      //document.querySelector("#total-progress").style.opacity = "0";
   });
 
   //nanobar
