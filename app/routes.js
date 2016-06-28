@@ -178,7 +178,7 @@ module.exports = function(app) {
     res.end()
   });
 
-  app.post('/pusher/beginSession', function(req, res) {
+  app.post('/beginSession', function(req, res) {
     var eventId = req.body.eventId
 
     //update events table
@@ -202,11 +202,16 @@ module.exports = function(app) {
         }
         if ((typeof event.endTime != "undefined") && (proposedStartTimeMillis > event.endTime)) {
           //already over
-          pusher.trigger("presence-event-" + eventId, 'completed')
+          var result = {
+            'result': 'alreadyCompleted',
+          };
+          res.write(JSON.stringify(result));
         } else {
-          pusher.trigger("presence-event-" + eventId, 'begin', {
-            startTimeMillis: proposedStartTimeMillis
-          })
+          var result = {
+            'result': 'begin',
+            'proposedStartTimeMillis': proposedStartTimeMillis
+          };
+          res.write(JSON.stringify(result));
         }
       } else {
         console.log("error retrieving event " + eventId + ": " + err)

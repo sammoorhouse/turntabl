@@ -124,6 +124,21 @@ $(function() { //on load
   nanobar.go(0)
 })
 
+function triggerSessionStart() {
+  $.post("/beginSession", {
+      eventId: eventId
+
+    },
+    function(result) {
+      if (result.result === "begin") {
+        session.signal({
+          type: "beginSession",
+          proposedStartTimeMillis: result.proposedStartTimeMillis
+        })
+      }
+    })
+}
+
 function start() {
   console.log('SESSION START')
   timerToken = window.setInterval(tick, intervalMillis)
