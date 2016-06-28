@@ -32,11 +32,11 @@ body {
 
 /*footer images*/
 
-.footer> .row-fluid {
+.footer> .container-fluid {
   overflow-x: scroll;
   white-space: nowrap;
 }
-.footer> .row-fluid .col-lg-3 {
+.footer> .container-fluid .col-sm-2 {
   display: inline-block;
   vertical-align: top;
   float: none;
