@@ -2,7 +2,10 @@
 //  OT.setLogLevel(OT.DEBUG);
 
 var session = TB.initSession(openTokSessionId);
-var publisher = TB.initPublisher(openTokApiKey, 'publisher');
+var publisher = TB.initPublisher(openTokApiKey, 'publisher', {
+  width: 250,
+  height: 250
+});
 
 // Receive a message and append it to the history
 var msgHistory = document.querySelector('#history');
