@@ -26,6 +26,7 @@ form.addEventListener('submit', function(event) {
 // Attach event handlers
 session.on({
   sessionConnected: function(event) {
+    console.log("session connected")
     session.publish(publisher);
   },
   streamCreated: function(event) {
