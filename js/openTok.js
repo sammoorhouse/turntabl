@@ -11,9 +11,9 @@ var form = document.querySelector('form#text-chat');
 
 // Send a signal once the user enters data in the form
 form.addEventListener('submit', function(event) {
-event.preventDefault();
+  event.preventDefault();
 
-session.signal({
+  session.signal({
     type: 'msg',
     data: msgTxt.value
   }, function(error) {
@@ -29,17 +29,19 @@ session.on({
     session.publish(publisher);
   },
   streamCreated: function(event) {
+    console.log("stream created")
     var subContainer = document.createElement('div');
     subContainer.id = 'stream-' + event.stream.streamId;
     document.getElementById('subscribers').appendChild(subContainer);
     session.subscribe(event.stream, subContainer);
   },
-  signal: function(event){
-       var msg = document.createElement('p');
-      msg.innerHTML = event.data;
-      msg.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
-      msgHistory.appendChild(msg);
-      msg.scrollIntoView();
+  signal: function(event) {
+    console.log("signal")
+    var msg = document.createElement('p');
+    msg.innerHTML = event.data;
+    msg.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
+    msgHistory.appendChild(msg);
+    msg.scrollIntoView();
   }
 });
 
