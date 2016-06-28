@@ -1,8 +1,8 @@
 //log at DEBUG
 //  OT.setLogLevel(OT.DEBUG);
 
-var session = TB.initSession(openTokSessionId);
-var publisher = TB.initPublisher(openTokApiKey, 'publisher', {
+var session = OT.initSession(openTokSessionId);
+var publisher = OT.initPublisher(openTokApiKey, 'publisher', {
   width: 250,
   height: 250
 });
