@@ -31,6 +31,7 @@
 
     var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
       url: "<%= s3Bucket %>", // Set the url
+      method: "post",
       thumbnailWidth: 80,
       thumbnailHeight: 80,
       parallelUploads: 20,
@@ -97,12 +98,16 @@
       formData.append('Content-type', '');
       formData.append('Content-length', '');
       formData.append('acl', 'public-read');
-      
+
       // Show the total progress bar when upload starts
       document.querySelector("#total-progress").style.opacity = "1";
       // And disable the start button
       file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
     });
+    myDropzone.on("complete", function(file) {
+      console.log("dropzone complete")
+      $(file.previewTemplate).removeClass('uploading');
+});
 
     // Hide the total progress bar when nothing's uploading anymore
     myDropzone.on("queuecomplete", function(progress) {
