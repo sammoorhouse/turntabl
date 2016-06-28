@@ -3,15 +3,15 @@
   var intervalMillis = 15 * 1000 //15 seconds
   var timerToken = 0
   var sessionEndTimeMillis
-  var pusher = new Pusher('45387f244d056952dda4', {
+  /*var pusher = new Pusher('45387f244d056952dda4', {
     encrypted: true
-  });
+  });*/
   var nanobar
 
   var presenceChannel
 
   // Enable pusher logging - don't include this in production
-  Pusher.logToConsole = true;
+  //Pusher.logToConsole = true;
 
   $(function() { //on load
     //dropzone
@@ -124,7 +124,7 @@
     });
 
     nanobar.go(0)
-
+/*
     presenceChannel = pusher.subscribe('presence-event-' + eventId);
 
     presenceChannel.bind('pusher:subscription_succeeded', function(members) {
@@ -190,7 +190,7 @@
     console.log("SESSION PAUSED")
 
   }
-
+*/
   function tick() {
     //recalc timeRemaining
     var nowMillis = Date.now()
