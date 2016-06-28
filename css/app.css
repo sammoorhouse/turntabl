@@ -1,98 +1,115 @@
+/* Sticky footer styles
+-------------------------------------------------- */
 
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+.nanobar.warn > .bar {
+  width: 0;
+  height: 100%;
+  transition: height .3s;
+  background: #9F6000;
+}
+.nanobar.alarm > .bar {
+  width: 0;
+  height: 100%;
+  transition: height .3s;
+  background: #D8000C;
+}
 
-  .nanobar.warn > .bar {
-    width: 0;
-    height: 100%;
-    transition: height .3s;
-    background: #9F6000;
-  }
+/*dropzone*/
 
-  .nanobar.alarm > .bar {
-    width: 0;
-    height: 100%;
-    transition: height .3s;
-    background: #D8000C;
-  }
-  /*dropzone*/
+#actions {
+  margin: 2em 0;
+}
 
-  #actions {
-    margin: 2em 0;
-  }
-  /* Mimic table appearance */
+/* Mimic table appearance */
 
-  div.table {
-    display: table;
-  }
+div.table {
+  display: table;
+}
+div.table .file-row {
+  display: table-row;
+}
+div.table .file-row > div {
+  display: table-cell;
+  vertical-align: top;
+  border-top: 1px solid #ddd;
+  padding: 8px;
+}
+div.table .file-row:nth-child(odd) {
+  background: #f9f9f9;
+}
 
-  div.table .file-row {
-    display: table-row;
-  }
+/* The total progress gets shown by event listeners */
 
-  div.table .file-row > div {
-    display: table-cell;
-    vertical-align: top;
-    border-top: 1px solid #ddd;
-    padding: 8px;
-  }
+#total-progress {
+  opacity: 0;
+  transition: opacity 0.3s linear;
+}
 
-  div.table .file-row:nth-child(odd) {
-    background: #f9f9f9;
-  }
-  /* The total progress gets shown by event listeners */
+/* Hide the progress bar when finished */
 
-  #total-progress {
-    opacity: 0;
-    transition: opacity 0.3s linear;
-  }
-  /* Hide the progress bar when finished */
+#previews .file-row.dz-success .progress {
+  opacity: 0;
+  transition: opacity 0.3s linear;
+}
 
-  #previews .file-row.dz-success .progress {
-    opacity: 0;
-    transition: opacity 0.3s linear;
-  }
-  /* Hide the delete button initially */
+/* Hide the delete button initially */
 
-  #previews .file-row .delete {
-    display: none;
-  }
-  /* Hide the start and cancel buttons and show the delete button */
+#previews .file-row .delete {
+  display: none;
+}
 
-  #previews .file-row.dz-success .start,
-  #previews .file-row.dz-success .cancel {
-    display: none;
-  }
+/* Hide the start and cancel buttons and show the delete button */
 
-  #previews .file-row.dz-success .delete {
-    display: block;
-  }
-
+#previews .file-row.dz-success .start, #previews .file-row.dz-success .cancel {
+  display: none;
+}
+#previews .file-row.dz-success .delete {
+  display: block;
+}
 
 /* tokbox */
+
 #textchat {
-    position: relative;
-    width: 20%;
-    float: right;
-    right: 0;
-    height: 100%;
-    background-color: #333;
+  position: relative;
+  width: 20%;
+  float: right;
+  right: 0;
+  height: 100%;
+  background-color: #333;
 }
 #history {
-     width: 100%;
-     height: calc(100% - 40px);
-     overflow: auto;
+  width: 100%;
+  height: calc(100% - 40px);
+  overflow: auto;
 }
 input#msgTxt {
-            height: 40px;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
+  height: 40px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 #history .mine {
-    color: #00FF00;
-    text-align: right;
-    margin-right: 10px;
+  color: #00FF00;
+  text-align: right;
+  margin-right: 10px;
 }
 #history .theirs {
-    color: #00FFFF;
-    margin-left: 10px;
+  color: #00FFFF;
+  margin-left: 10px;
 }
