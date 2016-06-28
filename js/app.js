@@ -12,8 +12,12 @@ var nanobar
 //Pusher.logToConsole = true;
 
 $(function() { //on load
-  //dropzone
-  // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+  //carousel
+  $('#myCarousel').carousel({
+      interval: 10000
+    })
+    //dropzone
+    // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
   var previewNode = document.querySelector("#dropzone-template");
   previewNode.id = "";
   var previewTemplate = previewNode.parentNode.innerHTML;

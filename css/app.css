@@ -7,14 +7,14 @@ html {
 }
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 130px;
+  margin-bottom: 150px;
 }
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
-  height: 130px;
+  height: 150px;
   background-color: #f5f5f5;
 }
 .nanobar.warn > .bar {
@@ -28,6 +28,43 @@ body {
   height: 100%;
   transition: height .3s;
   background: #D8000C;
+}
+
+/* carousel */
+
+
+/* Removes the default 20px margin and creates some padding space for the indicators and controls */
+
+.carousel {
+  margin-bottom: 0;
+  padding: 0 40px 30px 40px;
+}
+
+/* Reposition the controls slightly */
+
+.carousel-control {
+  left: -12px;
+}
+.carousel-control.right {
+  right: -12px;
+}
+
+/* Changes the position of the indicators */
+
+.carousel-indicators {
+  right: 50%;
+  top: auto;
+  bottom: 0px;
+  margin-right: -19px;
+}
+
+/* Changes the colour of the indicators */
+
+.carousel-indicators li {
+  background: #c0c0c0;
+}
+.carousel-indicators .active {
+  background: #333333;
 }
 
 /*dropzone*/
