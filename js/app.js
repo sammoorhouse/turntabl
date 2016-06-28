@@ -14,7 +14,7 @@ var nanobar
 $(function() { //on load
   //carousel
   $('#myCarousel').carousel({
-      interval: 10000
+      interval: false
     })
     //dropzone
     // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
