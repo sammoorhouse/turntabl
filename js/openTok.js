@@ -3,8 +3,8 @@
 
 var session = OT.initSession(openTokSessionId);
 var publisher = OT.initPublisher(openTokApiKey, 'publisher', {
-  width: 250,
-  height: 250
+  width: 150,
+  height: 150
 });
 
 // Receive a message and append it to the history
