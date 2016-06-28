@@ -32,7 +32,7 @@ $(function() { //on load
     //previewTemplate: previewTemplate,
     acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
     autoQueue: false, // Make sure the files aren't queued until manually added
-    //previewsContainer: "#dropzone-previews", // Define the container to display the previews
+    previewsContainer: ".existingImages", // Define the container to display the previews
     clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
     accept: dropzoneAccept
   });
