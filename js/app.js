@@ -109,16 +109,6 @@ $(function() { //on load
     document.querySelector("#total-progress").style.opacity = "0";
   });
 
-  // Setup the buttons for all transfers
-  // The "add files" button doesn't need to be setup because the config
-  // `clickable` has already been specified.
-  document.querySelector("#actions .start").onclick = function() {
-    myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
-  };
-  document.querySelector("#actions .cancel").onclick = function() {
-    myDropzone.removeAllFiles(true);
-  };
-
   //nanobar
   nanobar = new Nanobar({
     id: "event-progress-nanobar",
