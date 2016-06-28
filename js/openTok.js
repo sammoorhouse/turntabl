@@ -43,7 +43,13 @@ session.on({
     msg.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
     msgHistory.appendChild(msg);
     msg.scrollIntoView();
-  }
+  },
+  connectionCreated: function(event) {
+    if (event.connection.connectionId != session.connection.connectionId) {
+      console.log('Another client connected, start the session');
+      start()
+    }
+  },
 });
 
 // Connect to the Session using the 'apiKey' of the application and a 'token' for permission
