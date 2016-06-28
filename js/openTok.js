@@ -45,9 +45,9 @@ session.on({
     msg.scrollIntoView();
   },
   connectionCreated: function(event) {
-    if (event.connection.connectionId != session.connection.connectionId) {
+    if ((event.connection.connectionId != session.connection.connectionId) && (isLeader)) {
       console.log('Another client connected, start the session');
-      triggerStart()
+      triggerSessionStart()
     }
   },
 });
