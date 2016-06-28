@@ -30,7 +30,7 @@ session.on({
   },
   streamCreated: function(event) {
     var subContainer = document.createElement('div');
-    subContainer.id = 'stream-'  event.stream.streamId;
+    subContainer.id = 'stream-' + event.stream.streamId;
     document.getElementById('subscribers').appendChild(subContainer);
     session.subscribe(event.stream, subContainer);
   },
