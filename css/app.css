@@ -41,8 +41,11 @@ footer> .row-fluid .col-lg-3 {
 
 /*dropzone*/
 
-#actions {
-  margin: 2em 0;
+.dropzone.dz-drag-hover {
+  border-style: solid;
+}
+.dropzone.dz-drag-hover .dz-message {
+  opacity: 0.5;
 }
 
 /* Mimic table appearance */
