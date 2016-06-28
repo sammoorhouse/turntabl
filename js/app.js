@@ -18,12 +18,12 @@ $(function() { //on load
     })
     //dropzone
     // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-  var previewNode = document.querySelector("#dropzone-template");
-  previewNode.id = "";
-  var previewTemplate = previewNode.parentNode.innerHTML;
-  previewNode.parentNode.removeChild(previewNode);
+    //var previewNode = document.querySelector("#dropzone-template");
+    //previewNode.id = "";
+    //var previewTemplate = previewNode.parentNode.innerHTML;
+    //previewNode.parentNode.removeChild(previewNode);
 
-  var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+  var myDropzone = new Dropzone('footer', {
     url: s3Bucket, // Set the url
     method: "post",
     thumbnailWidth: 80,
