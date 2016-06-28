@@ -26,14 +26,14 @@ $(function() { //on load
   var myDropzone = new Dropzone('footer', {
     url: s3Bucket, // Set the url
     method: "post",
-    thumbnailWidth: 80,
-    thumbnailHeight: 80,
+    thumbnailWidth: 150,
+    thumbnailHeight: 150,
     parallelUploads: 20,
     //previewTemplate: previewTemplate,
     acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
     autoQueue: false, // Make sure the files aren't queued until manually added
-    previewsContainer: "#dropzone-previews", // Define the container to display the previews
-    clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+    //previewsContainer: "#dropzone-previews", // Define the container to display the previews
+    clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
     accept: dropzoneAccept
   });
 
