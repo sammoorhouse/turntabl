@@ -155,7 +155,7 @@ module.exports = function(app) {
       secret: process.env.AWS_SECRET_ACCESS_KEY,
       bucket: s3BucketName,
       key: filePath,
-      expires: new Date(Date.now() + 600000);
+      expires: new Date(Date.now() + 600000)
     })
   }
 
