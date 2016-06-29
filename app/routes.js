@@ -166,7 +166,7 @@ module.exports = function(app) {
               key: s3Key,
               policy: policy.policy,
               signature: policy.signature,
-              file: req.file
+              file: file
             }
           },
           function(err, resp) {
@@ -181,7 +181,7 @@ module.exports = function(app) {
                 'Content-Type': 'application/json',
                 result: 'success',
                 nested: false,
-                imageUrl: s3BucketUrl + "/" + s3Key,
+                imageUrl: s3BucketUrl + s3Key,
                 imageThumbUrl: "foo"
               });
               res.end()
