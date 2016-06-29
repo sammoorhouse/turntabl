@@ -36,7 +36,7 @@ $(function() { //on load
     acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
     autoProcessQueue: true,
     previewsContainer: ".dropzone-previews", // Define the container to display the previews
-    clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
+    //clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
     accept: dropzoneAccept
   });
 
