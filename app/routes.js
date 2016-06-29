@@ -151,11 +151,11 @@ module.exports = function(app) {
   })
 
   app.post('/addSessionResource', function(req, res) {
-    //var fstream;
+
+    var eventId = req.query.eventId
+
     req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
       console.log("Uploading: " + filename);
-
-
 
       var generatedId = generateID(8)
       var firstChar = generatedId[0]
@@ -173,7 +173,6 @@ module.exports = function(app) {
         } else {
           console.log("upload success: " + s3BucketUrl + s3Key)
 
-          var eventId = req.params.eventId
           console.log("eventId: " + eventId)
 
           //update events table
