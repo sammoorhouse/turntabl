@@ -178,6 +178,7 @@ module.exports = function(app) {
       function(err, resp) {
         if (err) {
           console.log("upload error: " + err)
+          console.log("response: " + resp)
           formSubmissionResponse.writeHead(400, {});
           formSubmissionResponse.end()
         } else {
