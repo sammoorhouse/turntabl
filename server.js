@@ -46,7 +46,11 @@ app.use('/fonts', express.static('fonts'));
 app.use('/img', express.static('img'));
 
 //app.use(morgan('dev'));
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
+
 app.set('view engine', 'ejs');
 
 require('./app/routes.js')(app);
