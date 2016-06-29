@@ -27,19 +27,20 @@ $(function() { //on load
   previewNode.parentNode.removeChild(previewNode);
 
   var myDropzone = new Dropzone('footer', {
-    url: "/addSessionResource", // Set the url
-    paramName: "file", // The name that will be used to transfer the file
-    method: "post",
-    createImageThumbnails: false,
-    thumbnailWidth: 150,
-    thumbnailHeight: 150,
-    parallelUploads: 20,
-    previewTemplate: previewTemplate,
-    acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
-    autoProcessQueue: true,
-    previewsContainer: ".dropzone-previews", // Define the container to display the previews
-    //clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
-    //accept: dropzoneAccept
+    url: "/addSessionResource"
+      /*, // Set the url
+          paramName: "file", // The name that will be used to transfer the file
+          method: "post",
+          createImageThumbnails: false,
+          thumbnailWidth: 150,
+          thumbnailHeight: 150,
+          parallelUploads: 20,
+          previewTemplate: previewTemplate,
+          acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
+          autoProcessQueue: true,
+          previewsContainer: ".dropzone-previews",*/ // Define the container to display the previews
+      //clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
+      //accept: dropzoneAccept
   });
 
   function dropzoneAccept(file, done) {
