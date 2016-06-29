@@ -88,15 +88,14 @@ $(function() { //on load
     formData.append('Content-length', '');
     formData.append('acl', 'public-read');
   });
-});
 
-//nanobar
-nanobar = new Nanobar({
-  id: "event-progress-nanobar",
-  className: "nanobar"
-});
+  //nanobar
+  nanobar = new Nanobar({
+    id: "event-progress-nanobar",
+    className: "nanobar"
+  });
 
-nanobar.go(0)
+  nanobar.go(0)
 })
 
 function triggerSessionStart() {
