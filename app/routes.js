@@ -8,7 +8,8 @@ var policy = require('s3-policy');
 var uuid = require('node-uuid');
 var formidable = require("formidable");
 var AWS = require('aws-sdk');
-var s3 = new AWS.S3();
+// Define s3-upload-stream with S3 credentials.
+var s3Stream = require('s3-upload-stream')(new AWS.S3());
 
 var util = require('util');
 var pusher = new Pusher({
@@ -150,43 +151,38 @@ module.exports = function(app) {
   })
 
   app.post('/addSessionResource', function(req, res) {
+    //var fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+      console.log("Uploading: " + filename);
 
-      //var fstream;
-      req.pipe(req.busboy);
-      req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        console.log("Uploading: " + filename);
+      var generatedId = generateID(8)
+      var firstChar = generatedId[0]
+      var secondChar = generatedId[1]
+      var s3Key = firstChar + "/" + secondChar + "/" + generatedId
 
-        var generatedId = generateID(8)
-        var firstChar = generatedId[0]
-        var secondChar = generatedId[1]
-        var s3Key = firstChar + "/" + secondChar + "/" + generatedId
+      uploadS3(file, s3Key, s3BucketName, function(err) {
+        if (err) {
+          console.log("upload error: " + err)
+          res.writeHead(400, {});
+          res.end()
+        } else {
+          console.log("upload success: " + s3BucketUrl + s3Key)
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            result: 'success',
+            nested: false,
+            imageUrl: s3BucketUrl + s3Key,
+            imageThumbUrl: "foo"
+          });
+          res.end()
+        }
 
-        var params = {
-          Bucket: s3BucketName,
-          Key: s3Key,
-          Body: file
-        };
-        s3.putObject(params, function(err, data) {
-          if (err) {
-            console.log("upload error: " + err)
-            res.writeHead(400, {});
-            res.end()
-          } else {
-            console.log("upload success: " + s3BucketUrl + s3Key)
-            res.writeHead(200, {
-              'Content-Type': 'application/json',
-              result: 'success',
-              nested: false,
-              imageUrl: s3BucketUrl + s3Key,
-              imageThumbUrl: "foo"
-            });
-            res.end()
-          }
-
-        });
-      })
+      });
     })
-    //create image thumbnail
+  })
+
+  //create image thumbnail
 
 
   //update events table
@@ -417,5 +413,30 @@ module.exports = function(app) {
 
     console.log(refName + " = " + result)
     return result
+  }
+
+  function uploadS3(readStream, key, bucket, callback) {
+    var upload = s3Stream.upload({
+      'Bucket': bucket,
+      'Key': key
+    });
+
+    // Handle errors.
+    upload.on('error', function(err) {
+      callback(err);
+    });
+
+    // Handle progress.
+    upload.on('part', function(details) {
+      console.log(inspect(details));
+    });
+
+    // Handle upload completion.
+    upload.on('uploaded', function(details) {
+      callback();
+    });
+
+    // Pipe the Readable stream to the s3-upload-stream module.
+    readStream.pipe(upload);
   }
 }
