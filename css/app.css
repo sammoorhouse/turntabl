@@ -44,10 +44,17 @@ body {
 
 /*dropzone*/
 
+.dropzone {
+  /*reset*/
+  min-height: auto;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
 .footer.dz-drag-hover {
   border-style: solid;
 }
-.footer.dz-drag-hover .dz-message {
+.footer.dz-drag-hover {
   opacity: 0.5;
 }
 .dropzone .dz-preview .dz-image {
@@ -56,12 +63,6 @@ body {
 }
 .dropzone .dz-preview:hover .dz-details img, .dropzone-previews .dz-preview:hover .dz-details img {
   display: none;
-}
-.dropzone {
-  min-height: auto;
-  border: auto;
-  background: auto;
-  padding: auto;
 }
 
 /* Mimic table appearance */
