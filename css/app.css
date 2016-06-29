@@ -72,6 +72,13 @@ body {
   border-radius: 0;
   z-index: auto;
 }
+.dropzone .dz-preview .dz-success-mark, .dropzone .dz-preview .dz-error-mark {
+  margin-left: -17px;
+  margin-top: -17px;
+}
+.dropzone .dz-preview .dz-progress {
+  margin-left: -20px;
+}
 .dropzone .dz-preview:hover .dz-details img, .dropzone-previews .dz-preview:hover .dz-details img {
   display: none;
 }
