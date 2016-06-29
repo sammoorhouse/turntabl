@@ -138,7 +138,6 @@ function tick() {
       //set the warn class on the nanobar
       $('#event-progress-nanobar').removeClass('alarm').addClass('warn')
     }
-
     //is it very nearly over? 1% or 1 minute
     if ((timeRemainingPercent < 1) || timeRemainingMillis <= 1 * 60 * 1000) {
       $('#event-progress-nanobar').removeClass('warn').addClass('alarm')

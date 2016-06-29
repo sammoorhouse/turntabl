@@ -160,7 +160,8 @@ module.exports = function(app) {
       var generatedId = generateID(8)
       var firstChar = generatedId[0]
       var secondChar = generatedId[1]
-      var s3Key = firstChar + "/" + secondChar + "/" + generatedId
+      var extension = generateID(3)
+      var s3Key = firstChar + "/" + secondChar + "/" + generatedId + "." + extension
 
       console.log("params: " + util.inspect(req.params))
       console.log("body: " + util.inspect(req.body))
