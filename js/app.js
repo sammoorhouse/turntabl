@@ -88,23 +88,7 @@ $(function() { //on load
     formData.append('Content-length', '');
     formData.append('acl', 'public-read');
   });
-  myDropzone.on("complete", function(file) {
-    console.log("dropzone complete")
-
-    $.post("/addSessionResource", {
-        s3Key: file.s3,
-        fileType: file.type,
-        filename: file.name,
-        eventId: eventId
-      },
-      function(result) {
-        if (result.action === "split") {
-          //the file has been split into sections; figure it out
-        })
-    }
-  })
 });
-
 
 //nanobar
 nanobar = new Nanobar({
