@@ -429,7 +429,7 @@ module.exports = function(app) {
 
     // Handle progress.
     upload.on('part', function(details) {
-      console.log(inspect(details));
+      console.log(util.inspect(details));
     });
 
     // Handle upload completion.
