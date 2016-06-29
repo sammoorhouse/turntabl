@@ -27,7 +27,8 @@ $(function() { //on load
   previewNode.parentNode.removeChild(previewNode);
 
   var myDropzone = new Dropzone('footer', {
-    url: "/addSessionResource"
+    url: "/addSessionResource",
+    paramName: "file"
       /*, // Set the url
           paramName: "file", // The name that will be used to transfer the file
           method: "post",

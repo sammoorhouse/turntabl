@@ -147,17 +147,6 @@ module.exports = function(app) {
     })
   })
 
-  function getPolicy(key) {
-    var acl = 'public-read'
-    return policy({
-      acl: acl,
-      secret: process.env.AWS_SECRET_ACCESS_KEY,
-      bucket: s3BucketName,
-      key: key,
-      expires: new Date(Date.now() + 600000)
-    })
-  }
-
   app.post('/addSessionResource', function(req, res) {
     console.log(util.inspect(req))
 
@@ -402,6 +391,17 @@ module.exports = function(app) {
     }
   }
 
+  function getPolicy(key) {
+    var acl = 'public-read'
+    return policy({
+      acl: acl,
+      secret: process.env.AWS_SECRET_ACCESS_KEY,
+      bucket: s3BucketName,
+      key: key,
+      expires: new Date(Date.now() + 600000)
+    })
+  }
+
   function resolveField(refName, formSubmission, formStructure) {
     console.log("attempting to find " + refName)
     var fieldId = formStructure.fields.find(function(q) {
@@ -423,6 +423,4 @@ module.exports = function(app) {
     console.log(refName + " = " + result)
     return result
   }
-
-
 }
