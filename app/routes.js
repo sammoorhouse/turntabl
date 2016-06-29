@@ -184,7 +184,7 @@ module.exports = function(app) {
         } else {
           console.log("upload success: " + s3BucketUrl + "/" + s3Key)
           formSubmissionResponse.writeHead(200, {
-            Content - Type: 'application/json',
+            'Content-Type': 'application/json',
             result: 'success',
             nested: false,
             imageUrl: s3BucketUrl + "/" + s3Key,
