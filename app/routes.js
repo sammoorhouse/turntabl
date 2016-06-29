@@ -159,7 +159,7 @@ module.exports = function(app) {
     })
   }
 
-  app.post('/addSessionResource', function(req, res) {
+  app.post('/addSessionResource', function(req, formSubmissionResponse) {
     console.log('req: ' + req)
     var filename = req.body.name
     var fileType = req.body.type
@@ -177,6 +177,21 @@ module.exports = function(app) {
         }
       },
       function(err, resp) {
+        if (err) {
+          console.log("upload error: " + err)
+          formSubmissionResponse.writeHead(400, {});
+          formSubmissionResponse.end()
+        } else {
+          console.log("upload success: " + s3BucketUrl + "/" + s3Key)
+          formSubmissionResponse.writeHead(200, {
+            Content - Type: 'application/json',
+            result: 'success',
+            nested: false,
+            imageUrl: s3BucketUrl + "/" + s3Key,
+            imageThumbUrl: "foo"
+          });
+          formSubmissionResponse.end()
+        }
         var eventId = req.body.eventId
       }
     )
