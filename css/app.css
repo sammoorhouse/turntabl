@@ -44,9 +44,6 @@ body {
 
 /*dropzone*/
 
-.dropzone {
-  /*reset?*/
-}
 .footer.dz-drag-hover {
   border-style: solid;
 }
@@ -59,6 +56,12 @@ body {
 }
 .dropzone .dz-preview:hover .dz-details img, .dropzone-previews .dz-preview:hover .dz-details img {
   display: none;
+}
+.dropzone {
+  min-height: auto;
+  border: auto;
+  background: auto;
+  padding: auto;
 }
 
 /* Mimic table appearance */
