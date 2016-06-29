@@ -47,7 +47,7 @@ app.use('/fonts', express.static('fonts'));
 app.use('/img', express.static('img'));
 
 //app.use(morgan('dev'));
-app.use(busboy);
+app.use(busboy());
 
 app.set('view engine', 'ejs');
 
