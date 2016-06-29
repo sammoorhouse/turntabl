@@ -160,7 +160,7 @@ module.exports = function(app) {
   }
 
   app.post('/addSessionResource', function(req, res) {
-    console.log('req: ' + JSON.parse(req, censor(req), 2))
+    console.log('req: ' + req)
     var filename = req.body.name
     var fileType = req.body.type
     var s3Key = generateID(8)
