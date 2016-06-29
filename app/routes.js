@@ -146,9 +146,6 @@ module.exports = function(app) {
 
   function getPolicy(key) {
     var filename = key
-    var firstChar = filename[0]
-    var secondChar = filename[1]
-    var filePath = firstChar + "/" + secondChar + "/" + filename
     var acl = 'public-read'
     return policy({
       acl: acl,
@@ -161,10 +158,15 @@ module.exports = function(app) {
 
   app.post('/addSessionResource', function(req, formSubmissionResponse) {
     console.log('req: ' + req)
-    var filename = req.body.name
+    var filename = req.body.filename
+    var generatedId = generateID(8)
+    var firstChar = generatedId[0]
+    var secondChar = generatedId[1]
+    var s3Key = firstChar + "/" + secondChar + "/" + generatedId
     var fileType = req.body.type
-    var s3Key = generateID(8)
     var policy = getPolicy(s3Key)
+
+    console.log("attempting to upload " + filename + " to " + s3Key)
 
     request.post(s3BucketUrl, {
         json: {
@@ -182,7 +184,7 @@ module.exports = function(app) {
           formSubmissionResponse.writeHead(400, {});
           formSubmissionResponse.end()
         } else {
-          console.log("upload success: " + s3BucketUrl + "/" + s3Key)
+          console.log("upload success: " + s3BucketUrl + s3Key)
           formSubmissionResponse.writeHead(200, {
             'Content-Type': 'application/json',
             result: 'success',
