@@ -165,10 +165,10 @@ module.exports = function(app) {
       //Store the data from the fields in your data store.
       //The data store could be a file or database or any other store based
       //on your application.
-      util.inspect({
+      console.log("res: " + util.inspect({
         fields: fields,
         files: files
-      });
+      }));
     })
 
     var filename = req.body.filename
