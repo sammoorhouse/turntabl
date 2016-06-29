@@ -170,7 +170,7 @@ module.exports = function(app) {
             }
           },
           function(err, resp) {
-            console.log("response: " + resp)
+            console.log("response: " + util.inspect(resp))
             if (err) {
               console.log("upload error: " + err)
               res.writeHead(400, {});
@@ -186,7 +186,7 @@ module.exports = function(app) {
               });
               res.end()
             }
-            var eventId = req.body.eventId
+            //var eventId = req.body.eventId
           }
         );
       })
