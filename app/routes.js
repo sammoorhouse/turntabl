@@ -157,7 +157,7 @@ module.exports = function(app) {
         var generatedId = generateID(8)
         var firstChar = generatedId[0]
         var secondChar = generatedId[1]
-        var s3Key = firstChar + "/" + secondChar + "/" + generatedId\
+        var s3Key = firstChar + "/" + secondChar + "/" + generatedId
         var policy = getPolicy(s3Key)
 
         request.post(s3BucketUrl, {
