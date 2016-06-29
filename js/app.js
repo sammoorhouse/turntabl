@@ -31,6 +31,9 @@ $(function() { //on load
     // Set the url
     paramName: "file", // The name that will be used to transfer the file
     method: "post",
+    params: {
+      eventId: eventId
+    }
     HiddenFilesPath: 'body',
     createImageThumbnails: true,
     uploadMultiple: true,

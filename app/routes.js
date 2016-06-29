@@ -155,10 +155,14 @@ module.exports = function(app) {
     req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
       console.log("Uploading: " + filename);
 
+
+
       var generatedId = generateID(8)
       var firstChar = generatedId[0]
       var secondChar = generatedId[1]
       var s3Key = firstChar + "/" + secondChar + "/" + generatedId
+
+      console.log("params: " + req.params)
 
       uploadS3(file, s3Key, s3BucketName, function(err) {
         if (err) {
@@ -167,6 +171,32 @@ module.exports = function(app) {
           res.end()
         } else {
           console.log("upload success: " + s3BucketUrl + s3Key)
+
+          var eventId = req.params.eventId
+
+          //update events table
+          Event.findOne({
+            'id': eventId
+          }, function(err, event) {
+            if (!err) {
+              event.resources.push({
+                filename: filename,
+                fileType: filetype,
+                s3Key: s3Key,
+                //thumbnailKey: thumbnailKey
+              })
+              event.save(function(error) {
+                if (error) {
+                  console.log("error updating event " + eventId + ": " + error)
+                }
+              })
+            }
+          })
+
+
+
+
+
           res.writeHead(200, {
             'Content-Type': 'application/json',
             result: 'success',
@@ -176,7 +206,6 @@ module.exports = function(app) {
           });
           res.end()
         }
-
       });
     })
 
@@ -186,26 +215,7 @@ module.exports = function(app) {
   //create image thumbnail
 
 
-  //update events table
-  /*
-  Event.findOne({
-    'id': eventId
-  }, function(err, event) {
-    if (!err) {
-      event.resources.push({
-        filename: filename,
-        fileType: filetype,
-        s3Key: s3Key,
-        thumbnailKey: thumbnailKey
-      })
-      event.save(function(error) {
-        if (error) {
-          console.log("error updating event " + eventId + ": " + error)
-        }
-      })
-    }
-  )
-  });*/
+
   app.post('/beginSession', function(req, res) {
     var eventId = req.body.eventId
 
