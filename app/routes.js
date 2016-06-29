@@ -162,7 +162,7 @@ module.exports = function(app) {
       var secondChar = generatedId[1]
       var s3Key = firstChar + "/" + secondChar + "/" + generatedId
 
-      console.log("params: " + req.params)
+      console.log("params: " + util.inspect(req.params))
 
       uploadS3(file, s3Key, s3BucketName, function(err) {
         if (err) {
@@ -173,6 +173,7 @@ module.exports = function(app) {
           console.log("upload success: " + s3BucketUrl + s3Key)
 
           var eventId = req.params.eventId
+          console.log("eventId: " + eventId)
 
           //update events table
           Event.findOne({
