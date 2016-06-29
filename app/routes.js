@@ -180,9 +180,8 @@ module.exports = function(app) {
           }, function(err, event) {
             if (!err) {
               event.resources.push({
-                filename: filename,
-                s3Key: s3Key,
-                //thumbnailKey: thumbnailKey
+                name: filename,
+                url: s3BucketUrl + s3Key
               })
               event.save(function(error) {
                 if (error) {
