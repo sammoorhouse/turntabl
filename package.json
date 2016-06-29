@@ -4,6 +4,7 @@
   "dependencies": {
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.0.0",
+    "connect-busboy": "0.0.2",
     "connect-flash": "~0.1.1",
     "cookie-parser": "~1.0.0",
     "dotenv": "^2.0.0",

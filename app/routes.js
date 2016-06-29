@@ -148,10 +148,18 @@ module.exports = function(app) {
   })
 
   app.post('/addSessionResource', function(req, res) {
-    console.log(util.inspect(req))
-    console.log('body: ' + util.inspect(req.body))
-    console.log("files: " + request.files)
-    console.log("file name: " + request.files.file.name)
+
+    var fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function(fieldname, file, filename) {
+      console.log("Uploading: " + filename);
+      //fstream = fs.createWriteStream(__dirname + '/files/' + filename);
+      //file.pipe(fstream);
+      //fstream.on('close', function() {
+      //  res.redirect('back');
+      //});
+    });
+
     var filename = req.body.filename
     var generatedId = generateID(8)
     var firstChar = generatedId[0]

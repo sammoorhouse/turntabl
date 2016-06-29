@@ -34,6 +34,7 @@ var mongoose = require('mongoose');
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var busboy = require('connect-busboy');
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -46,10 +47,7 @@ app.use('/fonts', express.static('fonts'));
 app.use('/img', express.static('img'));
 
 //app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-app.use(bodyParser.json());
+app.use(busboy);
 
 app.set('view engine', 'ejs');
 
