@@ -163,6 +163,7 @@ module.exports = function(app) {
       var s3Key = firstChar + "/" + secondChar + "/" + generatedId
 
       console.log("params: " + util.inspect(req.params))
+      console.log("body: " + util.inspect(req.body))
 
       uploadS3(file, s3Key, s3BucketName, function(err) {
         if (err) {
