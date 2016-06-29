@@ -33,7 +33,7 @@ $(function() { //on load
     method: "post",
     HiddenFilesPath: 'body',
     createImageThumbnails: true,
-    uploadMultiple: false,
+    uploadMultiple: true,
     thumbnailWidth: 150,
     thumbnailHeight: 150,
     parallelUploads: 20,

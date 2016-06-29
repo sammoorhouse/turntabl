@@ -46,6 +46,7 @@ app.use('/fonts', express.static('fonts'));
 app.use('/img', express.static('img'));
 
 //app.use(morgan('dev'));
+app.use(bodyParser)
 app.use(bodyParser.urlencoded({
   extended: true
 }));
