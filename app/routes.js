@@ -172,7 +172,6 @@ module.exports = function(app) {
           res.end()
         } else {
           console.log("upload success: " + s3BucketUrl + s3Key)
-
           console.log("eventId: " + eventId)
 
           //update events table
@@ -182,7 +181,6 @@ module.exports = function(app) {
             if (!err) {
               event.resources.push({
                 filename: filename,
-                fileType: filetype,
                 s3Key: s3Key,
                 //thumbnailKey: thumbnailKey
               })
