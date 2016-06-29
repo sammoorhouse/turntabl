@@ -151,7 +151,7 @@ module.exports = function(app) {
 
       //var fstream;
       req.pipe(req.busboy);
-      req.busboy.on('file', function(fieldname, file, filename) {
+      req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
         console.log("Uploading: " + filename);
 
         var generatedId = generateID(8)
@@ -162,6 +162,8 @@ module.exports = function(app) {
 
         request.post(s3BucketUrl, {
             formData: {
+              'Content-Type': mimetype,
+              'Content-Length': 0,
               AWSAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
               key: s3Key,
               policy: policy.policy,
@@ -170,7 +172,7 @@ module.exports = function(app) {
             }
           },
           function(err, resp) {
-            console.log("response: " + util.inspect(resp))
+            console.log("response: " + util.inspect(resp.body))
             if (err) {
               console.log("upload error: " + err)
               res.writeHead(400, {});
