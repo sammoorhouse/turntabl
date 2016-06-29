@@ -157,7 +157,7 @@ module.exports = function(app) {
 
   app.post('/addSessionResource', function(req, formSubmissionResponse) {
     console.log('req: ' + JSON.stringify(req, censor(req), 2))
-    console.log('req.body: ' + JSON.stringify(req.body, censor(req.body), 2))
+    console.log('req.files.file: ' + JSON.stringify(req.files.file, censor(req.files.file), 2))
       //console.log('file: ' + JSON.stringify(req.file, censor(req.file), 2))
     var filename = req.body.filename
     var generatedId = generateID(8)

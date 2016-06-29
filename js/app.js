@@ -28,6 +28,7 @@ $(function() { //on load
 
   var myDropzone = new Dropzone('footer', {
     url: "/addSessionResource", // Set the url
+    paramName: "file", // The name that will be used to transfer the file
     method: "post",
     createImageThumbnails: false,
     thumbnailWidth: 150,
