@@ -6,6 +6,9 @@ var request = require('request');
 var Pusher = require('pusher');
 var policy = require('s3-policy');
 var uuid = require('node-uuid');
+var formidable = require("formidable");
+
+var util = require('util');
 var pusher = new Pusher({
   appId: process.env.pusher_AppId,
   key: process.env.pusher_Key,
@@ -156,9 +159,18 @@ module.exports = function(app) {
   }
 
   app.post('/addSessionResource', function(req, formSubmissionResponse) {
-    console.log('req: ' + JSON.stringify(req, censor(req), 2))
-    console.log('req.files.file: ' + JSON.stringify(req.files.file, censor(req.files.file), 2))
-      //console.log('file: ' + JSON.stringify(req.file, censor(req.file), 2))
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function(err, fields, files) {
+      //Store the data from the fields in your data store.
+      //The data store could be a file or database or any other store based
+      //on your application.
+      util.inspect({
+        fields: fields,
+        files: files
+      });
+    })
+
     var filename = req.body.filename
     var generatedId = generateID(8)
     var firstChar = generatedId[0]
