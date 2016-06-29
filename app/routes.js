@@ -158,18 +158,8 @@ module.exports = function(app) {
     })
   }
 
-  app.post('/addSessionResource', function(req, formSubmissionResponse) {
-    var form = new formidable.IncomingForm();
-
-    form.parse(req, function(err, fields, files) {
-      //Store the data from the fields in your data store.
-      //The data store could be a file or database or any other store based
-      //on your application.
-      console.log("res: " + util.inspect({
-        fields: fields,
-        files: files
-      }));
-    })
+  app.post('/addSessionResource', function(req, res) {
+    console.log(util.inspect(req))
 
     var filename = req.body.filename
     var generatedId = generateID(8)
@@ -194,18 +184,18 @@ module.exports = function(app) {
         if (err) {
           console.log("upload error: " + err)
           console.log("response: " + resp)
-          formSubmissionResponse.writeHead(400, {});
-          formSubmissionResponse.end()
+          res.writeHead(400, {});
+          res.end()
         } else {
           console.log("upload success: " + s3BucketUrl + s3Key)
-          formSubmissionResponse.writeHead(200, {
+          res.writeHead(200, {
             'Content-Type': 'application/json',
             result: 'success',
             nested: false,
             imageUrl: s3BucketUrl + "/" + s3Key,
             imageThumbUrl: "foo"
           });
-          formSubmissionResponse.end()
+          res.end()
         }
         var eventId = req.body.eventId
       }
