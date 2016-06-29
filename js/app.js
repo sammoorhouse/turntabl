@@ -77,42 +77,42 @@ $(function() { //on load
     })
   }
 
-  /*
-    myDropzone.on("sending", function(file, xhr, formData) {
-      console.log("dropzone sending")
-      $.each(file.postData, function(k, v) {
-        formData.append(k, v);
-      });
 
-      formData.append('Content-type', '');
-      formData.append('Content-length', '');
-      formData.append('acl', 'public-read');
+  myDropzone.on("sending", function(file, xhr, formData) {
+    console.log("dropzone sending")
+    $.each(file.postData, function(k, v) {
+      formData.append(k, v);
     });
-    myDropzone.on("complete", function(file) {
-      console.log("dropzone complete")
 
-      $.post("/addSessionResource", {
-          s3Key: file.s3,
-          fileType: file.type,
-          filename: file.name,
-          eventId: eventId
-        },
-        function(result) {
-          if (result.action === "split") {
-            //the file has been split into sections; figure it out
-          })
-      }
-    })
+    formData.append('Content-type', '');
+    formData.append('Content-length', '');
+    formData.append('acl', 'public-read');
   });
-  */
+  myDropzone.on("complete", function(file) {
+    console.log("dropzone complete")
 
-  //nanobar
-  nanobar = new Nanobar({
-    id: "event-progress-nanobar",
-    className: "nanobar"
-  });
+    $.post("/addSessionResource", {
+        s3Key: file.s3,
+        fileType: file.type,
+        filename: file.name,
+        eventId: eventId
+      },
+      function(result) {
+        if (result.action === "split") {
+          //the file has been split into sections; figure it out
+        })
+    }
+  })
+});
 
-  nanobar.go(0)
+
+//nanobar
+nanobar = new Nanobar({
+  id: "event-progress-nanobar",
+  className: "nanobar"
+});
+
+nanobar.go(0)
 })
 
 function triggerSessionStart() {
