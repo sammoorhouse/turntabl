@@ -169,10 +169,10 @@ module.exports = function(app) {
     request.post({
         url: s3BucketUrl,
         json: {
-          'AWSAccessKeyId': process.env.AWS_ACCESS_KEY_ID,
-          'key': filePath,
-          'policy': policy.policy,
-          'signature': policy.signature,
+          AWSAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          key: s3Key,
+          policy: policy.policy,
+          signature: policy.signature,
           file: req.file
         }
       },
