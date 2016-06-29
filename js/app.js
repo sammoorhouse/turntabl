@@ -27,8 +27,9 @@ $(function() { //on load
   previewNode.parentNode.removeChild(previewNode);
 
   var myDropzone = new Dropzone('footer', {
-    url: s3Bucket, // Set the url
+    url: "/addSessionResource", // Set the url
     method: "post",
+    createImageThumbnails: false,
     thumbnailWidth: 150,
     thumbnailHeight: 150,
     parallelUploads: 20,
@@ -37,7 +38,7 @@ $(function() { //on load
     autoProcessQueue: true,
     previewsContainer: ".dropzone-previews", // Define the container to display the previews
     //clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
-    accept: dropzoneAccept
+    //accept: dropzoneAccept
   });
 
   function dropzoneAccept(file, done) {
@@ -72,41 +73,34 @@ $(function() { //on load
     })
   }
 
-  myDropzone.on("addedfile", function(file) {
-    console.log("dropzone addedfile")
-  });
+  /*
+    myDropzone.on("sending", function(file, xhr, formData) {
+      console.log("dropzone sending")
+      $.each(file.postData, function(k, v) {
+        formData.append(k, v);
+      });
 
-  // Update the total progress bar
-  myDropzone.on("totaluploadprogress", function(progress) {
-    console.log("dropzone totaluploadprogress")
-      //document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
-  });
-
-  myDropzone.on("sending", function(file, xhr, formData) {
-    console.log("dropzone sending")
-    $.each(file.postData, function(k, v) {
-      formData.append(k, v);
+      formData.append('Content-type', '');
+      formData.append('Content-length', '');
+      formData.append('acl', 'public-read');
     });
+    myDropzone.on("complete", function(file) {
+      console.log("dropzone complete")
 
-    formData.append('Content-type', '');
-    formData.append('Content-length', '');
-    formData.append('acl', 'public-read');
-
-    // Show the total progress bar when upload starts
-    //document.querySelector("#total-progress").style.opacity = "1";
-    // And disable the start button
-    //file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+      $.post("/addSessionResource", {
+          s3Key: file.s3,
+          fileType: file.type,
+          filename: file.name,
+          eventId: eventId
+        },
+        function(result) {
+          if (result.action === "split") {
+            //the file has been split into sections; figure it out
+          })
+      }
+    })
   });
-  myDropzone.on("complete", function(file) {
-    console.log("dropzone complete")
-      //$(file.previewTemplate).removeClass('uploading');
-  });
-
-  // Hide the total progress bar when nothing's uploading anymore
-  myDropzone.on("queuecomplete", function(progress) {
-    console.log("dropzone queuecomplete")
-      //document.querySelector("#total-progress").style.opacity = "0";
-  });
+  */
 
   //nanobar
   nanobar = new Nanobar({
@@ -120,7 +114,6 @@ $(function() { //on load
 function triggerSessionStart() {
   $.post("/beginSession", {
       eventId: eventId
-
     },
     function(result) {
       if (result.result === "begin") {

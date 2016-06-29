@@ -104,6 +104,7 @@ module.exports = function(app) {
         newEvent.leaderPaid = false
         newEvent.attended = false
         newEvent.eventPrice = eventPrice
+        newEvent.resources = []
 
         //create openTok session
         opentok.createSession(function(err, session) {
@@ -143,41 +144,67 @@ module.exports = function(app) {
     })
   })
 
-  app.get('/sign-s3', (req, res) => {
-    var filename = generateID(8)
+  function getPolicy(key) {
+    var filename = key
     var firstChar = filename[0]
     var secondChar = filename[1]
     var filePath = firstChar + "/" + secondChar + "/" + filename
     var acl = 'public-read'
-    var p = policy({
+    return policy({
       acl: acl,
       secret: process.env.AWS_SECRET_ACCESS_KEY,
       bucket: s3BucketName,
       key: filePath,
-      expires: new Date(Date.now() + 600000),
+      expires: new Date(Date.now() + 600000);
     })
-    var result = {
-      'AWSAccessKeyId': process.env.AWS_ACCESS_KEY_ID,
-      'key': filePath,
-      'policy': p.policy,
-      'signature': p.signature
-    };
-    res.write(JSON.stringify(result));
-    res.end();
-  });
+  }
 
-  app.post('/pusher/auth', function(req, res) {
-    var socketId = req.body.socket_id;
-    var channel = req.body.channel_name;
-    var presenceData = {
-      user_id: socketId
-    };
+  app.post('/addSessionResource', function(req, res) {
+    console.log('req: ' + JSON.parse(req, censor(req), 2))
+    var filename = req.body.name
+    var fileType = req.body.type
+    var s3Key = generateID(8)
+    var policy = getPolicy(s3Key)
 
-    var auth = pusher.authenticate(socketId, channel, presenceData);
-    res.send(auth);
-    res.end()
-  });
+    request.post({
+        url: s3BucketUrl,
+        json: {
+          'AWSAccessKeyId': process.env.AWS_ACCESS_KEY_ID,
+          'key': filePath,
+          'policy': policy.policy,
+          'signature': policy.signature,
+          file: req.file
+        }
+      },
+      function(err, resp) {
+        var eventId = req.body.eventId
+      }
+    )
+  })
 
+  //create image thumbnail
+
+
+  //update events table
+  /*
+  Event.findOne({
+    'id': eventId
+  }, function(err, event) {
+    if (!err) {
+      event.resources.push({
+        filename: filename,
+        fileType: filetype,
+        s3Key: s3Key,
+        thumbnailKey: thumbnailKey
+      })
+      event.save(function(error) {
+        if (error) {
+          console.log("error updating event " + eventId + ": " + error)
+        }
+      })
+    }
+  )
+  });*/
   app.post('/beginSession', function(req, res) {
     var eventId = req.body.eventId
 

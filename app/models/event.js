@@ -14,7 +14,8 @@ var eventSchema = mongoose.Schema({
   clientPaid: Boolean,
   leaderPaid: Boolean,
   openTokSessionId: String,
-  eventPrice: Number
+  eventPrice: Number,
+  resources: []
 });
 
 // create the model for users and expose it to our app
