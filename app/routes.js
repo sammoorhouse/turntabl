@@ -7,6 +7,8 @@ var Pusher = require('pusher');
 var policy = require('s3-policy');
 var uuid = require('node-uuid');
 var formidable = require("formidable");
+var AWS = require('aws-sdk');
+var s3 = new AWS.S3();
 
 var util = require('util');
 var pusher = new Pusher({
@@ -158,40 +160,30 @@ module.exports = function(app) {
         var firstChar = generatedId[0]
         var secondChar = generatedId[1]
         var s3Key = firstChar + "/" + secondChar + "/" + generatedId
-        var policy = getPolicy(s3Key)
 
-        request.post(s3BucketUrl, {
-            formData: {
-              'Content-Type': mimetype,
-              'Content-Length': 0,
-              acl: 'public-read',
-              AWSAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
-              key: s3Key,
-              policy: policy.policy,
-              signature: policy.signature,
-              file: file
-            }
-          },
-          function(err, resp) {
-            console.log("response: " + util.inspect(resp.body))
-            if (err) {
-              console.log("upload error: " + err)
-              res.writeHead(400, {});
-              res.end()
-            } else {
-              console.log("upload success: " + s3BucketUrl + s3Key)
-              res.writeHead(200, {
-                'Content-Type': 'application/json',
-                result: 'success',
-                nested: false,
-                imageUrl: s3BucketUrl + s3Key,
-                imageThumbUrl: "foo"
-              });
-              res.end()
-            }
-            //var eventId = req.body.eventId
+        var params = {
+          Bucket: s3Bucket,
+          Key: s3Key,
+          Body: file
+        };
+        s3.putObject(params, function(err, data) {
+          if (err) {
+            console.log("upload error: " + err)
+            res.writeHead(400, {});
+            res.end()
+          } else {
+            console.log("upload success: " + s3BucketUrl + s3Key)
+            res.writeHead(200, {
+              'Content-Type': 'application/json',
+              result: 'success',
+              nested: false,
+              imageUrl: s3BucketUrl + s3Key,
+              imageThumbUrl: "foo"
+            });
+            res.end()
           }
-        );
+
+        });
       })
     })
     //create image thumbnail
