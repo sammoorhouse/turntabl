@@ -57,9 +57,18 @@ body {
 .footer.dz-drag-hover {
   opacity: 0.5;
 }
+.dropzone .dz-preview {
+  margin: 0
+}
+.dropzone .dz-preview.dz-image-preview {
+  background: transparent;
+}
+.dropzone .dz-preview {
+  margin: 0;
+}
 .dropzone .dz-preview .dz-image {
-  width: 250px;
-  height: 250px;
+  width: 150px;
+  height: 150px;
 }
 .dropzone .dz-preview:hover .dz-details img, .dropzone-previews .dz-preview:hover .dz-details img {
   display: none;
