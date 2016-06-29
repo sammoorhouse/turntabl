@@ -152,7 +152,6 @@ module.exports = function(app) {
 
   app.post('/addSessionResource', function(req, res) {
     //var fstream;
-    req.pipe(req.busboy);
     req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
       console.log("Uploading: " + filename);
 
@@ -180,6 +179,8 @@ module.exports = function(app) {
 
       });
     })
+
+    req.pipe(req.busboy);
   })
 
   //create image thumbnail
