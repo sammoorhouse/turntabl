@@ -162,7 +162,7 @@ module.exports = function(app) {
         var s3Key = firstChar + "/" + secondChar + "/" + generatedId
 
         var params = {
-          Bucket: s3Bucket,
+          Bucket: s3BucketName,
           Key: s3Key,
           Body: file
         };
