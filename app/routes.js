@@ -164,6 +164,7 @@ module.exports = function(app) {
             formData: {
               'Content-Type': mimetype,
               'Content-Length': 0,
+              acl: 'public-read',
               AWSAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
               key: s3Key,
               policy: policy.policy,
