@@ -149,7 +149,7 @@ module.exports = function(app) {
 
   app.post('/addSessionResource', function(req, res) {
 
-    var fstream;
+    //var fstream;
     req.pipe(req.busboy);
     req.busboy.on('file', function(fieldname, file, filename) {
       console.log("Uploading: " + filename);
@@ -159,46 +159,45 @@ module.exports = function(app) {
       //  res.redirect('back');
       //});
     });
+    /*
+        var filename = req.body.filename
+        var generatedId = generateID(8)
+        var firstChar = generatedId[0]
+        var secondChar = generatedId[1]
+        var s3Key = firstChar + "/" + secondChar + "/" + generatedId
+        var fileType = req.body.type
+        var policy = getPolicy(s3Key)
 
-    var filename = req.body.filename
-    var generatedId = generateID(8)
-    var firstChar = generatedId[0]
-    var secondChar = generatedId[1]
-    var s3Key = firstChar + "/" + secondChar + "/" + generatedId
-    var fileType = req.body.type
-    var policy = getPolicy(s3Key)
 
-    console.log("attempting to upload " + filename + " to " + s3Key)
-
-    request.post(s3BucketUrl, {
-        json: {
-          AWSAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
-          key: s3Key,
-          policy: policy.policy,
-          signature: policy.signature,
-          file: req.file
-        }
-      },
-      function(err, resp) {
-        if (err) {
-          console.log("upload error: " + err)
-          console.log("response: " + resp)
-          res.writeHead(400, {});
-          res.end()
-        } else {
-          console.log("upload success: " + s3BucketUrl + s3Key)
-          res.writeHead(200, {
-            'Content-Type': 'application/json',
-            result: 'success',
-            nested: false,
-            imageUrl: s3BucketUrl + "/" + s3Key,
-            imageThumbUrl: "foo"
-          });
-          res.end()
-        }
-        var eventId = req.body.eventId
-      }
-    )
+        request.post(s3BucketUrl, {
+            json: {
+              AWSAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
+              key: s3Key,
+              policy: policy.policy,
+              signature: policy.signature,
+              file: req.file
+            }
+          },
+          function(err, resp) {
+            if (err) {
+              console.log("upload error: " + err)
+              console.log("response: " + resp)
+              res.writeHead(400, {});
+              res.end()
+            } else {
+              console.log("upload success: " + s3BucketUrl + s3Key)
+              res.writeHead(200, {
+                'Content-Type': 'application/json',
+                result: 'success',
+                nested: false,
+                imageUrl: s3BucketUrl + "/" + s3Key,
+                imageThumbUrl: "foo"
+              });
+              res.end()
+            }
+            var eventId = req.body.eventId
+          }
+        )*/
   })
 
   //create image thumbnail
