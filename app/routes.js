@@ -145,13 +145,12 @@ module.exports = function(app) {
   })
 
   function getPolicy(key) {
-    var filename = key
     var acl = 'public-read'
     return policy({
       acl: acl,
       secret: process.env.AWS_SECRET_ACCESS_KEY,
       bucket: s3BucketName,
-      key: filePath,
+      key: key,
       expires: new Date(Date.now() + 600000)
     })
   }
