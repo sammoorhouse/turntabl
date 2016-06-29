@@ -161,7 +161,7 @@ module.exports = function(app) {
         var policy = getPolicy(s3Key)
 
         request.post(s3BucketUrl, {
-            json: {
+            formData: {
               AWSAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
               key: s3Key,
               policy: policy.policy,
