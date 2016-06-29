@@ -149,25 +149,17 @@ module.exports = function(app) {
 
   app.post('/addSessionResource', function(req, res) {
 
-    //var fstream;
-    req.pipe(req.busboy);
-    req.busboy.on('file', function(fieldname, file, filename) {
-      console.log("Uploading: " + filename);
-      //fstream = fs.createWriteStream(__dirname + '/files/' + filename);
-      //file.pipe(fstream);
-      //fstream.on('close', function() {
-      //  res.redirect('back');
-      //});
-    });
-    /*
-        var filename = req.body.filename
+      //var fstream;
+      req.pipe(req.busboy);
+      req.busboy.on('file', function(fieldname, file, filename) {
+        console.log("Uploading: " + filename);
+
         var generatedId = generateID(8)
         var firstChar = generatedId[0]
         var secondChar = generatedId[1]
         var s3Key = firstChar + "/" + secondChar + "/" + generatedId
         var fileType = req.body.type
         var policy = getPolicy(s3Key)
-
 
         request.post(s3BucketUrl, {
             json: {
@@ -197,10 +189,10 @@ module.exports = function(app) {
             }
             var eventId = req.body.eventId
           }
-        )*/
-  })
-
-  //create image thumbnail
+        );
+      })
+    })
+    //create image thumbnail
 
 
   //update events table
