@@ -31,6 +31,7 @@ $(function() { //on load
     // Set the url
     paramName: "file", // The name that will be used to transfer the file
     method: "post",
+    HiddenFilesPath: 'body',
     createImageThumbnails: true,
     thumbnailWidth: 150,
     thumbnailHeight: 150,
