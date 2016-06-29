@@ -29,7 +29,8 @@
     "request": "^2.72.0",
     "s3-policy": "^0.2.0",
     "s3-upload-stream": "^1.0.7",
-    "stormpath": "^0.18.2"
+    "stormpath": "^0.18.2",
+    "thumbd": "^2.19.0"
   },
   "main": "server.js",
   "devDependencies": {
