@@ -150,7 +150,7 @@ module.exports = function(app) {
   app.post('/addSessionResource', function(req, res) {
     console.log(util.inspect(req))
     console.log('body: ' + util.inspect(req.body))
-
+    console.log("file name: " + request.files.file.name)
     var filename = req.body.filename
     var generatedId = generateID(8)
     var firstChar = generatedId[0]
