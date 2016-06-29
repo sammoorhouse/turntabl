@@ -31,9 +31,6 @@ $(function() { //on load
     // Set the url
     paramName: "file", // The name that will be used to transfer the file
     method: "post",
-    params: {
-      eventId: eventId
-    }
     HiddenFilesPath: 'body',
     createImageThumbnails: true,
     uploadMultiple: true,
@@ -80,16 +77,9 @@ $(function() { //on load
     })
   }
 
-
   myDropzone.on("sending", function(file, xhr, formData) {
     console.log("dropzone sending")
-    $.each(file.postData, function(k, v) {
-      formData.append(k, v);
-    });
-
-    formData.append('Content-type', '');
-    formData.append('Content-length', '');
-    formData.append('acl', 'public-read');
+    formData.append('eventId', eventId);
   });
 
   //nanobar
