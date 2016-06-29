@@ -170,9 +170,9 @@ module.exports = function(app) {
             }
           },
           function(err, resp) {
+            console.log("response: " + resp)
             if (err) {
               console.log("upload error: " + err)
-              console.log("response: " + resp)
               res.writeHead(400, {});
               res.end()
             } else {
