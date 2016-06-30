@@ -200,7 +200,7 @@ module.exports = function(app) {
       var extension = generateID(3)
       var s3Key = firstChar + "/" + secondChar + "/" + generatedId + "." + extension
 
-      uploadS3(fileReadStream, s3Key, s3BucketName, function(err) {
+      uploadS3(file, s3Key, s3BucketName, function(err) {
         if (err) {
           console.log("upload error: " + err)
           uploadError = "upload error: " + err
