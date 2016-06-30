@@ -179,50 +179,65 @@ module.exports = function(app) {
       }).then(
         function(image) {
           console.log('thumbnail created: ' + util.inspect(image))
+            //upload to S3
+          fs.readFile(image.path, function(err, file) {
+            if (err) {
+              console.error("error reading thumbnail file: " + err)
+            } else {
+
+              uploadS3(file, s3Key + "_150", s3BucketName, function(err) {
+                if (err) {
+                  console.log("error uploading thumbnail to s3: " + err)
+                } else {
+                  console.log("uploaded thumbnail to s3")
+
+                  fs.unlink(localPath)
+
+                  uploadS3(file, s3Key, s3BucketName, function(err) {
+                    if (err) {
+                      console.log("upload error: " + err)
+                      res.writeHead(400, {});
+                      res.end()
+                    } else {
+                      console.log("upload success: " + s3BucketUrl + s3Key)
+                      console.log("eventId: " + eventId)
+
+                      //update events table
+                      Event.findOne({
+                        'id': eventId
+                      }, function(err, event) {
+                        if (!err) {
+                          event.resources.push({
+                            name: filename,
+                            url: s3BucketUrl + s3Key
+                          })
+                          event.save(function(error) {
+                            if (error) {
+                              console.log("error updating event " + eventId + ": " + error)
+                            }
+                          })
+                        }
+                      })
+
+                      res.writeHead(200, {
+                        'Content-Type': 'application/json',
+                        result: 'success',
+                        nested: false,
+                        imageUrl: s3BucketUrl + s3Key,
+                        imageThumbUrl: s3BucketUrl + s3Key + "_150"
+                      });
+                      res.end()
+                    }
+                  });
+                }
+              })
+            }
+          })
         },
         function(err) {
           console.error("error creating thumbnail: " + util.inspect(err))
         }
       )
-
-      uploadS3(file, s3Key, s3BucketName, function(err) {
-        if (err) {
-          console.log("upload error: " + err)
-          res.writeHead(400, {});
-          res.end()
-        } else {
-          console.log("upload success: " + s3BucketUrl + s3Key)
-          console.log("eventId: " + eventId)
-
-          //create thumbnail
-
-          //update events table
-          Event.findOne({
-            'id': eventId
-          }, function(err, event) {
-            if (!err) {
-              event.resources.push({
-                name: filename,
-                url: s3BucketUrl + s3Key
-              })
-              event.save(function(error) {
-                if (error) {
-                  console.log("error updating event " + eventId + ": " + error)
-                }
-              })
-            }
-          })
-
-          res.writeHead(200, {
-            'Content-Type': 'application/json',
-            result: 'success',
-            nested: false,
-            imageUrl: s3BucketUrl + s3Key,
-            imageThumbUrl: "foo"
-          });
-          res.end()
-        }
-      });
     })
 
     req.pipe(req.busboy);
