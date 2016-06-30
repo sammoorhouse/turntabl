@@ -34,9 +34,29 @@ $(function() { //on load
     clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
     //accept: dropzoneAccept
   });
+  /*
+    thumbnail: function(file, dataUrl) {
+        var thumbnailElement, _i, _len, _ref;
+        if (file.previewElement) {
+          file.previewElement.classList.remove("dz-file-preview");
+          _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            thumbnailElement = _ref[_i];
+            thumbnailElement.alt = file.name;
+            thumbnailElement.src = dataUrl;
+          }
+          return setTimeout(((function(_this) {
+            return function() {
+              return file.previewElement.classList.add("dz-image-preview");
+            };
+          })(this)), 1);
+        }
+      },
+  */
 
-  eventResources.forEach(function(resource) {
-    addServerFile(myDropzone, resource.name, resource.url)
+  myDropzone.on("thumbnail", function(file, dataUrl) {
+
+    console.log("thumbnail")
   })
 
   myDropzone.on("sending", function(file, xhr, formData) {
@@ -120,9 +140,4 @@ function addServerFile(dropzone, imageName, url) {
     name: imageName,
     size: 12345
   };
-
-  // Call the default addedfile event handler
-  dropzone.emit("addedfile", mockFile);
-  dropzone.createThumbnailFromUrl(mockFile, "//" + url, null, "anonymous");
-  dropzone.emit("complete", mockFile);
 }
