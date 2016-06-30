@@ -12,7 +12,7 @@
         var openTokSessionId = "<%= openTokSessionId %>"
         var openTokApiKey = "<%= openTokApiKey %>"
         var openTokToken = "<%= openTokToken %>"
-        var eventResources = <%= event.resources %>
+        var eventResources = <%= JSON.stringify(event.resources, null, 2) %>
       </script>
       <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/nanobar/0.4.2/nanobar.min.js"></script>
       <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
