@@ -62,7 +62,7 @@
       <% event.resources.forEach(function(resource){ %>
         <script>
           var resourceId = generateID(8)
-          resizeImage("<%= resource.url %>", 150, 150, function(dataUrl, resourceId) {
+          resizeImage("//<%= resource.url %>", 150, 150, function(dataUrl, resourceId) {
             $("#" + resourceId).src = dataUrl
           }, resourceId)
         </script>
