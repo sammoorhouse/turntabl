@@ -120,7 +120,6 @@ function tick() {
 }
 
 function resizeImage(url, width, height, callback, file) {
-  console.log("In_resizeImage");
   var sourceImage = new Image();
   sourceImage.crossOrigin = "anonymous"
 
