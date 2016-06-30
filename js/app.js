@@ -126,9 +126,6 @@ function resizeImage(url, width, height, callback, file) {
 
   sourceImage.onload = (function(f) {
     return function(evt) {
-      console.log("In_sourceImage_onload");
-      console.log("sourceImage.width:" + sourceImage.width);
-      console.log("sourceImage.height:" + sourceImage.height);
       var canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;

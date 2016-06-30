@@ -71,14 +71,14 @@
             <div></div>
           </a>
         </div>
+
         <script>
           resizeImage("//<%= resource.url %>", 150, 150, function(dataUrl, resourceId) {
             $("div#<%=resourceId%>").removeClass('uil-ring-css')
-
-            $("div#<%=resourceId%>>a>div>").prepend($('<img>', {
+            $('<img>', {
               src: dataUrl,
               alt: '<%= resource.name %>'
-            }))
+            }).appendTo($("div#<%=resourceId%>>a>div>"))
           }, "<%= resourceId %>")
         </script>
 
