@@ -180,12 +180,12 @@ module.exports = function(app) {
         function(image) {
           console.log('thumbnail created: ' + util.inspect(image))
             //upload to S3
-          fs.readFile(image.path, function(err, file) {
+          fs.readFile(image.path, function(err, thumbstream) {
             if (err) {
               console.error("error reading thumbnail file: " + err)
             } else {
 
-              uploadS3(file, s3Key + "_150", s3BucketName, function(err) {
+              uploadS3(thumbstream, s3Key + "_150", s3BucketName, function(err) {
                 if (err) {
                   console.log("error uploading thumbnail to s3: " + err)
                 } else {
