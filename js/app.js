@@ -130,10 +130,32 @@ function tick() {
   $('#countdownClock').text(timeRemainingHuman)
 }
 
-function addServerFile(dropzone, imageName, url) {
-  // Create the mock file:
-  var mockFile = {
-    name: imageName,
-    size: 12345
-  };
+function resizeImage(url, width, height, callback, file) {
+  console.log("In_resizeImage");
+  var sourceImage = new Image();
+
+  sourceImage.onload = (function(f) {
+    return function(evt) {
+      console.log("In_sourceImage_onload");
+      console.log("sourceImage.width:" + sourceImage.width);
+      console.log("sourceImage.height:" + sourceImage.height);
+      var canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      if (sourceImage.width == sourceImage.height) {
+        canvas.getContext("2d").drawImage(sourceImage, 0, 0, width, height);
+      } else {
+        minVal = Math.min(sourceImage.width, sourceImage.height);
+        if (sourceImage.width > sourceImage.height) {
+          canvas.getContext("2d").drawImage(sourceImage, (sourceImage.width - minVal) / 2, 0, minVal, minVal, 0, 0, width, height);
+        } else {
+          canvas.getContext("2d").drawImage(sourceImage, 0, (sourceImage.height - minVal) / 2, minVal, minVal, 0, 0, width, height);
+        }
+      }
+      callback(canvas.toDataURL(), f);
+    }
+  })(file);
+
+  sourceImage.src = url;
 }
