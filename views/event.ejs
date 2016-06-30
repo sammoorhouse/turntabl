@@ -14,7 +14,7 @@
         var openTokToken = "<%= openTokToken %>"
         var eventResources = [
           <% event.resources.forEach(function(resource){ %> {
-            name: "<%= resource.name %>"
+            name: "<%= resource.name %>",
             url: "<%= resource.url %>"
           },
           <%})%>
