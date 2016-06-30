@@ -65,7 +65,7 @@
         <script>
           resizeImage("//<%= resource.url %>", 150, 150, function(dataUrl, resourceId) {
             $("#" + resourceId).src = dataUrl
-          }, <%= resourceId %>)
+          }, "<%= resourceId %>")
         </script>
         <div class="col-sm-2">
           <a href="#x">
