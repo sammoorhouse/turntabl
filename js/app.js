@@ -123,6 +123,6 @@ function addServerFile(dropzone, imageName, url) {
 
   // Call the default addedfile event handler
   dropzone.emit("addedfile", mockFile);
-  dropzone.createThumbnailFromUrl(file, imageUrl);
+  dropzone.createThumbnailFromUrl(mockFile, imageUrl);
   dropzone.emit("complete", mockFile);
 }
