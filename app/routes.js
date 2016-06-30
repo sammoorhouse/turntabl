@@ -167,12 +167,10 @@ module.exports = function(app) {
       var extension = generateID(3)
       var s3Key = firstChar + "/" + secondChar + "/" + generatedId + "." + extension
 
-      console.log("params: " + util.inspect(req.params))
-      console.log("body: " + util.inspect(req.body))
-
-      var localPath = path.join(os.tmpDir(), s3Key);
+      var localPath = path.join(os.tmpDir(), generatedId);
       file.pipe(fs.createWriteStream(localPath));
       console.log("written to " + localPath)
+
       easyimg.thumbnail({
         src: localPath,
         dst: localPath + "_150",
