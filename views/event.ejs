@@ -59,12 +59,13 @@
           <div id="publisher"></div>
         </a>
       </div>
-      <% event.resources.forEach(function(resource){ %>
+      <% event.resources.forEach(function(resource){
+        var resourceId = generateID(8)
+        %>
         <script>
-          var resourceId = generateID(8)
           resizeImage("//<%= resource.url %>", 150, 150, function(dataUrl, resourceId) {
             $("#" + resourceId).src = dataUrl
-          }, resourceId)
+          }, <%= resourceId %>)
         </script>
         <div class="col-sm-2">
           <a href="#x">

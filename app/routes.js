@@ -360,7 +360,8 @@ module.exports = function(app) {
           openTokApiKey: process.env.tokboxAuth_apiKey,
           openTokSessionId: sessionId,
           openTokToken: token,
-          eventValue: eventValue
+          eventValue: eventValue,
+          generateID: generateID
         });
         //}
       }
