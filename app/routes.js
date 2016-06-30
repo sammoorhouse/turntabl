@@ -155,6 +155,37 @@ module.exports = function(app) {
     })
   })
 
+  app.delete('/sessionResource', function(req, res) {
+    var eventId = req.query.eventId
+    var resourceKey = req.query.resourceKey
+
+    //update events table
+    Event.findOne({
+      'id': eventId
+    }, function(err, event) {
+      if (!err) {
+        event.resources.filter(function(res) {
+          res.resourceKey === resourceKey
+        }).forEach(function(res) {
+          res.active = false
+        })
+        event.save(function(error) {
+          if (error) {
+            console.log("error updating event " + eventId + ": " + error)
+            res.writeHead(400);
+            res.end()
+          } else {
+            res.writeHead(200);
+            res.end()
+          }
+        })
+      } else {
+        res.writeHead(400);
+        res.end()
+      }
+    })
+  })
+
   app.post('/addSessionResource', function(req, res) {
 
     var eventId = req.query.eventId
@@ -213,6 +244,8 @@ module.exports = function(app) {
                       event.resources.push({
                         name: filename,
                         url: s3BucketUrl + s3Key,
+                        resourceKey: generatedId,
+                        active: true
                       })
                       event.save(function(error) {
                         if (error) {
