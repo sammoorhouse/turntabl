@@ -35,6 +35,10 @@ $(function() { //on load
     //accept: dropzoneAccept
   });
 
+  eventResources.forEach(function(resource)) {
+    addServerFile(resource.name, resource.url)
+  }
+
   myDropzone.on("sending", function(file, xhr, formData) {
     console.log("dropzone sending")
     formData.append('eventId', eventId);
