@@ -158,6 +158,7 @@ module.exports = function(app) {
   app.post('/addSessionResource', function(req, res) {
 
     var eventId = req.query.eventId
+    var uploadError = false
 
     req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
       console.log("Uploading: " + filename);
@@ -187,8 +188,7 @@ module.exports = function(app) {
           uploadS3(thumbstream, s3Key + "_150", s3BucketName, function(err) {
             if (err) {
               console.log("error uploading thumbnail to s3: " + err)
-              res.writeHead(400, {});
-              res.end()
+              uploadError = "error uploading thumbnail to s3: " + err
             } else {
               console.log("uploaded thumbnail to s3")
 
@@ -200,8 +200,7 @@ module.exports = function(app) {
               uploadS3(fileReadStream, s3Key, s3BucketName, function(err) {
                 if (err) {
                   console.log("upload error: " + err)
-                  res.writeHead(400, {});
-                  res.end()
+                  uploadError = "upload error: " + err
                 } else {
                   console.log("upload success: " + s3BucketUrl + s3Key)
                   console.log("eventId: " + eventId)
@@ -219,21 +218,11 @@ module.exports = function(app) {
                       event.save(function(error) {
                         if (error) {
                           console.log("error updating event " + eventId + ": " + error)
-                          res.writeHead(400, {});
-                          res.end()
+                          uploadError = "error updating event " + eventId + ": " + error
                         }
                       })
                     }
                   })
-
-                  res.writeHead(200, {
-                    'Content-Type': 'application/json',
-                    result: 'success',
-                    nested: false,
-                    imageUrl: s3BucketUrl + s3Key,
-                    imageThumbUrl: s3BucketUrl + s3Key + "_150"
-                  });
-                  res.end()
                 }
               });
             }
@@ -241,11 +230,21 @@ module.exports = function(app) {
         },
         function(err) {
           console.error("error creating thumbnail: " + util.inspect(err))
-          res.writeHead(400, {});
-          res.end()
+          uploadError = "error creating thumbnail: " + util.inspect(err)
         }
       )
     })
+    busboy.on('finish', function() {
+      if (!uploadError) {
+        res.writeHead(200);
+        res.end()
+      } else {
+        res.writeHead(400, {
+          body: uploadError
+        })
+        res.end()
+      }
+    });
 
     req.pipe(req.busboy);
   })
