@@ -44,17 +44,6 @@ $(function() { //on load
     //accept: dropzoneAccept
   });
 
-  myDropzone.on("accept", function(file, done) {
-    console.log("accept")
-    var id = generateID(8);
-    file.addClass("resourceId", id)
-  })
-
-  myDropzone.on("thumbnail", function(file, dataUrl) {
-    console.log("thumbnail")
-    myDropzone.processQueue()
-  })
-
   myDropzone.on("sending", function(file, xhr, formData) {
     console.log("dropzone sending")
     formData.append('eventId', eventId);
