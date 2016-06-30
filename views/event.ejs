@@ -68,16 +68,16 @@
         %>
         <script>
           resizeImage("//<%= resource.url %>", 150, 150, function(dataUrl, resourceId) {
-
-            $("div#<%=resourceId%>>a>div>img").attr("src", dataUrl);
-            $("div#<%=resourceId%>>a>div>img").attr("alt", '<%= resource.name %>');
-
             $("div#<%=resourceId%>").removeClass('uil-ring-css')
+            $("div#<%=resourceId%>>a>div>").prepend("<img src=" + dataUrl + " alt="
+              <%= resource.name %>
+              "> ")
+
           }, "<%= resourceId %>")
         </script>
         <div id="<%= resourceId %>" class="uil-ring-css col-sm-2">
           <a href="#x">
-            <div><img alt="<%= resource.name %>"> </div>
+            <div></div>
           </a>
         </div>
 
