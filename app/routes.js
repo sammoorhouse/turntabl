@@ -169,6 +169,8 @@ module.exports = function(app) {
 
       var localPath = path.join(os.tmpDir(), generatedId);
       file.pipe(fs.createWriteStream(localPath));
+      var fileReadStream = new require('stream').PassThrough
+      file.pipe(fileReadStream)
       console.log("written to " + localPath)
 
       easyimg.thumbnail({
@@ -194,7 +196,7 @@ module.exports = function(app) {
               fs.unlink(localPath + "_150")
               console.log("deleted local copy of thumbnail")
 
-              uploadS3(file, s3Key, s3BucketName, function(err) {
+              uploadS3(fileReadStream, s3Key, s3BucketName, function(err) {
                 if (err) {
                   console.log("upload error: " + err)
                   res.writeHead(400, {});
@@ -461,6 +463,7 @@ module.exports = function(app) {
   }
 
   function uploadS3(readStream, key, bucket, callback) {
+    console.log("uploading " + key + " to s3")
     var upload = s3Stream.upload({
       'Bucket': bucket,
       'Key': key
