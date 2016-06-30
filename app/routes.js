@@ -234,7 +234,7 @@ module.exports = function(app) {
         }
       )
     })
-    busboy.on('finish', function() {
+    req.busboy.on('finish', function() {
       if (!uploadError) {
         res.writeHead(200);
         res.end()
