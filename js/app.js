@@ -1,23 +1,13 @@
 var intervalMillis = 15 * 1000 //15 seconds
 var timerToken = 0
 var sessionEndTimeMillis
-  /*var pusher = new Pusher('45387f244d056952dda4', {
-    encrypted: true
-  });*/
 var nanobar
-
-//var presenceChannel
-
-// Enable pusher logging - don't include this in production
-//Pusher.logToConsole = true;
 
 $(function() { //on load
   //carousel
   $('#myCarousel').carousel({
-      interval: false
-    })
-    //dropzone
-
+    interval: false
+  })
 
   Dropzone.autoDiscover = false;
   // Get the template HTML and remove it from the document
