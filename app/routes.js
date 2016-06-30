@@ -200,72 +200,37 @@ module.exports = function(app) {
       var extension = generateID(3)
       var s3Key = firstChar + "/" + secondChar + "/" + generatedId + "." + extension
 
-      var localPath = path.join(os.tmpDir(), generatedId);
-      file.pipe(fs.createWriteStream(localPath));
-      var fileReadStream = new pass
-      file.pipe(fileReadStream)
-      console.log("written to " + localPath)
+      uploadS3(fileReadStream, s3Key, s3BucketName, function(err) {
+        if (err) {
+          console.log("upload error: " + err)
+          uploadError = "upload error: " + err
+        } else {
+          console.log("upload success: " + s3BucketUrl + s3Key)
+          console.log("eventId: " + eventId)
 
-      easyimg.thumbnail({
-        src: localPath,
-        dst: localPath + "_150",
-        width: 150,
-        height: 150
-      }).then(
-        function(image) {
-          console.log('thumbnail created: ' + util.inspect(image))
-            //upload to S3
-          var thumbstream = fs.createReadStream(image.path)
-          uploadS3(thumbstream, s3Key + "_150", s3BucketName, function(err) {
-            if (err) {
-              console.log("error uploading thumbnail to s3: " + err)
-              uploadError = "error uploading thumbnail to s3: " + err
-            } else {
-              console.log("uploaded thumbnail to s3")
-
-              fs.unlink(localPath)
-              console.log("deleted local copy of image")
-              fs.unlink(localPath + "_150")
-              console.log("deleted local copy of thumbnail")
-
-              uploadS3(fileReadStream, s3Key, s3BucketName, function(err) {
-                if (err) {
-                  console.log("upload error: " + err)
-                  uploadError = "upload error: " + err
-                } else {
-                  console.log("upload success: " + s3BucketUrl + s3Key)
-                  console.log("eventId: " + eventId)
-
-                  //update events table
-                  Event.findOne({
-                    'id': eventId
-                  }, function(err, event) {
-                    if (!err) {
-                      event.resources.push({
-                        name: filename,
-                        url: s3BucketUrl + s3Key,
-                        resourceKey: generatedId,
-                        active: true
-                      })
-                      event.save(function(error) {
-                        if (error) {
-                          console.log("error updating event " + eventId + ": " + error)
-                          uploadError = "error updating event " + eventId + ": " + error
-                        }
-                      })
-                    }
-                  })
+          //update events table
+          Event.findOne({
+            'id': eventId
+          }, function(err, event) {
+            if (!err) {
+              event.resources.push({
+                name: filename,
+                url: s3BucketUrl + s3Key,
+                resourceKey: generatedId,
+                active: true
+              })
+              event.save(function(error) {
+                if (error) {
+                  console.log("error updating event " + eventId + ": " + error)
+                  uploadError = "error updating event " + eventId + ": " + error
                 }
-              });
+              })
             }
           })
-        },
-        function(err) {
-          console.error("error creating thumbnail: " + util.inspect(err))
-          uploadError = "error creating thumbnail: " + util.inspect(err)
         }
-      )
+      }); //uploads3
     })
+
     req.busboy.on('finish', function() {
       if (!uploadError) {
         res.writeHead(200);
