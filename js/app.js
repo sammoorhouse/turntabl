@@ -36,7 +36,7 @@ $(function() { //on load
   });
 
   eventResources.forEach(function(resource) {
-    addServerFile(resource.name, resource.url)
+    addServerFile(myDropzone, resource.name, resource.url)
   })
 
   myDropzone.on("sending", function(file, xhr, formData) {
@@ -114,7 +114,7 @@ function tick() {
   $('#countdownClock').text(timeRemainingHuman)
 }
 
-function addServerFile(imageName, url) {
+function addServerFile(dropzone, imageName, url) {
   // Create the mock file:
   var mockFile = {
     name: imageName,
@@ -122,7 +122,7 @@ function addServerFile(imageName, url) {
   };
 
   // Call the default addedfile event handler
-  myDropzone.emit("addedfile", mockFile);
-  myDropzone.createThumbnailFromUrl(file, imageUrl);
-  myDropzone.emit("complete", mockFile);
+  dropzone.emit("addedfile", mockFile);
+  dropzone.createThumbnailFromUrl(file, imageUrl);
+  dropzone.emit("complete", mockFile);
 }
