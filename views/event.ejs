@@ -70,7 +70,7 @@
           resizeImage("//<%= resource.url %>", 150, 150, function(dataUrl, resourceId) {
 
             $("div#<%=resourceId%>>a>div>img").attr("src", dataUrl);
-            $("div#<%=resourceId%>>a>div>img").attr("alt", <%= resource.name %>);
+            $("div#<%=resourceId%>>a>div>img").attr("alt", '<%= resource.name %>');
 
             $("div#<%=resourceId%>").removeClass('uil-ring-css')
           }, "<%= resourceId %>")
