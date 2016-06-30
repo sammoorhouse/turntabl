@@ -220,6 +220,7 @@ module.exports = function(app) {
                 active: true
               })
               event.save(function(error) {
+                console.log("saved event " + eventId)
                 if (error) {
                   console.log("error updating event " + eventId + ": " + error)
                   uploadError = "error updating event " + eventId + ": " + error
@@ -232,10 +233,13 @@ module.exports = function(app) {
     })
 
     req.busboy.on('finish', function() {
+
       if (!uploadError) {
+        console.log("update succeeded")
         res.writeHead(200);
         res.end()
       } else {
+        console.log("update failed: " + uploadError)
         res.writeHead(400, {
           body: uploadError
         })
