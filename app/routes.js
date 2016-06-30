@@ -1,5 +1,6 @@
 var Event = require('../app/models/event');
 var OpenTok = require('opentok');
+var path = require('path')
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 var stormpath = require('express-stormpath');
 var request = require('request');
