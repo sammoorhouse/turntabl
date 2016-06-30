@@ -38,7 +38,7 @@ $(function() { //on load
     parallelUploads: 20,
     previewTemplate: previewTemplate,
     acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
-    autoProcessQueue: false,
+    autoProcessQueue: true,
     previewsContainer: ".dropzone-previews", // Define the container to display the previews
     clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
     //accept: dropzoneAccept
