@@ -3,6 +3,15 @@ var timerToken = 0
 var sessionEndTimeMillis
 var nanobar
 
+function generateID(length) {
+  var ALPHABET = '23456789abdegjkmnpqrvwxyz';
+  var rtn = '';
+  for (var i = 0; i < length; i++) {
+    rtn += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET.length));
+  }
+  return rtn;
+}
+
 $(function() { //on load
   //carousel
   $('#myCarousel').carousel({
@@ -34,29 +43,16 @@ $(function() { //on load
     clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
     //accept: dropzoneAccept
   });
-  /*
-    thumbnail: function(file, dataUrl) {
-        var thumbnailElement, _i, _len, _ref;
-        if (file.previewElement) {
-          file.previewElement.classList.remove("dz-file-preview");
-          _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            thumbnailElement = _ref[_i];
-            thumbnailElement.alt = file.name;
-            thumbnailElement.src = dataUrl;
-          }
-          return setTimeout(((function(_this) {
-            return function() {
-              return file.previewElement.classList.add("dz-image-preview");
-            };
-          })(this)), 1);
-        }
-      },
-  */
+
+  myDropzone.on("accept", function(file, done) {
+    console.log("accept")
+    var id = generateID(8);
+    file.addClass("resourceId", id)
+  })
 
   myDropzone.on("thumbnail", function(file, dataUrl) {
-    myDropzone.processQueue()
     console.log("thumbnail")
+    myDropzone.processQueue()
   })
 
   myDropzone.on("sending", function(file, xhr, formData) {

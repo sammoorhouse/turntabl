@@ -429,7 +429,6 @@ module.exports = function(app) {
     return rtn;
   }
 
-
   function censor(censor) {
     var i = 0;
 
