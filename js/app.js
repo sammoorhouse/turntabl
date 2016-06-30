@@ -35,37 +35,9 @@ $(function() { //on load
     //accept: dropzoneAccept
   });
 
-  function dropzoneAccept(file, done) {
-    console.log("dropzone accept: " + file)
-    file.postData = [];
-    $.ajax({
-      url: "/sign-s3",
-      data: {
-        name: file.name,
-        type: file.type,
-        size: file.size
-      },
-      success: function jQAjaxSuccess(response) {
-        response = JSON.parse(response);
-        file.custom_status = 'ready';
-        file.postData = response;
-        file.s3 = response.key;
-        $(file.previewTemplate).addClass('uploading');
-        done();
-      },
-      error: function(response) {
-        file.custom_status = 'rejected';
-        if (response.responseText) {
-          response = JSON.parse(response.responseText);
-        }
-        if (response.message) {
-          done(response.message);
-          return;
-        }
-        done('error preparing the upload');
-      }
-    })
-  }
+  event.resources.forEach(function(resource) {
+    addServerFile("<%=resource.name%>", "<%=resource.url%>")
+  })
 
   myDropzone.on("sending", function(file, xhr, formData) {
     console.log("dropzone sending")
