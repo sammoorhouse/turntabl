@@ -12,14 +12,15 @@
         var openTokSessionId = "<%= openTokSessionId %>"
         var openTokApiKey = "<%= openTokApiKey %>"
         var openTokToken = "<%= openTokToken %>"
+      </script>
+      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/nanobar/0.4.2/nanobar.min.js"></script>
+      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
+      <script type="text/javascript" src="/js/app.js"></script>
+      <script type="text/javascript">
         event.resources.forEach(function(resource) {
           addServerFile(resource.name, resource.url)
         })
       </script>
-      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/nanobar/0.4.2/nanobar.min.js"></script>
-      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
-      <!--<script type="text/javascript" src="//js.pusher.com/3.1/pusher.min.js"></script>-->
-      <script type="text/javascript" src="/js/app.js"></script>
       <script src="https://static.opentok.com/v2/js/opentok.js" charset="utf-8"></script>
 
       <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css" />
