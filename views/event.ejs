@@ -66,6 +66,11 @@
       }).forEach(function(resource){
         var resourceId = generateID(8)
         %>
+        <div id="<%= resourceId %>" class="uil-ring-css col-sm-2">
+          <a href="#x">
+            <div></div>
+          </a>
+        </div>
         <script>
           resizeImage("//<%= resource.url %>", 150, 150, function(dataUrl, resourceId) {
             $("div#<%=resourceId%>").removeClass('uil-ring-css')
@@ -76,11 +81,6 @@
             }))
           }, "<%= resourceId %>")
         </script>
-        <div id="<%= resourceId %>" class="uil-ring-css col-sm-2">
-          <a href="#x">
-            <div></div>
-          </a>
-        </div>
 
         <%})%>
 
