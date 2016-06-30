@@ -184,6 +184,8 @@ module.exports = function(app) {
           uploadS3(thumbstream, s3Key + "_150", s3BucketName, function(err) {
             if (err) {
               console.log("error uploading thumbnail to s3: " + err)
+              res.writeHead(400, {});
+              res.end()
             } else {
               console.log("uploaded thumbnail to s3")
 
@@ -210,6 +212,8 @@ module.exports = function(app) {
                       event.save(function(error) {
                         if (error) {
                           console.log("error updating event " + eventId + ": " + error)
+                          res.writeHead(400, {});
+                          res.end()
                         }
                       })
                     }
@@ -227,11 +231,11 @@ module.exports = function(app) {
               });
             }
           })
-
-
         },
         function(err) {
           console.error("error creating thumbnail: " + util.inspect(err))
+          res.writeHead(400, {});
+          res.end()
         }
       )
     })
