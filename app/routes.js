@@ -190,6 +190,9 @@ module.exports = function(app) {
               console.log("uploaded thumbnail to s3")
 
               fs.unlink(localPath)
+              console.log("deleted local copy of image")
+              fs.unlink(localPath + "_150")
+              console.log("deleted local copy of thumbnail")
 
               uploadS3(file, s3Key, s3BucketName, function(err) {
                 if (err) {
