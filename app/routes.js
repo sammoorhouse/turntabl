@@ -7,6 +7,7 @@ var Pusher = require('pusher');
 var policy = require('s3-policy');
 var uuid = require('node-uuid');
 var formidable = require("formidable");
+var easyimg = require('easyimage');
 var AWS = require('aws-sdk');
 // Define s3-upload-stream with S3 credentials.
 var s3Stream = require('s3-upload-stream')(new AWS.S3());
@@ -166,6 +167,23 @@ module.exports = function(app) {
       console.log("params: " + util.inspect(req.params))
       console.log("body: " + util.inspect(req.body))
 
+      var localPath = path.join(os.tmpDir(), s3Key);
+      file.pipe(fs.createWriteStream(localPath));
+      console.log("written to " + localPath)
+      easyimg.thumbnail({
+        src: localPath,
+        dst: localPath + "_150",
+        width: 150,
+        height: 150
+      }).then(
+        function(image) {
+          console.log('thumbnail created: ' + util.inspect(image))
+        },
+        function(err) {
+          console.error("error creating thumbnail: " + util.inspect(err))
+        }
+      )
+
       uploadS3(file, s3Key, s3BucketName, function(err) {
         if (err) {
           console.log("upload error: " + err)
@@ -174,6 +192,8 @@ module.exports = function(app) {
         } else {
           console.log("upload success: " + s3BucketUrl + s3Key)
           console.log("eventId: " + eventId)
+
+          //create thumbnail
 
           //update events table
           Event.findOne({
@@ -191,10 +211,6 @@ module.exports = function(app) {
               })
             }
           })
-
-
-
-
 
           res.writeHead(200, {
             'Content-Type': 'application/json',
