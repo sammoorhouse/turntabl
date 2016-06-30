@@ -11,6 +11,7 @@ var policy = require('s3-policy');
 var uuid = require('node-uuid');
 var formidable = require("formidable");
 var easyimg = require('easyimage');
+var pass = require('stream').PassThrough
 var AWS = require('aws-sdk');
 // Define s3-upload-stream with S3 credentials.
 var s3Stream = require('s3-upload-stream')(new AWS.S3());
@@ -169,7 +170,7 @@ module.exports = function(app) {
 
       var localPath = path.join(os.tmpDir(), generatedId);
       file.pipe(fs.createWriteStream(localPath));
-      var fileReadStream = new require('stream').PassThrough
+      var fileReadStream = new pass
       file.pipe(fileReadStream)
       console.log("written to " + localPath)
 
