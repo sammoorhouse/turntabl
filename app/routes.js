@@ -213,7 +213,6 @@ module.exports = function(app) {
                       event.resources.push({
                         name: filename,
                         url: s3BucketUrl + s3Key,
-                        thumbUrl: s3BucketUrl + s3Key + "_150"
                       })
                       event.save(function(error) {
                         if (error) {

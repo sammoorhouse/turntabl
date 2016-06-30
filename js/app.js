@@ -151,3 +151,16 @@ function tick() {
   var timeRemainingHuman = moment.duration(timeRemainingMillis).humanize()
   $('#countdownClock').text(timeRemainingHuman)
 }
+
+function addServerFile(imageName, url) {
+  // Create the mock file:
+  var mockFile = {
+    name: imageName,
+    size: 12345
+  };
+
+  // Call the default addedfile event handler
+  myDropzone.emit("addedfile", mockFile);
+  myDropzone.createThumbnailFromUrl(file, imageUrl);
+  myDropzone.emit("complete", mockFile);
+}

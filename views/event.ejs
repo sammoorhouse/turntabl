@@ -12,6 +12,9 @@
         var openTokSessionId = "<%= openTokSessionId %>"
         var openTokApiKey = "<%= openTokApiKey %>"
         var openTokToken = "<%= openTokToken %>"
+        event.resources.forEach(function(resource) {
+          addServerFile(resource.name, resource.url) <
+        })
       </script>
       <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/nanobar/0.4.2/nanobar.min.js"></script>
       <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
@@ -51,11 +54,7 @@
           <div id="publisher"></div>
         </a>
       </div>
-      <% event.resources.forEach(function(resource){ %>
-        <div class="col-sm-2">
-          <a href="#x"> <img src="<%= resource.thumbUrl %>" alt="<%= resource.name%>"> </a>
-        </div>
-        <%  })%>
+
     </div>
     <div class="col-sm-1 fileinput-thumbnail">
       <a href="#x"> <img src="//placeholdit.imgix.net/~text?txtsize=50&txt=%2B&w=75&h=150" alt="Image"> </a>
