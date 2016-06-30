@@ -60,7 +60,10 @@
           <div id="publisher"></div>
         </a>
       </div>
-      <% event.resources.forEach(function(resource){
+      <% event.resources
+      .filter(function(resource){
+        return (typeof resource.active != "undefined")
+      }).forEach(function(resource){
         var resourceId = generateID(8)
         %>
         <script>
