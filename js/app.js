@@ -3,38 +3,37 @@ var timerToken = 0
 var sessionEndTimeMillis
 var nanobar
 
-Dropzone.autoDiscover = false;
-// Get the template HTML and remove it from the document
-var previewNode = document.querySelector("#template");
-var previewTemplate = previewNode.outerHTML;
-previewTemplate.id = ""
-previewNode.parentNode.removeChild(previewNode);
-
-var myDropzone = new Dropzone('footer', {
-  url: "/addSessionResource?eventId=" + eventId,
-  // Set the url
-  paramName: "file", // The name that will be used to transfer the file
-  method: "post",
-  HiddenFilesPath: 'body',
-  createImageThumbnails: true,
-  uploadMultiple: false,
-  thumbnailWidth: 150,
-  thumbnailHeight: 150,
-  parallelUploads: 20,
-  previewTemplate: previewTemplate,
-  acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
-  autoProcessQueue: true,
-  previewsContainer: ".dropzone-previews", // Define the container to display the previews
-  clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
-  //accept: dropzoneAccept
-});
-
 $(function() { //on load
   //carousel
   $('#myCarousel').carousel({
     interval: false
   })
 
+  Dropzone.autoDiscover = false;
+  // Get the template HTML and remove it from the document
+  var previewNode = document.querySelector("#template");
+  var previewTemplate = previewNode.outerHTML;
+  previewTemplate.id = ""
+  previewNode.parentNode.removeChild(previewNode);
+
+  var myDropzone = new Dropzone('footer', {
+    url: "/addSessionResource?eventId=" + eventId,
+    // Set the url
+    paramName: "file", // The name that will be used to transfer the file
+    method: "post",
+    HiddenFilesPath: 'body',
+    createImageThumbnails: true,
+    uploadMultiple: false,
+    thumbnailWidth: 150,
+    thumbnailHeight: 150,
+    parallelUploads: 20,
+    previewTemplate: previewTemplate,
+    acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
+    autoProcessQueue: true,
+    previewsContainer: ".dropzone-previews", // Define the container to display the previews
+    clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
+    //accept: dropzoneAccept
+  });
 
   eventResources.forEach(function(resource) {
     addServerFile(resource.name, resource.url)
