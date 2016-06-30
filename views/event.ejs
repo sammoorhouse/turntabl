@@ -29,6 +29,7 @@
 
       <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css" />
       <link rel="stylesheet" type="text/css" href="/css/app.css" />
+      <link rel="stylesheet" type="text/css" href="/css/ring.css" />
 </head>
 
 <body>
@@ -64,12 +65,14 @@
         %>
         <script>
           resizeImage("//<%= resource.url %>", 150, 150, function(dataUrl, resourceId) {
-            $("img#" + resourceId).src = dataUrl
+
+            $("div#" + resourceId + ">img").src = dataUrl
+            $("div#" + resourceId).removeClass('uil-ring-css')
           }, "<%= resourceId %>")
         </script>
-        <div class="col-sm-2">
+        <div id="<%= resourceId %>" class="class='uil-ring-css' col-sm-2">
           <a href="#x">
-            <div><img id="<%= resourceId %>" alt="<%= resource.name %>"> </div>
+            <div><img alt="<%= resource.name %>"> </div>
           </a>
         </div>
 
