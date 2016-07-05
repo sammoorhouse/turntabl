@@ -9,7 +9,6 @@ var request = require('request');
 var Pusher = require('pusher');
 var policy = require('s3-policy');
 var uuid = require('node-uuid');
-var formidable = require("formidable");
 var easyimg = require('easyimage');
 var pass = require('stream').PassThrough
 var AWS = require('aws-sdk');
@@ -81,6 +80,7 @@ module.exports = function(app) {
   app.post('/form/create-event', function(formSubmissionRequest, formSubmissionResponse) {
 
     console.log("form submission webhook invoked")
+    console.log(util.inspect(formSubmissionRequest.body))
     console.log(util.inspect(formSubmissionRequest.body))
     var formId = formSubmissionRequest.body.uid;
     console.log("form id: " + formId)
