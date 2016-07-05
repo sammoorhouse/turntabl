@@ -81,7 +81,7 @@ module.exports = function(app) {
   app.post('/form/create-event', function(formSubmissionRequest, formSubmissionResponse) {
 
     console.log("form submission webhook invoked")
-
+    console.log(util.inspect(formSubmissionRequest))
     var formId = formSubmissionRequest.body.uid;
     console.log("form id: " + formId)
     var newEvent = new Event();
