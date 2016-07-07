@@ -41,11 +41,36 @@ session.on({
   },
   signal: function(event) {
     console.log("signal")
-    var msg = document.createElement('p');
-    msg.innerHTML = event.data;
-    msg.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
-    msgHistory.appendChild(msg);
-    msg.scrollIntoView();
+    var msgTemplate = $('#chat-message-template')
+    msgTemplate.addClass(event.from.connectionId === session.connection.connectionId ? 'right' : 'left')
+    msgTemplate.find('#chat-message-image').attr('src', generateId(event.from.connectionId))
+    msgTemplate.find('#chat-body-text').text(event.data)
+    msgHistory.append(msgTemplate)
+    msgTemplate.scrollIntoView();
+
+    /*<li class="right clearfix"><span class="chat-img pull-right">
+                  <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
+              </span>
+      <div class="chat-body clearfix">
+        <div class="header">
+          <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>13 mins ago</small>
+          <strong class="pull-right primary-font">Bhaumik Patel</strong>
+        </div>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+        </p>
+      </div>
+    </li>*/
+
+
+
+
+    /*
+        var msg = document.createElement('p');
+        msg.innerHTML = event.data;
+        msg.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
+        msgHistory.appendChild(msg);
+        msg.scrollIntoView();*/
   },
   connectionCreated: function(event) {
     if ((event.connection.connectionId != session.connection.connectionId) && (isLeader)) {
