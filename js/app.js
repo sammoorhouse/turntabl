@@ -18,6 +18,11 @@ $(function() { //on load
     interval: false
   })
 
+  var chatTemplateNode = document.querySelector("#chat-message-template");
+  var chatTemplate = chatTemplateNode.outerHTML;
+  chatTemplate.id = ""
+  chatTemplateNode.parentNode.removeChild(chatTemplateNode)
+
   Dropzone.autoDiscover = false;
   // Get the template HTML and remove it from the document
   var previewNode = document.querySelector("#template");
