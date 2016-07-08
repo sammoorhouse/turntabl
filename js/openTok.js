@@ -10,9 +10,7 @@ var publisher = OT.initPublisher(openTokApiKey, 'publisher', {
 // Receive a message and append it to the history
 var msgHistory = document.querySelector('#history');
 var msgTxt = document.querySelector('#msgTxt');
-var form = document.querySelector('form#text-chat');
-
-
+var button = document.querySelector('#btn-chat');
 
 // Attach event handlers
 session.on({
@@ -21,7 +19,7 @@ session.on({
     session.publish(publisher);
 
     // Send a signal once the user enters data in the form
-    form.addEventListener('submit', function(event) {
+    button.addEventListener('click', function(event) {
       event.preventDefault();
 
       session.signal({
