@@ -12,25 +12,27 @@ var msgHistory = document.querySelector('#history');
 var msgTxt = document.querySelector('#msgTxt');
 var form = document.querySelector('form#text-chat');
 
-// Send a signal once the user enters data in the form
-form.addEventListener('submit', function(event) {
-  event.preventDefault();
 
-  session.signal({
-    type: 'msg',
-    data: msgTxt.value
-  }, function(error) {
-    if (!error) {
-      msgTxt.value = '';
-    }
-  });
-});
 
 // Attach event handlers
 session.on({
   sessionConnected: function(event) {
     console.log("session connected")
     session.publish(publisher);
+
+    // Send a signal once the user enters data in the form
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      session.signal({
+        type: 'msg',
+        data: msgTxt.value
+      }, function(error) {
+        if (!error) {
+          msgTxt.value = '';
+        }
+      });
+    });
   },
   streamCreated: function(event) {
     console.log("stream created")
