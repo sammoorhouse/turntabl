@@ -46,7 +46,8 @@ app.use('/font-awesome', express.static('font-awesome'));
 app.use('/fonts', express.static('fonts'));
 app.use('/img', express.static('img'));
 
-app.use(bodyParser)
+// parse application/json
+app.use(bodyParser.json())
 app.use(busboy());
 
 app.set('view engine', 'ejs');
