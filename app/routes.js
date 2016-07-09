@@ -127,7 +127,6 @@ module.exports = function(app) {
 
             newEvent.save(function(err) {
               if (err) {
-                throw err;
                 console.error('triggering failure message to client')
                 pusher.trigger("event-creation-" + eventId, 'failure', {
                   "reason": "err"
@@ -340,7 +339,7 @@ module.exports = function(app) {
   function generateForm(user, eventId) {
     var formData = {
       "title": "turntable - teach, mentor, advise",
-      "webhook_submit_url": process.env.typeform_webhook_submit_url, //"http://requestb.in/um9wh5um",//
+      "webhook_submit_url": "http://requestb.in/qqmbwcqq",//process.env.typeform_webhook_submit_url, //
       "tags": [eventId],
       "branding": false,
       "fields": [{
