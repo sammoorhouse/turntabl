@@ -339,7 +339,7 @@ module.exports = function(app) {
   function generateForm(user, eventId) {
     var formData = {
       "title": "turntable - teach, mentor, advise",
-      "webhook_submit_url": "http://requestb.in/qqmbwcqq",//process.env.typeform_webhook_submit_url, //
+      "webhook_submit_url": process.env.typeform_webhook_submit_url, //"http://requestb.in/qqmbwcqq",//
       "tags": [eventId],
       "branding": false,
       "fields": [{
