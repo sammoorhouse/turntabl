@@ -12,7 +12,7 @@ function generateID(length) {
   return rtn;
 }
 
-$(function() { //on load
+$(function () { //on load
   //carousel
   $('#myCarousel').carousel({
     interval: false
@@ -31,9 +31,9 @@ $(function() { //on load
   previewNode.parentNode.removeChild(previewNode);
 
   var myDropzone = new Dropzone('footer', {
-    url: "/addSessionResource?eventId=" + eventId,
+    url: "https://" + s3Bucket,
     // Set the url
-    paramName: "file", // The name that will be used to transfer the file
+    //paramName: "file", // The name that will be used to transfer the file
     method: "post",
     HiddenFilesPath: 'body',
     createImageThumbnails: true,
@@ -46,13 +46,54 @@ $(function() { //on load
     autoProcessQueue: true,
     previewsContainer: ".dropzone-previews", // Define the container to display the previews
     clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
-    //accept: dropzoneAccept
+    accept: dropzoneAccept
   });
 
-  myDropzone.on("sending", function(file, xhr, formData) {
+  myDropzone.on("sending", function (file, xhr, formData) {
     console.log("dropzone sending")
-    formData.append('eventId', eventId);
+    $.each(file.postData, function (k, v) {
+      console.log(v)
+      formData.append(k, v)
+    })
+    formData.append('Content-type', '')
+    formData.append('Content-length', '')
+    formData.append('acl', 'public-read')
+    //formData.append('eventId', eventId);
   });
+
+  myDropzone.on("complete", function(file){
+    $(file.previewTemplate).removeClass('uploading')
+  })
+
+  function dropzoneAccept(file, done) {
+    file.postData = []
+    $.ajax({
+      url: '/sign-s3',
+      data: {name: file.name,
+      type: file.type,
+      size: file.size
+    },
+      success: function (response) {
+        response = JSON.parse(response)
+        file.custom_status = 'ready'
+        file.postData = response
+        file.s3 = response.key
+        $(file.previewTemplate).addClass('uploading')
+        done()
+      },
+      error: function(response){
+        file.custom_status = 'rejected'
+        if(response.responseText){
+          response = JSON.parse(response.responseText)
+        }
+        if(response.message){
+          done(response.message)
+          return
+        }
+        done('error preparing the upload')
+      }
+    })
+  }
 
   //nanobar
   nanobar = new Nanobar({
@@ -65,9 +106,9 @@ $(function() { //on load
 
 function triggerSessionStart() {
   $.post("/beginSession", {
-      eventId: eventId
-    },
-    function(result) {
+    eventId: eventId
+  },
+    function (result) {
       if (result.result === "begin") {
         session.signal({
           type: "beginSession",
@@ -98,13 +139,13 @@ function tick() {
   timeRemainingMillis = sessionEndTimeMillis - nowMillis
   var timeRemainingPercent = (timeRemainingMillis / sessionDurationMillis) * 100
   console.log("timeRemainingPercent: " + timeRemainingPercent)
-    //is the session over?
+  //is the session over?
   if (timeRemainingPercent <= 0) {
     nanobar.go(100)
     stop()
   } else {
     nanobar.go(100 - timeRemainingPercent)
-      //is it nearly over? 5% or 5 minutes
+    //is it nearly over? 5% or 5 minutes
     if ((timeRemainingPercent < 5) || timeRemainingMillis <= 5 * 60 * 1000) {
 
       //set the warn class on the nanobar
@@ -128,8 +169,8 @@ function resizeImage(url, width, height, callback, file) {
   var sourceImage = new Image();
   sourceImage.crossOrigin = "anonymous"
 
-  sourceImage.onload = (function(f) {
-    return function(evt) {
+  sourceImage.onload = (function (f) {
+    return function (evt) {
       var canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;

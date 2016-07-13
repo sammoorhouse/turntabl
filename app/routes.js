@@ -32,8 +32,8 @@ var eventPriceRef = "eventPrice"
 var emailLogicJumpRef = "emailLogicJump"
 var emailOverrideRef = "emailOverride"
 
-module.exports = function(app) {
-  app.get('/', function(req, res) {
+module.exports = function (app) {
+  app.get('/', function (req, res) {
     var user = req.user
     res.render('index.ejs', {
       user: user
@@ -41,7 +41,7 @@ module.exports = function(app) {
   });
 
   // create-event SECTION =========================
-  app.get('/create-event', stormpath.loginRequired, function(req, res) {
+  app.get('/create-event', stormpath.loginRequired, function (req, res) {
     var user = req.user
 
     //generate typeform
@@ -50,16 +50,16 @@ module.exports = function(app) {
     var formData = generateForm(user, eventId)
 
     request.post({
-        url: typeformUrl,
-        json: formData,
-        headers: {
-          "X-API-TOKEN": process.env.TYPEFORM_APIKEY
-        }
-      },
-      function(err, resp) {
+      url: typeformUrl,
+      json: formData,
+      headers: {
+        "X-API-TOKEN": process.env.TYPEFORM_APIKEY
+      }
+    },
+      function (err, resp) {
         if (!err && resp.statusCode == 201) { //201 CREATED
           console.log('typeform Upload successful');
-          var formLink = resp.body['_links'].find(function(el) {
+          var formLink = resp.body['_links'].find(function (el) {
             return el.rel === "form_render"
           }).href
           console.log('typeform url: ' + formLink)
@@ -77,7 +77,7 @@ module.exports = function(app) {
       })
   })
 
-  app.post('/form/create-event', function(formSubmissionRequest, formSubmissionResponse) {
+  app.post('/form/create-event', function (formSubmissionRequest, formSubmissionResponse) {
 
     console.log("form submission webhook invoked")
     var formId = formSubmissionRequest.body.uid;
@@ -92,7 +92,7 @@ module.exports = function(app) {
       headers: {
         "X-API-TOKEN": process.env.TYPEFORM_APIKEY
       }
-    }, function(err, formStructureResponse) {
+    }, function (err, formStructureResponse) {
       if (!err) {
 
         var formSubmission = formSubmissionRequest.body
@@ -116,14 +116,14 @@ module.exports = function(app) {
         newEvent.resources = []
 
         //create openTok session
-        opentok.createSession(function(err, session) {
+        opentok.createSession(function (err, session) {
           if (err) {
             console.error("sessionId creation error: " + err)
           } else {
             console.log("sessionId: " + session.sessionId)
             newEvent.openTokSessionId = session.sessionId
 
-            newEvent.save(function(err) {
+            newEvent.save(function (err) {
               if (err) {
                 console.error('triggering failure message to client')
                 pusher.trigger("event-creation-" + eventId, 'failure', {
@@ -152,21 +152,44 @@ module.exports = function(app) {
     })
   })
 
-  app.delete('/sessionResource', function(req, res) {
+  app.get("/sign-s3", (req, res) => {
+    var filename = generateID(8)
+    var firstChar = filename[0]
+    var secondChar = filename[1]
+    var filePath = firstChar + "/" + secondChar + "/" + filename
+    var acl = "public-read"
+    var p = policy({
+      acl: acl,
+      secret: process.env.AWS_SECRET_ACCESS_KEY,
+      bucket: s3BucketName,
+      key: filePath,
+      expires: new Date(Date.now() + 600000),
+    })
+    var result = {
+      'AWSAccessKeyId': process.env.AWS_ACCESS_KEY_ID,
+      'key': filePath,
+      'policy': p.policy,
+      'signature': p.signature
+    }
+    res.write(JSON.stringify(result));
+    res.end()
+  })
+
+  app.delete('/sessionResource', function (req, res) {
     var eventId = req.query.eventId
     var resourceKey = req.query.resourceKey
 
     //update events table
     Event.findOne({
       'id': eventId
-    }, function(err, event) {
+    }, function (err, event) {
       if (!err) {
-        event.resources.filter(function(res) {
+        event.resources.filter(function (res) {
           res.resourceKey === resourceKey
-        }).forEach(function(res) {
+        }).forEach(function (res) {
           res.active = false
         })
-        event.save(function(error) {
+        event.save(function (error) {
           if (error) {
             console.log("error updating event " + eventId + ": " + error)
             res.writeHead(400);
@@ -183,12 +206,12 @@ module.exports = function(app) {
     })
   })
 
-  app.post('/addSessionResource', function(req, res) {
+  app.post('/addSessionResource', function (req, res) {
 
     var eventId = req.query.eventId
     var uploadError = false
 
-    req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+    req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
       console.log("Uploading: " + filename);
 
       var generatedId = generateID(8)
@@ -197,7 +220,7 @@ module.exports = function(app) {
       var extension = generateID(3)
       var s3Key = firstChar + "/" + secondChar + "/" + generatedId + "." + extension
 
-      uploadS3(file, s3Key, s3BucketName, function(err) {
+      uploadS3(file, s3Key, s3BucketName, function (err) {
         if (err) {
           console.log("upload error: " + err)
           uploadError = "upload error: " + err
@@ -208,7 +231,7 @@ module.exports = function(app) {
           //update events table
           Event.findOne({
             'id': eventId
-          }, function(err, event) {
+          }, function (err, event) {
             if (!err) {
               event.resources.push({
                 name: filename,
@@ -216,7 +239,7 @@ module.exports = function(app) {
                 resourceKey: generatedId,
                 active: true
               })
-              event.save(function(error) {
+              event.save(function (error) {
                 console.log("saved event " + eventId)
                 if (error) {
                   console.log("error updating event " + eventId + ": " + error)
@@ -229,7 +252,7 @@ module.exports = function(app) {
       }); //uploads3
     })
 
-    req.busboy.on('finish', function() {
+    req.busboy.on('finish', function () {
 
       if (!uploadError) {
         console.log("update succeeded")
@@ -251,13 +274,13 @@ module.exports = function(app) {
 
 
 
-  app.post('/beginSession', function(req, res) {
+  app.post('/beginSession', function (req, res) {
     var eventId = req.body.eventId
 
     //update events table
     Event.findOne({
       'id': eventId
-    }, function(err, event) {
+    }, function (err, event) {
       if (!err) {
         var proposedStartTimeMillis = Date.now()
         var proposedEndTimeMillis = proposedStartTimeMillis + event.durationMins * 60 * 1000
@@ -267,7 +290,7 @@ module.exports = function(app) {
           event.endTime = proposedEndTimeMillis
 
           //writeBack
-          event.save(function(error) {
+          event.save(function (error) {
             if (error) {
               console.log("error updating event " + eventId + ": " + error)
             }
@@ -293,13 +316,13 @@ module.exports = function(app) {
     res.end()
   })
 
-  app.get('/event/:id', stormpath.loginRequired, function(req, res) {
+  app.get('/event/:id', stormpath.loginRequired, function (req, res) {
     var evtId = req.param('id')
     var fakeclient = req.param('fakeclient')
     console.log("evtId: " + evtId)
     Event.findOne({
       'id': evtId
-    }, function(err, event) {
+    }, function (err, event) {
       // if there are any errors, return the error
       if (err) {
         console.log("err: " + err)
@@ -335,6 +358,7 @@ module.exports = function(app) {
   })
 
   function generateForm(user, eventId) {
+    console.log("webhook url: " + process.env.typeform_webhook_submit_url)
     var formData = {
       "title": "turntable - teach, mentor, advise",
       "webhook_submit_url": process.env.typeform_webhook_submit_url, //"http://requestb.in/qqmbwcqq",//
@@ -347,36 +371,36 @@ module.exports = function(app) {
         question: "Hey " + user.givenName + ", we're going to get started! First, we think your email address is `" + user.email + "` - is that right?",
         description: "We promise not to give your address away, but we might need to get in touch if there's a payment issue"
       }, {
-        type: "email",
-        required: true,
-        ref: emailOverrideRef,
-        question: "Disaster! Looks like we messed up, sorry about that. So... what's your email?",
-        description: "Seriously, we totally promise not to give away your email"
-      }, {
-        type: "short_text",
-        required: true,
-        ref: eventTitleRef,
-        question: "Great! What do you want to call this session?",
-        description: "Sam / George life coaching"
-      }, {
-        type: "number",
-        required: true,
-        ref: eventDurationRef,
-        question: "How many minutes is the session going to last?",
-        description: "We'll show you a warning when your time is almost up",
-        min_value: 5
-      }, {
-        type: "number",
-        required: true,
-        ref: eventPriceRef,
-        question: "How much are you charging for the session?",
-        description: "USD. We take $10; you'll get paid once the session is over"
-      }, {
-        type: "legal",
-        required: true,
-        question: "Thanks!",
-        description: "That's all for now. Your session will be available for 90 days from now."
-      }],
+          type: "email",
+          required: true,
+          ref: emailOverrideRef,
+          question: "Disaster! Looks like we messed up, sorry about that. So... what's your email?",
+          description: "Seriously, we totally promise not to give away your email"
+        }, {
+          type: "short_text",
+          required: true,
+          ref: eventTitleRef,
+          question: "Great! What do you want to call this session?",
+          description: "Sam / George life coaching"
+        }, {
+          type: "number",
+          required: true,
+          ref: eventDurationRef,
+          question: "How many minutes is the session going to last?",
+          description: "We'll show you a warning when your time is almost up",
+          min_value: 5
+        }, {
+          type: "number",
+          required: true,
+          ref: eventPriceRef,
+          question: "How much are you charging for the session?",
+          description: "USD. We take $10; you'll get paid once the session is over"
+        }, {
+          type: "legal",
+          required: true,
+          question: "Thanks!",
+          description: "That's all for now. Your session will be available for 90 days from now."
+        }],
       "logic_jumps": [{
         "from": emailLogicJumpRef,
         "to": eventTitleRef,
@@ -399,8 +423,8 @@ module.exports = function(app) {
   function censor(censor) {
     var i = 0;
 
-    return function(key, value) {
-      if (i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value)
+    return function (key, value) {
+      if (i !== 0 && typeof (censor) === 'object' && typeof (value) == 'object' && censor == value)
         return '[Circular]';
 
       if (i >= 29) // seems to be a harded maximum of 30 serialized objects?
@@ -418,7 +442,7 @@ module.exports = function(app) {
       return resolveField(emailOverrideRef, formSubmission, formStructure)
     } else {
       // :( parse from question
-      var questionText = formStructure.fields.find(function(q) {
+      var questionText = formStructure.fields.find(function (q) {
         return q.ref === emailLogicJumpRef
       }).question
       var pattern = /\<code\>(.*)\<\/code\>/
@@ -428,25 +452,14 @@ module.exports = function(app) {
     }
   }
 
-  function getPolicy(key) {
-    var acl = 'public-read'
-    return policy({
-      acl: acl,
-      secret: process.env.AWS_SECRET_ACCESS_KEY,
-      bucket: s3BucketName,
-      key: key,
-      expires: new Date(Date.now() + 600000)
-    })
-  }
-
   function resolveField(refName, formSubmission, formStructure) {
     console.log("attempting to find " + refName)
-    var fieldId = formStructure.fields.find(function(q) {
+    var fieldId = formStructure.fields.find(function (q) {
       return q.ref === refName
     }).id
 
     console.log("found id: " + fieldId)
-    var block = formSubmission.answers.find(function(a) {
+    var block = formSubmission.answers.find(function (a) {
       return a.field_id === fieldId
     })
 
@@ -469,17 +482,17 @@ module.exports = function(app) {
     });
 
     // Handle errors.
-    upload.on('error', function(err) {
+    upload.on('error', function (err) {
       callback(err);
     });
 
     // Handle progress.
-    upload.on('part', function(details) {
+    upload.on('part', function (details) {
       console.log(util.inspect(details));
     });
 
     // Handle upload completion.
-    upload.on('uploaded', function(details) {
+    upload.on('uploaded', function (details) {
       callback();
     });
 

@@ -1,6 +1,6 @@
 // load the auth variables
 require('dotenv').config({
-  silent: true
+  //silent: true
 }); //for dev. In production, variables are in the environment.
 
 var express = require('express');
