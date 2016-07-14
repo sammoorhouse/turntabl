@@ -8,12 +8,6 @@ var stormpath = require('express-stormpath');
 var request = require('request');
 var Pusher = require('pusher');
 var policy = require('s3-policy');
-var uuid = require('node-uuid');
-var easyimg = require('easyimage');
-var pass = require('stream').PassThrough
-var AWS = require('aws-sdk');
-// Define s3-upload-stream with S3 credentials.
-var s3Stream = require('s3-upload-stream')(new AWS.S3());
 
 var util = require('util');
 var pusher = new Pusher({
@@ -472,31 +466,5 @@ module.exports = function (app) {
 
     console.log(refName + " = " + result)
     return result
-  }
-
-  function uploadS3(readStream, key, bucket, callback) {
-    console.log("uploading " + key + " to s3")
-    var upload = s3Stream.upload({
-      'Bucket': bucket,
-      'Key': key
-    });
-
-    // Handle errors.
-    upload.on('error', function (err) {
-      callback(err);
-    });
-
-    // Handle progress.
-    upload.on('part', function (details) {
-      console.log(util.inspect(details));
-    });
-
-    // Handle upload completion.
-    upload.on('uploaded', function (details) {
-      callback();
-    });
-
-    // Pipe the Readable stream to the s3-upload-stream module.
-    readStream.pipe(upload);
   }
 }
