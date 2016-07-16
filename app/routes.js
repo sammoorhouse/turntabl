@@ -1,3 +1,6 @@
+var bunyan = require('bunyan')
+var log = bunyan.createLogger({ name: process.env.APP_NAME });
+
 var Event = require('../app/models/event');
 var OpenTok = require('opentok');
 var path = require('path')
@@ -36,6 +39,7 @@ module.exports = function (app) {
 
   // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function (req, res) {
+    log.info('GET /create-event')
     var user = req.user
 
     //generate typeform
@@ -73,6 +77,7 @@ module.exports = function (app) {
 
   app.post('/form/create-event', function (formSubmissionRequest, formSubmissionResponse) {
 
+    log.info('POST /form/create-event')
     console.log("form submission webhook invoked")
     var formId = formSubmissionRequest.body.uid;
     console.log("form id: " + formId)
@@ -147,6 +152,7 @@ module.exports = function (app) {
   })
 
   app.get("/sign-s3", (req, res) => {
+    log.info('GET /sign-s3')
     var filename = generateID(8)
     var firstChar = filename[0]
     var secondChar = filename[1]
@@ -170,6 +176,7 @@ module.exports = function (app) {
   })
 
   app.delete('/sessionResource', function (req, res) {
+    log.info('DELETE /sessionResource')
     var eventId = req.query.eventId
     var resourceKey = req.query.resourceKey
 
@@ -201,74 +208,35 @@ module.exports = function (app) {
   })
 
   app.post('/addSessionResource', function (req, res) {
+    log.info('POST /addSessionResource')
 
     var eventId = req.query.eventId
     var uploadError = false
 
-    req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-      console.log("Uploading: " + filename);
-
-      var generatedId = generateID(8)
-      var firstChar = generatedId[0]
-      var secondChar = generatedId[1]
-      var extension = generateID(3)
-      var s3Key = firstChar + "/" + secondChar + "/" + generatedId + "." + extension
-
-      uploadS3(file, s3Key, s3BucketName, function (err) {
-        if (err) {
-          console.log("upload error: " + err)
-          uploadError = "upload error: " + err
-        } else {
-          console.log("upload success: " + s3BucketUrl + s3Key)
-          console.log("eventId: " + eventId)
-
-          //update events table
-          Event.findOne({
-            'id': eventId
-          }, function (err, event) {
-            if (!err) {
-              event.resources.push({
-                name: filename,
-                url: s3BucketUrl + s3Key,
-                resourceKey: generatedId,
-                active: true
-              })
-              event.save(function (error) {
-                console.log("saved event " + eventId)
-                if (error) {
-                  console.log("error updating event " + eventId + ": " + error)
-                  uploadError = "error updating event " + eventId + ": " + error
-                }
-              })
-            }
-          })
-        }
-      }); //uploads3
-    })
-
-    req.busboy.on('finish', function () {
-
-      if (!uploadError) {
-        console.log("update succeeded")
-        res.writeHead(200);
-        res.end()
-      } else {
-        console.log("update failed: " + uploadError)
-        res.writeHead(400, {
-          body: uploadError
+    //update events table
+    Event.findOne({
+      'id': eventId
+    }, function (err, event) {
+      if (!err) {
+        event.resources.push({
+          name: filename,
+          url: s3BucketUrl + s3Key,
+          resourceKey: generatedId,
+          active: true
         })
-        res.end()
+        event.save(function (error) {
+          console.log("saved event " + eventId)
+          if (error) {
+            console.log("error updating event " + eventId + ": " + error)
+            uploadError = "error updating event " + eventId + ": " + error
+          }
+        })
       }
-    });
-
-    req.pipe(req.busboy);
+    })
   })
 
-  //create image thumbnail
-
-
-
   app.post('/beginSession', function (req, res) {
+    log.info('POST /beginSession')
     var eventId = req.body.eventId
 
     //update events table
@@ -311,6 +279,8 @@ module.exports = function (app) {
   })
 
   app.get('/event/:id', stormpath.loginRequired, function (req, res) {
+    log.info('GET /event')
+
     var evtId = req.params['id']
     var fakeclient = req.params['fakeclient']
     console.log("evtId: " + evtId)

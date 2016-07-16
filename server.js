@@ -1,35 +1,44 @@
-// load the auth variables
-require('dotenv').config({
-  //silent: true
-}); //for dev. In production, variables are in the environment.
+var env = process.env.NODE_ENV || 'dev';
+
+if (env === "dev") {
+  console.log('loading .env')
+  // load the auth variables
+  require('dotenv').config({
+    silent: true
+  });
+}
+
+var bunyan = require('bunyan')
+var log = bunyan.createLogger({ name: process.env.APP_NAME });
 
 var express = require('express');
 var stormpath = require('express-stormpath');
+var compression = require('compression')
 
 var app = express();
-app.use(stormpath.init(app, 
+app.use(stormpath.init(app,
 
-{
-  website: true,
-  sessionDuration: 1000 * 60 * 60 * 24 * 30, //30 days
-  enableAccountVerification: false, //don't require email validation
-  enableForgotPassword: true, //allow password reset workflow
-  enableFacebook: true,
-  social: {
-    facebook: {
-      appId: process.env.facebookAuth_clientID,
-      appSecret: process.env.facebookAuth_clientSecret
-    }
-  },
-  web: {
-    register: {
-      nextUri: '/create-event'
+  {
+    website: true,
+    sessionDuration: 1000 * 60 * 60 * 24 * 30, //30 days
+    enableAccountVerification: false, //don't require email validation
+    enableForgotPassword: true, //allow password reset workflow
+    enableFacebook: true,
+    social: {
+      facebook: {
+        appId: process.env.facebookAuth_clientID,
+        appSecret: process.env.facebookAuth_clientSecret
+      }
     },
-    login: {
-      nextUri: '/create-event',
+    web: {
+      register: {
+        nextUri: '/create-event'
+      },
+      login: {
+        nextUri: '/create-event',
+      }
     }
   }
-}
 
 ));
 
@@ -52,15 +61,17 @@ app.use('/img', express.static('static/img'));
 // parse application/json
 app.use(bodyParser.json())
 app.use(busboy());
+app.use(compression())
+
+app.locals['title'] = "turntabl"
+app.locals['tagline'] = "teach · mentor · advise"
 
 app.set('views', './app/views')
 app.set('view engine', 'ejs');
 
 require('./app/routes.js')(app);
 
-//initialise typeform with a GET request to https://api.typeform.io/latest/
-
-app.on('stormpath.ready', function() {
+app.on('stormpath.ready', function () {
   app.listen(port);
-  console.log('The magic happens on port ' + port);
+  log.info('The magic happens on port ' + port);
 });
