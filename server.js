@@ -9,7 +9,14 @@ if (env === "dev") {
 }
 
 var bunyan = require('bunyan')
-var log = bunyan.createLogger({ name: process.env.APP_NAME });
+var log = bunyan.createLogger({ 
+  name: process.env.APP_NAME, 
+   streams: [
+    {
+      level: 'debug',
+      path: '/var/tmp/' +process.env.APP_NAME + '-' + process.pid + '.log'  // log ERROR and above to a file
+    }
+  ] });
 
 var express = require('express');
 var stormpath = require('express-stormpath');
@@ -73,5 +80,5 @@ require('./app/routes.js')(app);
 
 app.on('stormpath.ready', function () {
   app.listen(port);
-  log.info('The magic happens on port ' + port);
+  console.log('The magic happens on port ' + port);
 });

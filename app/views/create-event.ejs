@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include partials/head.ejs %>
+    <!--CSS styles that ensure your typeform takes up all the available screen space (DO NOT EDIT!)-->
+    <style type="text/css">
+      html {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      iframe {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        border: 0;
+      }
+    </style>
+
+      <% include partials/rt.ejs %>
+</head>
+
+<body id="page-top">
+
+  <% include partials/header.ejs %>
+    <section>
+      <div class="container">
+        <iframe id="typeform-full" width="100%" height="100%" frameborder="0" src="<%= typeformUrl %>"></iframe>
+        <script type="text/javascript" src="https://s3-eu-west-1.amazonaws.com/share.typeform.com/embed.js"></script>
+      </div>
+    </section>
+    <% include partials/footer.ejs %>
+      <script>
+        $(document).ready(function() {
+          $(window).on('message', function(ev) {
+            if (ev.originalEvent.data === "form-submit") {
+              //window.location='/event/<%= eventId %>'
+              console.log('start scroller')
+            }
+          });
+        });
+      </script>
+
+      <script>
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('45387f244d056952dda4', {
+          encrypted: true
+        });
+
+        var channel = pusher.subscribe('event-creation-<%= eventId %>');
+        channel.bind('failure', function(data) {
+          console.error('event creation failed')
+          pusher.disconnect();
+          window.location = '/eventcreationfailed/<%= eventId %>'
+        });
+        channel.bind('success', function() {
+          console.log('event creation succeeded')
+          pusher.disconnect();
+          window.location = '/event/<%= eventId %>'
+        })
+      </script>
+
+</body>
+
+</html>
