@@ -27,7 +27,6 @@ app.use(stormpath.init(app,
     },
     login: {
       nextUri: '/create-event',
-      view: '/login.jade'
     }
   }
 }

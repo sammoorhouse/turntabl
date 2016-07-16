@@ -27,7 +27,7 @@ var emailLogicJumpRef = "emailLogicJump"
 var emailOverrideRef = "emailOverride"
 
 module.exports = function (app) {
-  app.get('/', function (req, res) {
+  app.get('/', stormpath.getUser, function (req, res) {
     var user = req.user
     res.render('index.ejs', {
       user: user
