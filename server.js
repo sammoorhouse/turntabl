@@ -7,7 +7,9 @@ var express = require('express');
 var stormpath = require('express-stormpath');
 
 var app = express();
-app.use(stormpath.init(app, {
+app.use(stormpath.init(app, 
+
+{
   website: true,
   sessionDuration: 1000 * 60 * 60 * 24 * 30, //30 days
   enableAccountVerification: false, //don't require email validation
@@ -24,10 +26,13 @@ app.use(stormpath.init(app, {
       nextUri: '/create-event'
     },
     login: {
-      nextUri: '/create-event'
+      nextUri: '/create-event',
+      view: '/login.jade'
     }
   }
-}));
+}
+
+));
 
 var port = process.env.PORT || 8080;
 var mongoose = require('mongoose');
@@ -50,6 +55,7 @@ app.use('/img', express.static('img'));
 app.use(bodyParser.json())
 app.use(busboy());
 
+app.set('views', './app/views')
 app.set('view engine', 'ejs');
 
 require('./app/routes.js')(app);
