@@ -311,8 +311,8 @@ module.exports = function (app) {
   })
 
   app.get('/event/:id', stormpath.loginRequired, function (req, res) {
-    var evtId = req.param('id')
-    var fakeclient = req.param('fakeclient')
+    var evtId = req.params['id']
+    var fakeclient = req.params['fakeclient']
     console.log("evtId: " + evtId)
     Event.findOne({
       'id': evtId

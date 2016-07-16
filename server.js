@@ -44,12 +44,11 @@ var busboy = require('connect-busboy');
 mongoose.connect(process.env.MONGODB_URI);
 
 //js,css
-app.use('/js', express.static('js'));
-app.use('/css', express.static('css'));
-app.use('/fontawesome', express.static('fontawesome'));
-app.use('/font-awesome', express.static('font-awesome'));
-app.use('/fonts', express.static('fonts'));
-app.use('/img', express.static('img'));
+app.use('/js', express.static('static/js'));
+app.use('/css', express.static('static/css'));
+app.use('/font-awesome', express.static('static/fonts'));
+app.use('/fonts', express.static('static/fonts'));
+app.use('/img', express.static('static/img'));
 
 // parse application/json
 app.use(bodyParser.json())
