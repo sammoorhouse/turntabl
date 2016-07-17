@@ -405,3 +405,38 @@ img::-moz-selection {
 body {
   webkit-tap-highlight-color: #222222;
 }
+
+.modal-body {
+    /*background-image: url('../img/dj-turntables.jpg');*/
+    background-color: transparent;
+    height: 600px;
+    width: 800px;
+    opacity: .95;
+}
+
+.modal-content {
+  background-color: transparent;
+}
+
+.modal-header {
+  background-color: #F05F40;
+  opacity: .95;
+  width: 800px
+}
+
+#login-iframe {
+  width: 775px;
+  height: 500px;
+  border: none;
+}
+
+.modal-body {
+  border: none;
+}
+
+.register {
+  background-color: transparent;
+  border: 10px solid green;
+}
+
+

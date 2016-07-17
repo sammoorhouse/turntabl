@@ -15,6 +15,7 @@ var log = bunyan.createLogger({
 var express = require('express');
 var stormpath = require('express-stormpath');
 var compression = require('compression')
+var path = require('path')
 
 var app = express();
 app.use(stormpath.init(app,
@@ -35,7 +36,8 @@ app.use(stormpath.init(app,
         nextUri: '/create-event'
       },
       login: {
-        nextUri: '/create-event',
+        view: path.join(__dirname,'app/views','login.jade'),
+        nextUri: '/create-event'
       }
     }
   }
