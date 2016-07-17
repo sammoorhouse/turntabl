@@ -1,5 +1,4 @@
 var bunyan = require('bunyan')
-var log = bunyan.createLogger({ name: process.env.APP_NAME });
 
 var Event = require('../app/models/event');
 var OpenTok = require('opentok');
@@ -29,7 +28,7 @@ var eventPriceRef = "eventPrice"
 var emailLogicJumpRef = "emailLogicJump"
 var emailOverrideRef = "emailOverride"
 
-module.exports = function (app) {
+module.exports = function (app, log) {
   app.get('/', stormpath.getUser, function (req, res) {
     var user = req.user
     res.render('index.ejs', {
@@ -56,11 +55,11 @@ module.exports = function (app) {
     },
       function (err, resp) {
         if (!err && resp.statusCode == 201) { //201 CREATED
-          console.log('typeform Upload successful');
+          log.info('typeform Upload successful');
           var formLink = resp.body['_links'].find(function (el) {
             return el.rel === "form_render"
           }).href
-          console.log('typeform url: ' + formLink)
+          log.info('typeform url: ' + formLink)
 
           res.render('create-event.ejs', {
             typeformUrl: formLink,
@@ -78,9 +77,9 @@ module.exports = function (app) {
   app.post('/form/create-event', function (formSubmissionRequest, formSubmissionResponse) {
 
     log.info('POST /form/create-event')
-    console.log("form submission webhook invoked")
+    log.info("form submission webhook invoked")
     var formId = formSubmissionRequest.body.uid;
-    console.log("form id: " + formId)
+    log.info("form id: " + formId)
     var newEvent = new Event();
 
     //get form structure https://api.typeform.io/v0.4/forms/:form_id
@@ -97,7 +96,7 @@ module.exports = function (app) {
         var formSubmission = formSubmissionRequest.body
         var formStructure = JSON.parse(formStructureResponse.body)
         var eventId = formStructure.tags[0]
-        console.log("found eventId: " + eventId)
+        log.info("found eventId: " + eventId)
         var leaderEmail = resolveLeaderEmail(formSubmission, formStructure)
         var eventTitle = resolveField(eventTitleRef, formSubmission, formStructure)
         var eventDuration = resolveField(eventDurationRef, formSubmission, formStructure)
@@ -119,7 +118,7 @@ module.exports = function (app) {
           if (err) {
             console.error("sessionId creation error: " + err)
           } else {
-            console.log("sessionId: " + session.sessionId)
+            log.info("sessionId: " + session.sessionId)
             newEvent.openTokSessionId = session.sessionId
 
             newEvent.save(function (err) {
@@ -133,8 +132,8 @@ module.exports = function (app) {
                 });
                 formSubmissionResponse.end()
               } else {
-                console.log("sending success message to client")
-                console.log("pusher eventid: " + eventId)
+                log.info("sending success message to client")
+                log.info("pusher eventid: " + eventId)
                 pusher.trigger("event-creation-" + eventId, 'success', {});
 
                 formSubmissionResponse.writeHead(200, {
@@ -146,7 +145,7 @@ module.exports = function (app) {
           }
         });
       } else {
-        console.log("fail: " + err)
+        log.info("fail: " + err)
       }
     })
   })
@@ -192,7 +191,7 @@ module.exports = function (app) {
         })
         event.save(function (error) {
           if (error) {
-            console.log("error updating event " + eventId + ": " + error)
+            log.info("error updating event " + eventId + ": " + error)
             res.writeHead(400);
             res.end()
           } else {
@@ -225,9 +224,9 @@ module.exports = function (app) {
           active: true
         })
         event.save(function (error) {
-          console.log("saved event " + eventId)
+          log.info("saved event " + eventId)
           if (error) {
-            console.log("error updating event " + eventId + ": " + error)
+            log.info("error updating event " + eventId + ": " + error)
             uploadError = "error updating event " + eventId + ": " + error
           }
         })
@@ -254,7 +253,7 @@ module.exports = function (app) {
           //writeBack
           event.save(function (error) {
             if (error) {
-              console.log("error updating event " + eventId + ": " + error)
+              log.info("error updating event " + eventId + ": " + error)
             }
           })
         }
@@ -272,7 +271,7 @@ module.exports = function (app) {
           res.write(JSON.stringify(result));
         }
       } else {
-        console.log("error retrieving event " + eventId + ": " + err)
+        log.info("error retrieving event " + eventId + ": " + err)
       }
     })
     res.end()
@@ -283,19 +282,19 @@ module.exports = function (app) {
 
     var evtId = req.params['id']
     var fakeclient = req.params['fakeclient']
-    console.log("evtId: " + evtId)
+    log.info("evtId: " + evtId)
     Event.findOne({
       'id': evtId
     }, function (err, event) {
       // if there are any errors, return the error
       if (err) {
-        console.log("err: " + err)
+        log.info("err: " + err)
         res.redirect('/');
       }
 
       // if no event is found, return the message
       if (!event) {
-        console.log("no evt")
+        log.info("no evt")
         res.redirect('/');
       }
       // all is well, render event
@@ -322,7 +321,7 @@ module.exports = function (app) {
   })
 
   function generateForm(user, eventId) {
-    console.log("webhook url: " + process.env.typeform_webhook_submit_url)
+    log.info("webhook url: " + process.env.typeform_webhook_submit_url)
     var formData = {
       "title": "turntable - teach, mentor, advise",
       "webhook_submit_url": process.env.typeform_webhook_submit_url, //"http://requestb.in/qqmbwcqq",//
@@ -411,18 +410,18 @@ module.exports = function (app) {
       }).question
       var pattern = /\<code\>(.*)\<\/code\>/
       var email = questionText.match(pattern)[1]
-      console.log("email = " + email)
+      log.info("email = " + email)
       return email
     }
   }
 
   function resolveField(refName, formSubmission, formStructure) {
-    console.log("attempting to find " + refName)
+    log.info("attempting to find " + refName)
     var fieldId = formStructure.fields.find(function (q) {
       return q.ref === refName
     }).id
 
-    console.log("found id: " + fieldId)
+    log.info("found id: " + fieldId)
     var block = formSubmission.answers.find(function (a) {
       return a.field_id === fieldId
     })
@@ -434,7 +433,7 @@ module.exports = function (app) {
       result = block.value
     }
 
-    console.log(refName + " = " + result)
+    log.info(refName + " = " + result)
     return result
   }
 }

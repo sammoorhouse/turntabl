@@ -2,21 +2,24 @@ var env = process.env.NODE_ENV || 'dev';
 
 if (env === "dev") {
   console.log('loading .env')
-  // load the auth variables
   require('dotenv').config({
     silent: true
   });
 }
 
 var bunyan = require('bunyan')
-var log = bunyan.createLogger({ 
-  name: process.env.APP_NAME, 
-   streams: [
+var log = bunyan.createLogger({
+  name: process.env.APP_NAME,
+  streams: [
     {
+      type: 'rotating-file',
       level: 'debug',
-      path: '/var/tmp/' +process.env.APP_NAME + '-' + process.pid + '.log'  // log ERROR and above to a file
+      period: '1h',
+      count: 200,
+      path: '/var/tmp/' + process.env.APP_NAME + '-' + process.pid + '.log'  // log ERROR and above to a file
     }
-  ] });
+  ]
+});
 
 var express = require('express');
 var stormpath = require('express-stormpath');
@@ -76,7 +79,7 @@ app.locals['tagline'] = "teach · mentor · advise"
 app.set('views', './app/views')
 app.set('view engine', 'ejs');
 
-require('./app/routes.js')(app);
+require('./app/routes.js')(app, log);
 
 app.on('stormpath.ready', function () {
   app.listen(port);
