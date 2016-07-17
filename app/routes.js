@@ -126,15 +126,15 @@ module.exports = function (app, log) {
 
   app.get("/sign-s3", (req, res) => {
     log.info('GET /sign-s3')
-    var sig = s2.generateSignature(utils.generateID(8))
+    var sig = s3.generateSignature(utils.generateID(8))
     res.write(JSON.stringify(sig));
     res.end()
   })
 
   app.delete('/sessionResource', function (req, res) {
     log.info('DELETE /sessionResource')
-    var eventId = req.query.eventId
-    var resourceKey = req.query.resourceKey
+    var eventId = req.params['eventId']
+    var resourceKey = req.params['resourceKey']
 
     //update events table
     Event.findOne({
@@ -166,8 +166,11 @@ module.exports = function (app, log) {
   app.post('/addSessionResource', function (req, res) {
     log.info('POST /addSessionResource')
 
-    var eventId = req.query.eventId
-    var uploadError = false
+    console.log("body: " + JSON.stringify(req.body))
+
+    var eventId = req.body.eventId
+    var name = req.body.name
+    var s3Key = req.body.s3Key
 
     //update events table
     Event.findOne({
@@ -175,19 +178,19 @@ module.exports = function (app, log) {
     }, function (err, event) {
       if (!err) {
         event.resources.push({
-          name: filename,
+          name: name,
           url: s3.bucketUrl + s3Key,
-          resourceKey: utils.generatedId(8),
+          resourceKey: utils.generateID(8),
           active: true
         })
         event.save(function (error) {
           log.info("saved event " + eventId)
           if (error) {
-            log.info("error updating event " + eventId + ": " + error)
-            uploadError = "error updating event " + eventId + ": " + error
+            log.error("error updating event " + eventId + ": " + error)
           }
         })
       }
+      res.end();
     })
   })
 

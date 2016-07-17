@@ -52,7 +52,6 @@ $(function () { //on load
   myDropzone.on("sending", function (file, xhr, formData) {
     console.log("dropzone sending")
     $.each(file.postData, function (k, v) {
-      console.log(v)
       formData.append(k, v)
     })
     formData.append('Content-type', '')
@@ -61,18 +60,34 @@ $(function () { //on load
     //formData.append('eventId', eventId);
   });
 
-  myDropzone.on("complete", function(file){
+  myDropzone.on("complete", function (file) {
     $(file.previewTemplate).removeClass('uploading')
+
+    $.post("/addSessionResource", {
+      eventId: eventId,
+      name: file.name,
+      s3Key: file.s3
+    },
+      function (result) {
+        if (result.result === "begin") {
+          session.signal({
+            type: "beginSession",
+            proposedStartTimeMillis: result.proposedStartTimeMillis
+          })
+        }
+      },
+      "json")
   })
 
   function dropzoneAccept(file, done) {
     file.postData = []
     $.ajax({
       url: '/sign-s3',
-      data: {name: file.name,
-      type: file.type,
-      size: file.size
-    },
+      data: {
+        name: file.name,
+        type: file.type,
+        size: file.size
+      },
       success: function (response) {
         response = JSON.parse(response)
         file.custom_status = 'ready'
@@ -81,12 +96,12 @@ $(function () { //on load
         $(file.previewTemplate).addClass('uploading')
         done()
       },
-      error: function(response){
+      error: function (response) {
         file.custom_status = 'rejected'
-        if(response.responseText){
+        if (response.responseText) {
           response = JSON.parse(response.responseText)
         }
-        if(response.message){
+        if (response.message) {
           done(response.message)
           return
         }
@@ -105,9 +120,10 @@ $(function () { //on load
 })
 
 function triggerSessionStart() {
-  $.post("/beginSession", {
-    eventId: eventId
-  },
+  $.post("/beginSession",
+    {
+      eventId: eventId
+    },
     function (result) {
       if (result.result === "begin") {
         session.signal({
