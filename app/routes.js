@@ -18,9 +18,10 @@ var pusher = new Pusher({
 });
 
 module.exports = function (app, log) {
-  var s3 = require('./3rd/s3.js');
+  var s3 = require('./3rd/s3.js')(log);
   var typeform = require('./3rd/typeform.js')(log);
-  
+  var utils = require('./utils.js')(log);
+
   app.get('/', stormpath.getUser, function (req, res) {
     var user = req.user
     res.render('index.ejs', {
@@ -31,9 +32,9 @@ module.exports = function (app, log) {
   // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function (req, res) {
     log.info('GET /create-event')
-    
+
     var user = req.user
-    var eventId = generateID(8)
+    var eventId = utils.generateID(8)
     var formData = typeform.generateForm(user, eventId)
 
     typeform.createAndRenderForm(formData,
@@ -58,7 +59,7 @@ module.exports = function (app, log) {
     var newEvent = new Event();
 
     //get form structure https://api.typeform.io/v0.4/forms/:form_id
-    var typeform_structure_url = "https://api.typeform.io/" + typeformVersionString + "/forms/" + formId
+    var typeform_structure_url = "https://api.typeform.io/" + typeform.versionString + "/forms/" + formId
 
     request.get({
       uri: typeform_structure_url,
@@ -127,25 +128,8 @@ module.exports = function (app, log) {
 
   app.get("/sign-s3", (req, res) => {
     log.info('GET /sign-s3')
-    var filename = generateID(8)
-    var firstChar = filename[0]
-    var secondChar = filename[1]
-    var filePath = firstChar + "/" + secondChar + "/" + filename
-    var acl = "public-read"
-    var p = policy({
-      acl: acl,
-      secret: process.env.AWS_SECRET_ACCESS_KEY,
-      bucket: s3.bucketName,
-      key: filePath,
-      expires: new Date(Date.now() + 600000),
-    })
-    var result = {
-      'AWSAccessKeyId': process.env.AWS_ACCESS_KEY_ID,
-      'key': filePath,
-      'policy': p.policy,
-      'signature': p.signature
-    }
-    res.write(JSON.stringify(result));
+    var sig = s2.generateSignature(utils.generateID(8))
+    res.write(JSON.stringify(sig));
     res.end()
   })
 
@@ -195,7 +179,7 @@ module.exports = function (app, log) {
         event.resources.push({
           name: filename,
           url: s3.bucketUrl + s3Key,
-          resourceKey: generatedId,
+          resourceKey: utils.generatedId(8),
           active: true
         })
         event.save(function (error) {
@@ -288,37 +272,9 @@ module.exports = function (app, log) {
           openTokSessionId: sessionId,
           openTokToken: token,
           eventValue: eventValue,
-          generateID: generateID
+          generateID: utils.generateID
         });
-        //}
       }
     });
   })
-
-
-  function generateID(length) {
-    var ALPHABET = '23456789abdegjkmnpqrvwxyz';
-    var rtn = '';
-    for (var i = 0; i < length; i++) {
-      rtn += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET.length));
-    }
-    return rtn;
-  }
-
-  function censor(censor) {
-    var i = 0;
-
-    return function (key, value) {
-      if (i !== 0 && typeof (censor) === 'object' && typeof (value) == 'object' && censor == value)
-        return '[Circular]';
-
-      if (i >= 29) // seems to be a harded maximum of 30 serialized objects?
-        return '[Unknown]';
-
-      ++i; // so we know we aren't using the original object anymore
-
-      return value;
-    }
-  }
-
 }

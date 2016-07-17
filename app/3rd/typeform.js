@@ -1,6 +1,6 @@
 
 
-var typeformVersionString = 'v0.4'
+var versionString = 'v0.4'
 var eventTitleRef = "eventTitle"
 var eventDurationRef = "eventDuration"
 var eventPriceRef = "eventPrice"
@@ -11,7 +11,7 @@ var request = require('request');
 module.exports = function (log) {
     var createAndRenderForm = function (formData, doneCB, errCB) {
         //generate typeform
-        var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
+        var typeformUrl = "https://api.typeform.io/" + versionString + "/forms"
 
         request.post(
             {
@@ -134,6 +134,7 @@ module.exports = function (log) {
     }
 
     return {
+        versionString: versionString,
         generateForm: generateForm,
         createAndRenderForm: createAndRenderForm,
         resolveField: resolveField,
