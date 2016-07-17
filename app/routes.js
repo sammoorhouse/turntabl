@@ -1,5 +1,3 @@
-var bunyan = require('bunyan')
-
 var Event = require('../app/models/event');
 var OpenTok = require('opentok');
 var path = require('path')
@@ -9,9 +7,9 @@ var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_
 var stormpath = require('express-stormpath');
 var request = require('request');
 var Pusher = require('pusher');
-var policy = require('s3-policy');
 
 var util = require('util');
+
 var pusher = new Pusher({
   appId: process.env.pusher_AppId,
   key: process.env.pusher_Key,
@@ -19,16 +17,10 @@ var pusher = new Pusher({
   encrypted: true
 });
 
-var s3BucketName = process.env.S3_BUCKET
-var s3BucketUrl = s3BucketName + ".s3.amazonaws.com/"
-var typeformVersionString = 'v0.4'
-var eventTitleRef = "eventTitle"
-var eventDurationRef = "eventDuration"
-var eventPriceRef = "eventPrice"
-var emailLogicJumpRef = "emailLogicJump"
-var emailOverrideRef = "emailOverride"
-
 module.exports = function (app, log) {
+  var s3 = require('./3rd/s3.js');
+  var typeform = require('./3rd/typeform.js')(log);
+  
   app.get('/', stormpath.getUser, function (req, res) {
     var user = req.user
     res.render('index.ejs', {
@@ -39,47 +31,30 @@ module.exports = function (app, log) {
   // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function (req, res) {
     log.info('GET /create-event')
+    
     var user = req.user
-
-    //generate typeform
-    var typeformUrl = "https://api.typeform.io/" + typeformVersionString + "/forms"
     var eventId = generateID(8)
-    var formData = generateForm(user, eventId)
+    var formData = typeform.generateForm(user, eventId)
 
-    request.post({
-      url: typeformUrl,
-      json: formData,
-      headers: {
-        "X-API-TOKEN": process.env.TYPEFORM_APIKEY
-      }
-    },
-      function (err, resp) {
-        if (!err && resp.statusCode == 201) { //201 CREATED
-          log.info('typeform Upload successful');
-          var formLink = resp.body['_links'].find(function (el) {
-            return el.rel === "form_render"
-          }).href
-          log.info('typeform url: ' + formLink)
-
-          res.render('create-event.ejs', {
-            typeformUrl: formLink,
-            eventId: eventId,
-            user: user
-          });
-        } else if (err) {
-          return console.error('typeform upload failed:', err);
-        } else {
-          return console.error('typeform upload failed:', resp.body);
-        }
+    typeform.createAndRenderForm(formData,
+      function (formUrl) {
+        res.render('create-event.ejs', {
+          typeformUrl: formUrl,
+          eventId: eventId,
+          user: user
+        });
+      },
+      function (err) {
+        return console.error(err);
       })
   })
 
   app.post('/form/create-event', function (formSubmissionRequest, formSubmissionResponse) {
 
-    log.info('POST /form/create-event')
     log.info("form submission webhook invoked")
     var formId = formSubmissionRequest.body.uid;
     log.info("form id: " + formId)
+
     var newEvent = new Event();
 
     //get form structure https://api.typeform.io/v0.4/forms/:form_id
@@ -97,10 +72,10 @@ module.exports = function (app, log) {
         var formStructure = JSON.parse(formStructureResponse.body)
         var eventId = formStructure.tags[0]
         log.info("found eventId: " + eventId)
-        var leaderEmail = resolveLeaderEmail(formSubmission, formStructure)
-        var eventTitle = resolveField(eventTitleRef, formSubmission, formStructure)
-        var eventDuration = resolveField(eventDurationRef, formSubmission, formStructure)
-        var eventPrice = resolveField(eventPriceRef, formSubmission, formStructure)
+        var leaderEmail = typeform.resolveLeaderEmail(formSubmission, formStructure)
+        var eventTitle = typeform.resolveField(eventTitleRef, formSubmission, formStructure)
+        var eventDuration = typeform.resolveField(eventDurationRef, formSubmission, formStructure)
+        var eventPrice = typeform.resolveField(eventPriceRef, formSubmission, formStructure)
 
         newEvent.id = eventId
         newEvent.name = eventTitle
@@ -160,7 +135,7 @@ module.exports = function (app, log) {
     var p = policy({
       acl: acl,
       secret: process.env.AWS_SECRET_ACCESS_KEY,
-      bucket: s3BucketName,
+      bucket: s3.bucketName,
       key: filePath,
       expires: new Date(Date.now() + 600000),
     })
@@ -219,7 +194,7 @@ module.exports = function (app, log) {
       if (!err) {
         event.resources.push({
           name: filename,
-          url: s3BucketUrl + s3Key,
+          url: s3.bucketUrl + s3Key,
           resourceKey: generatedId,
           active: true
         })
@@ -305,7 +280,7 @@ module.exports = function (app, log) {
         var token = opentok.generateToken(sessionId)
         var eventValue = event.eventValue
         return res.render('event.ejs', {
-          s3Bucket: s3BucketUrl,
+          s3Bucket: s3.bucketUrl,
           isLeader: event.leader === userEmail,
           user: req.user,
           event: event,
@@ -320,59 +295,6 @@ module.exports = function (app, log) {
     });
   })
 
-  function generateForm(user, eventId) {
-    log.info("webhook url: " + process.env.typeform_webhook_submit_url)
-    var formData = {
-      "title": "turntable - teach, mentor, advise",
-      "webhook_submit_url": process.env.typeform_webhook_submit_url, //"http://requestb.in/qqmbwcqq",//
-      "tags": [eventId],
-      "branding": false,
-      "fields": [{
-        type: "yes_no",
-        required: true,
-        ref: emailLogicJumpRef,
-        question: "Hey " + user.givenName + ", we're going to get started! First, we think your email address is `" + user.email + "` - is that right?",
-        description: "We promise not to give your address away, but we might need to get in touch if there's a payment issue"
-      }, {
-          type: "email",
-          required: true,
-          ref: emailOverrideRef,
-          question: "Disaster! Looks like we messed up, sorry about that. So... what's your email?",
-          description: "Seriously, we totally promise not to give away your email"
-        }, {
-          type: "short_text",
-          required: true,
-          ref: eventTitleRef,
-          question: "Great! What do you want to call this session?",
-          description: "Sam / George life coaching"
-        }, {
-          type: "number",
-          required: true,
-          ref: eventDurationRef,
-          question: "How many minutes is the session going to last?",
-          description: "We'll show you a warning when your time is almost up",
-          min_value: 5
-        }, {
-          type: "number",
-          required: true,
-          ref: eventPriceRef,
-          question: "How much are you charging for the session?",
-          description: "USD. We take $10; you'll get paid once the session is over"
-        }, {
-          type: "legal",
-          required: true,
-          question: "Thanks!",
-          description: "That's all for now. Your session will be available for 90 days from now."
-        }],
-      "logic_jumps": [{
-        "from": emailLogicJumpRef,
-        "to": eventTitleRef,
-        "if": true
-      }]
-    }
-
-    return formData
-  }
 
   function generateID(length) {
     var ALPHABET = '23456789abdegjkmnpqrvwxyz';
@@ -399,41 +321,4 @@ module.exports = function (app, log) {
     }
   }
 
-  function resolveLeaderEmail(formSubmission, formStructure) {
-    var emailOverridden = !resolveField(emailLogicJumpRef, formSubmission, formStructure)
-    if (emailOverridden) {
-      return resolveField(emailOverrideRef, formSubmission, formStructure)
-    } else {
-      // :( parse from question
-      var questionText = formStructure.fields.find(function (q) {
-        return q.ref === emailLogicJumpRef
-      }).question
-      var pattern = /\<code\>(.*)\<\/code\>/
-      var email = questionText.match(pattern)[1]
-      log.info("email = " + email)
-      return email
-    }
-  }
-
-  function resolveField(refName, formSubmission, formStructure) {
-    log.info("attempting to find " + refName)
-    var fieldId = formStructure.fields.find(function (q) {
-      return q.ref === refName
-    }).id
-
-    log.info("found id: " + fieldId)
-    var block = formSubmission.answers.find(function (a) {
-      return a.field_id === fieldId
-    })
-
-    var result
-    if (block.type === "number") {
-      result = block.value.amount
-    } else {
-      result = block.value
-    }
-
-    log.info(refName + " = " + result)
-    return result
-  }
 }
