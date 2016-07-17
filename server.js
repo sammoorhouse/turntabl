@@ -27,7 +27,6 @@ var compression = require('compression')
 
 var app = express();
 app.use(stormpath.init(app,
-
   {
     website: true,
     sessionDuration: 1000 * 60 * 60 * 24 * 30, //30 days
@@ -81,7 +80,5 @@ app.set('view engine', 'ejs');
 
 require('./app/routes.js')(app, log);
 
-app.on('stormpath.ready', function () {
-  app.listen(port);
-  console.log('The magic happens on port ' + port);
-});
+app.listen(port);
+console.log('The magic happens on port ' + port);

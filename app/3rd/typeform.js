@@ -36,7 +36,6 @@ module.exports = function (log) {
                     return errCB('typeform upload failed:' + resp.body);
                 }
             })
-
     }
 
     function generateForm(user, eventId) {
