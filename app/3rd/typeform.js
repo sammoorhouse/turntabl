@@ -133,11 +133,19 @@ module.exports = function (log) {
         }
     }
 
+    function resolveFormSubmissionWebhook(formSubmission, formStructure) {
+        return {
+            leaderEmail: resolveLeaderEmail(formSubmission, formStructure),
+            eventTitle: typeform.resolveField(eventTitleRef, formSubmission, formStructure),
+            eventDuration: resolveField(eventDurationRef, formSubmission, formStructure),
+            eventPrice: resolveField(eventPriceRef, formSubmission, formStructure),
+        }
+    }
+
     return {
         versionString: versionString,
         generateForm: generateForm,
         createAndRenderForm: createAndRenderForm,
-        resolveField: resolveField,
-        resolveLeaderEmail: resolveLeaderEmail
+        resolveFormSubmissionWebhook: resolveFormSubmissionWebhook
     }
 } 

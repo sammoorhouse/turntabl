@@ -69,24 +69,22 @@ module.exports = function (app, log) {
     }, function (err, formStructureResponse) {
       if (!err) {
 
-        var formSubmission = formSubmissionRequest.body
-        var formStructure = JSON.parse(formStructureResponse.body)
+        var submission = formSubmissionRequest.body
+        var structure = JSON.parse(formStructureResponse.body)
         var eventId = formStructure.tags[0]
         log.info("found eventId: " + eventId)
-        var leaderEmail = typeform.resolveLeaderEmail(formSubmission, formStructure)
-        var eventTitle = typeform.resolveField(eventTitleRef, formSubmission, formStructure)
-        var eventDuration = typeform.resolveField(eventDurationRef, formSubmission, formStructure)
-        var eventPrice = typeform.resolveField(eventPriceRef, formSubmission, formStructure)
+
+        var formDetails = typeform.resolveFormSubmissionWebhook(submission, structure)
 
         newEvent.id = eventId
-        newEvent.name = eventTitle
+        newEvent.name = formDetails.eventTitle
         newEvent.creationDate = new Date()
-        newEvent.durationMins = eventDuration
-        newEvent.leader = leaderEmail
+        newEvent.durationMins = formDetails.eventDuration
+        newEvent.leader = formDetails.leaderEmail
         newEvent.clientPaid = false
         newEvent.leaderPaid = false
         newEvent.attended = false
-        newEvent.eventPrice = eventPrice
+        newEvent.eventPrice = formDetails.eventPrice
         newEvent.resources = []
 
         //create openTok session
