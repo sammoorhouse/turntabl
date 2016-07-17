@@ -71,7 +71,7 @@ module.exports = function (app, log) {
 
         var submission = formSubmissionRequest.body
         var structure = JSON.parse(formStructureResponse.body)
-        var eventId = formStructure.tags[0]
+        var eventId = structure.tags[0]
         log.info("found eventId: " + eventId)
 
         var formDetails = typeform.resolveFormSubmissionWebhook(submission, structure)
