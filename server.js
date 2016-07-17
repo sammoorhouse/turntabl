@@ -9,16 +9,7 @@ if (env === "dev") {
 
 var bunyan = require('bunyan')
 var log = bunyan.createLogger({
-  name: process.env.APP_NAME,
-  streams: [
-    {
-      type: 'rotating-file',
-      level: 'debug',
-      period: '1h',
-      count: 200,
-      path: '/var/tmp/' + process.env.APP_NAME + '-' + process.pid + '.log'  // log ERROR and above to a file
-    }
-  ]
+  name: process.env.APP_NAME
 });
 
 var express = require('express');
