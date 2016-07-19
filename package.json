@@ -1,6 +1,9 @@
 {
   "name": "turntable",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "turntable is an online platform for mentors, teachers and coaches",
+  "license": "MIT",
+  "repository": "http://github.com/sammoorhouse/turntabl",
   "dependencies": {
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.0.0",
@@ -14,9 +17,7 @@
     "express": "4.14.0",
     "express-session": "~1.0.0",
     "express-stormpath": "^3.1.2",
-    "method-override": "~1.0.0",
     "mongoose": "4.5.4",
-    "morgan": "~1.0.0",
     "opentok": "^2.3.2",
     "pusher": "^1.3.0",
     "request": "^2.72.0",

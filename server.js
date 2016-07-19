@@ -44,7 +44,6 @@ app.use(stormpath.init(app,
 
 var port = process.env.PORT || 8080;
 var mongoose = require('mongoose');
-var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
