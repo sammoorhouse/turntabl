@@ -62,6 +62,7 @@ app.use('/img', express.static('static/img'));
 
 // parse application/json
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded())
 app.use(busboy());
 app.use(compression())
 
