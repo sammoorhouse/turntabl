@@ -273,7 +273,6 @@ module.exports = function (app, log) {
           openTokSessionId: sessionId,
           openTokToken: token,
           eventValue: eventValue,
-          generateID: utils.generateID
         });
       }
     });

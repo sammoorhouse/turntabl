@@ -3,15 +3,6 @@ var timerToken = 0
 var sessionEndTimeMillis
 var nanobar
 
-function generateID(length) {
-  var ALPHABET = '23456789abdegjkmnpqrvwxyz';
-  var rtn = '';
-  for (var i = 0; i < length; i++) {
-    rtn += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET.length));
-  }
-  return rtn;
-}
-
 $(function () { //on load
   //carousel
   $('#myCarousel').carousel({

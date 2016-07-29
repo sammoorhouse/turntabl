@@ -43,7 +43,7 @@ session.on({
     console.log("signal")
     var msgTemplate = $('#chat-message-template')
     msgTemplate.addClass(event.from.connectionId === session.connection.connectionId ? 'right' : 'left')
-    msgTemplate.find('#chat-message-image').attr('src', generateId(event.from.connectionId))
+    msgTemplate.find('#chat-message-image').attr('src', "https://placeholdit.imgix.net/~text?txtsize=13&bg=fa6f57&txtclr=fff%26text%3Dme&txt=ME&w=50&h=50")
     msgTemplate.find('#chat-body-text').text(event.data)
     msgHistory.append(msgTemplate)
     msgTemplate.scrollIntoView();
