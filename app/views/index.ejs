@@ -18,7 +18,7 @@
     <header>
       <div class="header-content">
         <div class="header-content-inner">
-          <h1>turntable</h1>
+          <h1><%= app.locals["name"] %></h1>
           <hr>
           <p>turntable is an online platform for mentors, teachers and coaches</p>
           <!--<a data-toggle="modal" class="btn btn-primary btn-xl" href="javascript:void(0)" onclick="openLoginModal();">Get Started</a>-->
@@ -46,7 +46,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 text-center">
-            <h2 class="section-heading">teach &middot; mentor &middot; advise</h2>
+            <h2 class="section-heading"><%= app.locals['tagline'] %></h2>
             <hr class="light">
             <p class="text-faded">We make it easy to create and host mentoring sessions, share documents and notes, and get paid.</p>
             <a href="/login" class="page-scroll btn btn-default btn-xl sr-button">Get Started</a>
@@ -99,7 +99,7 @@
           </div>
           <div class="col-lg-4 text-center">
             <i class="fa fa-envelope-o fa-3x wow bounceIn" data-wow-delay=".1s"></i>
-            <p><a href="mailto:feedback@turntabl.io">feedback@turntabl.io</a></p>
+            <p><a href="mailto:<%= app.locals['email-feedback'] %>"><%= app.locals['email-feedback'] %></a></p>
           </div>
         </div>
       </div>

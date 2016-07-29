@@ -63,8 +63,14 @@ app.use(bodyParser.urlencoded())
 app.use(busboy());
 app.use(compression())
 
-app.locals['title'] = "turntabl"
+//app local variables - for use in ejs templates
+app.locals['name'] = "turntabl"
+app.locals['url'] = "turntabl.io"
+app.locals['url'] = "turntabl.io"
+app.locals['description'] = "turntable is an online platform for mentors, teachers and coaches"
 app.locals['tagline'] = "teach · mentor · advise"
+app.locals['email-feedback'] = "feedback@turntabl.io"
+app.locals['email-jobs'] = "jobs@turntabl.io"
 
 app.set('views', './app/views')
 app.set('view engine', 'ejs');
