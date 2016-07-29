@@ -1,5 +1,3 @@
-var path = require('path')
-
 var env = process.env.NODE_ENV || 'dev';
 
 if (env === "dev") {
@@ -38,7 +36,6 @@ app.use(stormpath.init(app,
       },
       login: {
         nextUri: '/create-event',
-        //view: path.join(__dirname, 'app','views','auth', 'login.ejs') // My custom login view
       }
     }
   }
