@@ -179,7 +179,7 @@ module.exports = function (app, log) {
       if (!err) {
         event.resources.push({
           name: name,
-          url: s3.bucketUrl + s3Key,
+          url: s3Key,
           resourceKey: utils.generateID(8),
           active: true
         })

@@ -157,24 +157,16 @@
       .filter(function(resource){
         return (typeof resource.active != "undefined")
       }).forEach(function(resource){
-        var resourceId = generateID(8)
+        var imgsrc = "https://turntabl-io.imgix.net/" + resource.url + "?w=150&h=150&fit=crop&crop=entropy&auto=format,enhance&q=60"
         %>
-        <div id="<%= resourceId %>" class="uil-ring-css col-sm-2">
-          <a href="#x">
-            <div></div>
+        <div class="col-sm-2">
+          <a href="#">
+            <div>
+            <img alt="<%= resource.name %>" src="<%= imgsrc %>">
+            </img>
+            </div>
           </a>
         </div>
-
-        <script>
-          resizeImage("//<%= resource.url %>", 150, 150, function(dataUrl, resourceId) {
-            $("div#<%=resourceId%>").removeClass('uil-ring-css')
-            $('<img>', {
-              src: dataUrl,
-              alt: '<%= resource.name %>'
-            }).appendTo($("div#<%=resourceId%>>a>div"))
-          }, "<%= resourceId %>")
-        </script>
-
         <%})%>
 
     </div>
