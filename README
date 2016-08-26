@@ -1,0 +1,7 @@
+1. you need npm:
+  $ npm --version
+  3.4.0
+2. `npm install`
+3. cp .env.template .env
+4. populate .env with values from heroku
+5. `npm start`
