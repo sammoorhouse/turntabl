@@ -18,7 +18,7 @@ var pusher = new Pusher({
   encrypted: true
 });
 
-module.exports = function (app, log) {
+module.exports = function (app, log, stormpathApp) {
   var s3 = require('./3rd/s3.js')(log);
   var typeform = require('./3rd/typeform.js')(log);
   var utils = require('./utils.js')(log);
@@ -46,6 +46,18 @@ module.exports = function (app, log) {
       }
     })
   })
+
+
+//default login is broken
+app.post('/login', function(req, res) {
+    stormpathApp.authenticateAccount(req.body, function(err, authResponse) {
+        if(err) { console.log(err); res.json(err); }
+        authResponse.getAccount(function(err, account) {
+            if(err) { console.log(err); res.json(err); }
+            res.json(account);
+        });
+    });
+});
 
   // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function (req, res) {

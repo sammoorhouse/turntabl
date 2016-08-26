@@ -13,6 +13,32 @@
 </head>
 
 <body id="page-top">
+
+
+<script>
+function foo(){
+
+  $.ajax({
+    type: "POST",
+    url: "/login",
+    data: { 
+      username: "sam", 
+      password: "foo" 
+      },
+      error: function(  jqXHR,  textStatus,  errorThrown ){
+      console.log( textStatus ); // John
+      },
+    success: function( response, status ) {
+      console.log( status ); // John
+      }
+  });
+}
+
+
+
+
+
+</script>
   <% include partials/header.ejs %>
 
     <header>
@@ -22,7 +48,8 @@
           <hr>
           <p>turntable is an online platform for mentors, teachers and coaches</p>
           <!--<a data-toggle="modal" class="btn btn-primary btn-xl" href="javascript:void(0)" onclick="openLoginModal();">Get Started</a>-->
-          <a class="btn btn-primary btn-xl" href="/login">Get Started</a>
+          <a data-toggle="modal" class="btn btn-primary btn-xl" href="javascript:void(0)" onclick="foo();">Get Started</a>
+          <!--<a class="btn btn-primary btn-xl" href="/login">Get Started</a>-->
         </div>
 
       </div>

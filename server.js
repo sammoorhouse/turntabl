@@ -17,8 +17,10 @@ var stormpath = require('express-stormpath');
 var compression = require('compression')
 
 var app = express();
-app.use(stormpath.init(app,
+var stormpathApp = stormpath.init(app,
   {
+
+  debug: 'debug',
     website: true,
     sessionDuration: 1000 * 60 * 60 * 24 * 30, //30 days
     enableAccountVerification: false, //don't require email validation
@@ -31,16 +33,19 @@ app.use(stormpath.init(app,
       }
     },
     web: {
+
       register: {
         nextUri: '/create-event'
       },
       login: {
+        enabled: false,
         nextUri: '/create-event',
       }
     }
   }
 
-));
+)
+app.use(stormpathApp);
 
 var port = process.env.PORT || 8080;
 var mongoose = require('mongoose');
@@ -75,7 +80,7 @@ app.locals['email-jobs'] = "jobs@turntabl.io"
 app.set('views', './app/views')
 app.set('view engine', 'ejs');
 
-require('./app/routes.js')(app, log);
+require('./app/routes.js')(app, log, stormpathApp);
 
 app.listen(port);
 console.log('The magic happens on port ' + port);
