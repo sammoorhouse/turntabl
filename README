@@ -1,7 +1,8 @@
-1. you need npm:
+1. Install npm: http://blog.npmjs.org/post/85484771375/how-to-install-npm
   $ npm --version
   3.4.0
-2. `npm install`
-3. cp .env.template .env
-4. populate .env with values from heroku
-5. `npm start`
+2. `git clone https://github.com/sammoorhouse/turntabl.git`
+3. `npm install`
+4. `cp .env.template .env`
+5. populate .env with values from heroku
+6. `npm start`
