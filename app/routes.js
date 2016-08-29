@@ -154,22 +154,43 @@ module.exports = function (app, log, stormpathApp) {
     })
   })
 
+  function ensureAccount(user){ 
+    var accountId = user.getCustomData()['accountId']
+    Account.findOne({
+      'id': accountId
+    }, function(err, acc){
+      if(err){
+        //create new account, link stormpath ID
+        //return newacc
+      }
+      return acc
+    })
+  }
+
   app.get("/account/profile", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/profile')
     var user = req.user
+    var account = ensureAccount(user)
+    
     return res.render('account-profile.ejs', {
     })
   })
+  
   app.get("/account/sessions", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/sessions')
     var user = req.user
+    var account = ensureAccount(user)
+
     return res.render('account-sessions.ejs', {
     })
 
   })
+
   app.get("/account/payment", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/payment')
     var user = req.user
+    var account = ensureAccount(user)
+
     return res.render('account-payment.ejs', {
     })
 
