@@ -48,16 +48,16 @@ module.exports = function (app, log, stormpathApp) {
   })
 
 
-//default login is broken
-app.post('/login', function(req, res) {
-    stormpathApp.authenticateAccount(req.body, function(err, authResponse) {
-        if(err) { console.log(err); res.json(err); }
-        authResponse.getAccount(function(err, account) {
-            if(err) { console.log(err); res.json(err); }
-            res.json(account);
-        });
+  //default login is broken
+  app.post('/login', function (req, res) {
+    stormpathApp.authenticateAccount(req.body, function (err, authResponse) {
+      if (err) { console.log(err); res.json(err); }
+      authResponse.getAccount(function (err, account) {
+        if (err) { console.log(err); res.json(err); }
+        res.json(account);
+      });
     });
-});
+  });
 
   // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function (req, res) {
@@ -152,6 +152,27 @@ app.post('/login', function(req, res) {
         log.info("fail: " + err)
       }
     })
+  })
+
+  app.get("/account/profile", stormpath.loginRequired, (req, res) => {
+    log.info('GET /account/profile')
+    var user = req.user
+    return res.render('account-profile.ejs', {
+    })
+  })
+  app.get("/account/sessions", stormpath.loginRequired, (req, res) => {
+    log.info('GET /account/sessions')
+    var user = req.user
+    return res.render('account-sessions.ejs', {
+    })
+
+  })
+  app.get("/account/payment", stormpath.loginRequired, (req, res) => {
+    log.info('GET /account/payment')
+    var user = req.user
+    return res.render('account-payment.ejs', {
+    })
+
   })
 
   app.get("/sign-s3", (req, res) => {
