@@ -35,11 +35,10 @@ var stormpathApp = stormpath.init(app,
     web: {
 
       register: {
-        nextUri: '/create-event'
+        nextUri: '/account/profile'
       },
       login: {
-        enabled: false,
-        nextUri: '/create-event',
+        nextUri: '/account/profile',
       }
     }
   }

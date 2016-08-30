@@ -30,23 +30,6 @@ module.exports = function (app, log, stormpathApp) {
     });
   });
 
-  app.get('/account', stormpath.loginRequired, function (req, res) {
-    var user = req.user
-    var account = Account.findOne({
-      'id': user.customData.accountId
-    }, function (err, account) {
-      if (!err) {
-        res.render('account.ejs', {
-          user: user,
-          account: account
-        })
-      } else {
-        console.log('account not found: ' + err)
-        res.redirect('/');
-      }
-    })
-  })
-
   // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function (req, res) {
     log.info('GET /create-event')
