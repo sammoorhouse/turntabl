@@ -47,18 +47,6 @@ module.exports = function (app, log, stormpathApp) {
     })
   })
 
-
-  //default login is broken
-  app.post('/login', function (req, res) {
-    stormpathApp.authenticateAccount(req.body, function (err, authResponse) {
-      if (err) { console.log(err); res.json(err); }
-      authResponse.getAccount(function (err, account) {
-        if (err) { console.log(err); res.json(err); }
-        res.json(account);
-      });
-    });
-  });
-
   // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function (req, res) {
     log.info('GET /create-event')
