@@ -126,16 +126,28 @@ module.exports = function (app, log, stormpathApp) {
   })
 
   function ensureAccount(user){ 
-    var accountId = user.getCustomData()['accountId']
-    Account.findOne({
-      'id': accountId
-    }, function(err, acc){
-      if(err){
-        //create new account, link stormpath ID
-        //return newacc
-      }
-      return acc
+    var accountId = user.getCustomData(function(err, customData){
+      var accountId = customData.accountId;
+      Account.findOne({
+        'id': accountId
+      }, function(err, acc){
+        if(!acc || err){
+          //generate new Account
+          var newAccountId = util.generateID(8);
+          var newAccount = new Account();
+          newAccount.id = newAccountId();
+          customData.accountId = newAccountId();
+          newAccount.save(function(err){
+            console.error("failed to save account " + newAccountId + ": " + err);
+          })
+    //var newEvent = new Event();
+          //create new account, link stormpath ID
+          //return newacc
+        }
+        return acc
+      })
     })
+
   }
 
   app.get("/account/profile", stormpath.loginRequired, (req, res) => {
