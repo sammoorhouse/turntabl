@@ -297,7 +297,7 @@ module.exports = function (app, log, stormpathApp) {
 
   app.post('/stripe/update', function (req, res) {
     console.log("STRIPE UPDATE RECEIVED")
-    console.log(JSON.stringufy(res.body))
+    console.log(JSON.stringify(res.body))
     res.writeHead(200);
     res.end()
   })
