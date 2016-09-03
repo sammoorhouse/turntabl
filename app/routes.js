@@ -295,7 +295,7 @@ module.exports = function (app, log, stormpathApp) {
     res.end()
   })
 
-  app.get('/stripe/update', function(req, res){
+  app.post('/stripe/update', function(req, res){
     console.log("STRIPE UPDATE RECEIVED")
     console.log(res)
   })
