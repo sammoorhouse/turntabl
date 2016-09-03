@@ -125,22 +125,22 @@ module.exports = function (app, log, stormpathApp) {
     })
   })
 
-  function ensureAccount(user){ 
-    var accountId = user.getCustomData(function(err, customData){
+  function ensureAccount(user) {
+    var accountId = user.getCustomData(function (err, customData) {
       var accountId = customData.accountId;
       Account.findOne({
         'id': accountId
-      }, function(err, acc){
-        if(!acc || err){
+      }, function (err, acc) {
+        if (!acc || err) {
           //generate new Account
           var newAccountId = util.generateID(8);
           var newAccount = new Account();
           newAccount.id = newAccountId();
           customData.accountId = newAccountId();
-          newAccount.save(function(err){
+          newAccount.save(function (err) {
             console.error("failed to save account " + newAccountId + ": " + err);
           })
-    //var newEvent = new Event();
+          //var newEvent = new Event();
           //create new account, link stormpath ID
           //return newacc
         }
@@ -154,12 +154,12 @@ module.exports = function (app, log, stormpathApp) {
     log.info('GET /account/profile')
     var user = req.user
     var account = ensureAccount(user)
-    
+
     return res.render('account-profile.ejs', {
       user: user
     })
   })
-  
+
   app.get("/account/sessions", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/sessions')
     var user = req.user
@@ -295,9 +295,11 @@ module.exports = function (app, log, stormpathApp) {
     res.end()
   })
 
-  app.post('/stripe/update', function(req, res){
+  app.post('/stripe/update', function (req, res) {
     console.log("STRIPE UPDATE RECEIVED")
     console.log(res)
+    res.writeHead(200);
+    res.end()
   })
 
   app.get('/event/:id', stormpath.loginRequired, function (req, res) {
