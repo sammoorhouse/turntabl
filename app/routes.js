@@ -295,6 +295,11 @@ module.exports = function (app, log, stormpathApp) {
     res.end()
   })
 
+  app.get('/stripe/updates', function(req, res){
+    console.log("STRIPE UPDATE RECEIVED")
+    console.log(res)
+  })
+
   app.get('/event/:id', stormpath.loginRequired, function (req, res) {
     log.info('GET /event')
 
