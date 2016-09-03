@@ -8,6 +8,7 @@ var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_
 var stormpath = require('express-stormpath');
 var request = require('request');
 var Pusher = require('pusher');
+var stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 var util = require('util');
 
@@ -300,6 +301,37 @@ module.exports = function (app, log, stormpathApp) {
     console.log(JSON.stringify(req.body))
     res.writeHead(200);
     res.end()
+  })
+
+  app.post('/account/init', stormpath. loginRequired, function(req, res){
+    //this is called for new accounts. All we need
+    //at this stage is the country for stripe
+    var user = req.user
+    var countryCode = req.country;
+    //one from https://stripe.com/global
+    var stripeResponse = stripe.accounts.create({
+      country: countryCode,
+      managed: true
+    });
+
+    user.getCustomData(function(err, customData){
+      customData.stripeAccountId = stripeResponse.id;
+      customData.save(function(err){
+        if(!err){
+          console.log("user custom data saved with id " + stripeResponse.id);
+        }else{
+          console.error("failed to save custom data for id " + stripeResponse.id);
+        }
+      })
+    })
+
+    res.redirect("/account-newevent")
+  })
+
+  app.get('/account-newevent', stormpath.loginRequired, function(req, res){
+    //on first login, once the stripe account is setup.
+    //subsequently, whenever the client creates a new event.
+
   })
 
   app.get('/event/:id', stormpath.loginRequired, function (req, res) {
