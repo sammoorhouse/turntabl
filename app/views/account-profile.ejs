@@ -9,9 +9,11 @@
   <% include partials/header.ejs %>
   <script>
   var user = <%= user %>
-  var account = <%= account %>
   </script>
 
+<p>Name: <%= user.givenName %>
+<p>Email: <%= user.email %>
+<p>Bio: <%= user.givenName %>
 
     <% include partials/footer.ejs %>
 

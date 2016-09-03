@@ -144,6 +144,7 @@ module.exports = function (app, log, stormpathApp) {
     var account = ensureAccount(user)
     
     return res.render('account-profile.ejs', {
+      user: user
     })
   })
   
@@ -153,6 +154,7 @@ module.exports = function (app, log, stormpathApp) {
     var account = ensureAccount(user)
 
     return res.render('account-sessions.ejs', {
+      user: user
     })
 
   })
@@ -163,6 +165,7 @@ module.exports = function (app, log, stormpathApp) {
     var account = ensureAccount(user)
 
     return res.render('account-payment.ejs', {
+      user: user
     })
 
   })
