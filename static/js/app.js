@@ -4,6 +4,27 @@ var sessionEndTimeMillis
 var nanobar
 
 $(function () { //on load
+
+   
+    $(".dropdown-toggle").dropdown();
+    $('.dropdown-menu > li').click(function() {
+    var toggle = $(this).parent().siblings('.dropdown-toggle');
+    $(toggle).html($(this).text() + "<span class=\"caret\"></span>")
+});
+
+var text_max = 50;
+$('#count_message').html(text_max + " / " + text_max);
+
+$('#sessionName').keyup(function() {
+  var text_length = $('#sessionName').val().length;
+  var text_remaining = text_max - text_length;
+  
+  $('#count_message').html(text_remaining + " / " + text_max);
+});
+    
+
+
+
   //carousel
   $('#myCarousel').carousel({
     interval: false
