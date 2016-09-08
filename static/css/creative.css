@@ -422,6 +422,7 @@ fieldset[disabled] .btn-primary.active {
   font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
   border: none;
   border-radius: 5px;
+  padding: 10px 50px;
   font-weight: 400;
   text-transform: uppercase;
   font-size: 150%;
@@ -511,6 +512,7 @@ body {
 .form-wrapper {
 	padding: 50px 20%;
 	font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+	min-width: 1000px;
 }
 
 .form-wrapper .question {
@@ -528,6 +530,8 @@ body {
     box-shadow: none;
     border-bottom: 0.5px solid #000;
     border-radius: 0px;
+    font-weight: 100;
+	font-size: 20px;
 }
 
 .form-wrapper .inline-wrapper {
@@ -551,7 +555,7 @@ body {
 } 
 
 
-.form-wrapper .dropdown a:hover, .form-wrapper .dropdown a:active {
+.form-wrapper .dropdown a:hover, .form-wrapper .dropdown a:active, .form-wrapper .dropdown a:focus, .form-wrapper .dropdown a:visited {
 	text-decoration: none;
 } 
 
@@ -584,4 +588,28 @@ body {
 
 .form-wrapper .dropdown li:hover{
 	cursor: pointer;
+}
+
+.form-wrapper .caret {
+    float: right;
+    margin-top: 10px;
+    }
+
+.form-wrapper label {
+	font-weight: 100;
+	font-size: 16px;
+}
+
+.button-wrapper {
+	width: 100%;
+	text-align: center;
+}
+
+.form-wrapper .btn-primary.inactive {
+	opacity: 0.5;
+}
+
+.form-wrapper .btn-primary.inactive:hover {
+	background-color: #7ecdc8;
+	cursor: default;
 }
