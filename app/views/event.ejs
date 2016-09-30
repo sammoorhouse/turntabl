@@ -3,8 +3,8 @@
 
 <head>
   <% include partials/head.ejs %>
-  <% include partials/rt.ejs %>
-  <script type="text/javascript">
+  
+  <!--<script type="text/javascript">
     var sessionDurationMillis = <%= event.durationMins %> * 60 * 1000
     var eventId = "<%= event.id %>"
     var s3Bucket = "<%= s3Bucket %>"
@@ -19,7 +19,7 @@
       },
       <%})%>
     ]
-  </script>
+  </script>-->
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/nanobar/0.4.2/nanobar.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
   <script type="text/javascript" src="/js/app.js"></script>

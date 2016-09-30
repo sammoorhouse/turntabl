@@ -31,6 +31,14 @@ module.exports = function (app, log, stormpathApp) {
   });
 
   // create-event SECTION =========================
+  app.get('/session', stormpath.loginRequired, function (req, res) {
+    log.info('GET /session')
+ 
+    res.render('session.ejs', {
+    });
+  });
+
+
   app.get('/create-event', stormpath.loginRequired, function (req, res) {
     log.info('GET /create-event')
 
@@ -280,7 +288,7 @@ module.exports = function (app, log, stormpathApp) {
     res.end()
   })
 
-  app.get('/event/:id', stormpath.loginRequired, function (req, res) {
+ app.get('/event/:id', stormpath.loginRequired, function (req, res) {
     log.info('GET /event')
 
     var evtId = req.params['id']
