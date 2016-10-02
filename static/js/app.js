@@ -5,6 +5,21 @@ var nanobar
 
 $(function () { //on load
 
+    $(".navbar.session").hide();
+  
+ document.onmousemove = function(e){
+    y=e.clientY;
+    if (y < 50) {
+        $(".navbar.session").show();
+    }
+
+    if (y > 50) {
+        $(".navbar.session").hide();
+    }
+
+   }
+
+
     $(".dropdown-toggle").dropdown();
     $('.dropdown-menu > li').click(function() {
     var toggle = $(this).parent().siblings('.dropdown-toggle');
@@ -48,9 +63,8 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
-    
-
-
+  
+  
 
   //carousel
   $('#myCarousel').carousel({
