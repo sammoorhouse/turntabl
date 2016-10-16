@@ -7,11 +7,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand page-scroll" href="#page-top"><%= app.locals['url'] %></a>
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">How It Works</a></li>        
+      </ul>
+    	<a class="navbar-brand page-scroll" href="#page-top"><img src="../img/logo_b.png"></img></a>
       <ul class="nav navbar-nav navbar-right">
+
         <% if (typeof user != 'undefined') { %>
           <form action="/logout" method="POST" id="logout_form"></form>
           <li><a>Welcome, <%= user.givenName %>!</a></li>
