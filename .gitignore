@@ -20,3 +20,4 @@ Gruntfile.js
 local.ns
 mongod.lock
 storage.bson
+.DS_Store
