@@ -28,9 +28,8 @@
   <% include partials/header_session.ejs %>
 
 
-  <div id="sidenavCollapsed" class="sidenav collapsed" >
-  <!--<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-onmouseleave="closeCollapsedNav()"-->
+  <div id="sidenavCollapsed" class="sidenav collapsed" onmouseleave="closeCollapsedNav()">
+  <!--<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
 <a onclick="showExpanded()">
   <i class="fa fa-clock-o"></i>
   <div class="sidebarItem">Session Details</div>
@@ -53,8 +52,7 @@ onmouseleave="closeCollapsedNav()"-->
 </a>
 </div>
 
-<div id="sidenavExpanded" class="sidenav expanded" >
-<!--onmouseleave="closeExpandedNav()"-->
+<div id="sidenavExpanded" class="sidenav expanded" onmouseleave="closeExpandedNav()">
   <button class="accordion">
   <i class="fa fa-clock-o"></i>
   <div class="sidebarItem">Session Details</div>
