@@ -8,6 +8,7 @@ var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_
 var stormpath = require('express-stormpath');
 var request = require('request');
 var Pusher = require('pusher');
+var stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 var util = require('util');
 
@@ -125,34 +126,48 @@ module.exports = function (app, log, stormpathApp) {
     })
   })
 
-  function ensureAccount(user){ 
-    var accountId = user.getCustomData()['accountId']
-    Account.findOne({
-      'id': accountId
-    }, function(err, acc){
-      if(err){
-        //create new account, link stormpath ID
-        //return newacc
-      }
-      return acc
+  function ensureAccount(user) {
+    var accountId = user.getCustomData(function (err, customData) {
+      var accountId = customData.accountId;
+      Account.findOne({
+        'id': accountId
+      }, function (err, acc) {
+        if (!acc || err) {
+          //generate new Account
+          var newAccountId = util.generateID(8);
+          var newAccount = new Account();
+          newAccount.id = newAccountId();
+          customData.accountId = newAccountId();
+          newAccount.save(function (err) {
+            console.error("failed to save account " + newAccountId + ": " + err);
+          })
+          //var newEvent = new Event();
+          //create new account, link stormpath ID
+          //return newacc
+        }
+        return acc
+      })
     })
+
   }
 
   app.get("/account/profile", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/profile')
     var user = req.user
     var account = ensureAccount(user)
-    
+
     return res.render('account-profile.ejs', {
+      user: user
     })
   })
-  
+
   app.get("/account/sessions", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/sessions')
     var user = req.user
     var account = ensureAccount(user)
 
     return res.render('account-sessions.ejs', {
+      user: user
     })
 
   })
@@ -163,6 +178,7 @@ module.exports = function (app, log, stormpathApp) {
     var account = ensureAccount(user)
 
     return res.render('account-payment.ejs', {
+      user: user
     })
 
   })
@@ -278,6 +294,44 @@ module.exports = function (app, log, stormpathApp) {
       }
     })
     res.end()
+  })
+
+  app.post('/stripe/update', function (req, res) {
+    console.log("STRIPE UPDATE RECEIVED")
+    console.log(JSON.stringify(req.body))
+    res.writeHead(200);
+    res.end()
+  })
+
+  app.post('/account/init', stormpath. loginRequired, function(req, res){
+    //this is called for new accounts. All we need
+    //at this stage is the country for stripe
+    var user = req.user
+    var countryCode = req.country;
+    //one from https://stripe.com/global
+    var stripeResponse = stripe.accounts.create({
+      country: countryCode,
+      managed: true
+    });
+
+    user.getCustomData(function(err, customData){
+      customData.stripeAccountId = stripeResponse.id;
+      customData.save(function(err){
+        if(!err){
+          console.log("user custom data saved with id " + stripeResponse.id);
+        }else{
+          console.error("failed to save custom data for id " + stripeResponse.id);
+        }
+      })
+    })
+
+    res.redirect("/account-newevent")
+  })
+
+  app.get('/account-newevent', stormpath.loginRequired, function(req, res){
+    //on first login, once the stripe account is setup.
+    //subsequently, whenever the client creates a new event.
+
   })
 
   app.get('/event/:id', stormpath.loginRequired, function (req, res) {
