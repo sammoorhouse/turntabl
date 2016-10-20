@@ -32,6 +32,14 @@ module.exports = function (app, log, stormpathApp) {
   });
 
   // create-event SECTION =========================
+  app.get('/session', stormpath.loginRequired, function (req, res) {
+    log.info('GET /session')
+ 
+    res.render('session.ejs', {
+    });
+  });
+
+
   app.get('/create-event', stormpath.loginRequired, function (req, res) {
     log.info('GET /create-event')
 
