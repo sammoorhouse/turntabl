@@ -136,8 +136,8 @@ module.exports = function (app, log, stormpathApp) {
           //generate new Account
           var newAccountId = utils.generateID(8);
           var newAccount = new Account();
-          newAccount.id = newAccountId();
-          customData.accountId = newAccountId();
+          newAccount.id = newAccountId;
+          customData.accountId = newAccountId;
           newAccount.save(function (err) {
             console.error("failed to save account " + newAccountId + ": " + err);
           })
