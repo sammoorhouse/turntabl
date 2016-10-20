@@ -134,7 +134,7 @@ module.exports = function (app, log, stormpathApp) {
       }, function (err, acc) {
         if (!acc || err) {
           //generate new Account
-          var newAccountId = util.generateID(8);
+          var newAccountId = utils.generateID(8);
           var newAccount = new Account();
           newAccount.id = newAccountId();
           customData.accountId = newAccountId();
