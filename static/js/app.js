@@ -3,19 +3,43 @@ var timerToken = 0
 var sessionEndTimeMillis
 var nanobar
 
+ var sidebarCollapsedOut = false;
+ var sidebarExpandedOut = false;
+
 $(function () { //on load
 
-    $(".navbar.session").hide();
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+    acc[i].onclick = function(){
+      togglePanel(this);
+        if(this.classList.contains("active")) {
+          var siblings = $(this).siblings();
+          for(var j = 0; j < siblings.length; j++) {
+            if(siblings[j].classList.contains("active")) {
+              togglePanel(siblings[j]);
+            }
+          }
+        }
+    }
+}
+
   
  document.onmousemove = function(e){
     y=e.clientY;
+
+    if(!sidebarCollapsedOut && !sidebarExpandedOut) {
     if (y < 50) {
-        $(".navbar.session").show();
+       document.getElementById('sessionNav').style.top = "0px";
+       document.getElementById('sessionNav').style.position = "static";
     }
 
     if (y > 50) {
-        $(".navbar.session").hide();
+        document.getElementById('sessionNav').style.top = "-62px";
+        document.getElementById('sessionNav').style.position = "absolute";
     }
+  }
 
    }
 
@@ -232,4 +256,39 @@ function tick() {
 
   var timeRemainingHuman = moment.duration(timeRemainingMillis).humanize()
   $('#countdownClock').text(timeRemainingHuman)
+}
+
+function openNav() {
+    document.getElementById("sidenavCollapsed").style.left = "90%";
+    sidebarCollapsedOut = true;
+    $('.dim').fadeIn(200);
+}
+
+/* Set the width of the side navigation to 0 */
+function closeCollapsedNav() {
+    document.getElementById("sidenavCollapsed").style.left = "100%";
+    sidebarCollapsedOut = false;
+    if(!sidebarExpandedOut){$('.dim').fadeOut(200);}
+}
+
+function closeExpandedNav() {
+  document.getElementById("sidenavExpanded").style.left = "100%";
+  sidebarExpandedOut = false;
+  $('.dim').fadeOut(200);
+}
+
+function showExpanded() {
+  document.getElementById("sidenavExpanded").style.left = "80%";
+  sidebarExpandedOut = true;
+  closeCollapsedNav();
+}
+
+function togglePanel(panel) {
+        panel.classList.toggle("active");
+        panel.nextElementSibling.classList.toggle("show");
+}
+
+function closePanel(panel) {
+        panel.classList.remove("active");
+        panel.nextElementSibling.classList.remove("show");
 }

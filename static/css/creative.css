@@ -726,6 +726,11 @@ body {
   color: #6D6E71;
 }
 
+#sessionNav {
+    position: absolute;
+  top: -62px;
+}
+
 .navbar.session {
   min-height: 0px;
 }
@@ -757,6 +762,7 @@ body {
   margin: 0px;
   height: 100%;
   min-height: 400px;
+  min-width: 900px;
   width: 100%;
 }
 
@@ -800,4 +806,153 @@ body {
 
 .container.session .row {
   padding: 0px;
+}
+
+
+
+/* The side navigation menu */
+.sidebar {
+  width: 20px;
+  height: 50px;
+  padding: 15px 5px;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 99;
+  color: #72C6A5;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.sidenav {
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    height: 100%; /* 100% Full-height */
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Stay on top */
+    top: 0;
+    background-color: #72C6A5; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 10px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+.sidenav.collapsed {
+  width: 10%; 
+  min-width: 100px;
+  left: 100%;
+  text-align: center;
+}
+
+.sidenav.collapsed .fa{
+  font-size: 40px;
+}
+
+.sidenav.collapsed .sidebarItem{
+  font-size: 12px;
+  font-weight: 200;
+}
+
+.sidenav.expanded {
+  width: 20%;
+  left: 100%;
+}
+
+.sidenav.expanded .fa{
+  font-size: 30px;
+  display: inline;
+}
+
+.sidenav.expanded .sidebarItem{
+  font-size: 18px;
+  font-weight: 200;
+  padding: 0px 0px 5px 10px;
+  display: inline;
+}
+
+/* The navigation menu links */
+.sidenav a {
+    padding: 20px 8px;
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+    border-bottom: 0.5px solid #fff;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover, .offcanvas a:focus{
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+    transition: margin-left .5s;
+    padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 10px;}
+    .sidenav a {
+      font-size: 18px; 
+      border-bottom: 0.5px solid #fff;
+    }
+}
+
+
+/* Style the buttons that are used to open and close the accordion panel */
+button.accordion {
+    background-color: #72C6A5;
+    color: #fff;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+button.accordion:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+button.accordion.active {
+  background-color: #F7F9F9;
+  color: #72C6A5;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+div.panel {
+    border-radius: 0;
+    padding: 0 18px;
+    background-color: white;
+    display: none;
+}
+
+/* The "show" class is added to the accordion panel when the user clicks on one of the buttons. This will show the panel content */
+div.panel.show {
+    display: block;
+}
+
+.dim {
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: none;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.4);
 }
