@@ -17,5 +17,5 @@
 
 # Local db
 
-If you want a local copy of the accounts/events database, install & run mongodb, and edit the 'MONGODB_URI' value in your .env
+If you want a local copy of the accounts/events database, install & run `mongod --dbpath .`, and edit the 'MONGODB_URI' value in your .env
 
