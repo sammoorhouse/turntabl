@@ -4,57 +4,138 @@
 <head>
   <% include partials/head.ejs %>
 
- <!-- Plugin CSS -->
-    <link rel="stylesheet" type="text/css" href="/css/animate.min.css" />
-    <link rel="stylesheet" type="text/css" href="/css/login-register.css" />
+  <!-- Plugin CSS -->
+  <link rel="stylesheet" type="text/css" href="/css/animate.min.css" />
+  <link rel="stylesheet" type="text/css" href="/css/login-register.css" />
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="/css/creative.css" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="/css/creative.css" />
 
-<link href="/js/bfh/css/bootstrap-formhelpers.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 
-<script src="/js/bfh/js/bootstrap-formhelpers.js"></script>
+  <link href="/js/bfh/css/bootstrap-formhelpers.min.css" rel="stylesheet" />
 
-<script src="/js/jquery.js"></script>
-<script src="/js/bootstrap.js"></script>
+  <script src="/js/bfh/js/bootstrap-formhelpers.js"></script>
+
+  <script src="/js/jquery.js"></script>
+  <script src="/js/bootstrap.js"></script>
   <script type="text/javascript" src="/js/app.js"></script>
 
 
 </head>
 
 <body id="page-top">
- <% include partials/header_session.ejs %>
-
-      <div class="container session">
-        <div class="row main">
-          <div class="col-xs-12 module">
-            <img src="/img/presentation.jpg"></img>
-            <div class="module-bar">
-                1/21
-            </div>
-          </div>
-        </div>
-        <div class="row camera">
-          <div class="col-xs-4 module">
-            <img src="/img/videochat1.jpg"></img>
-            <div class="module-bar">
-              You
-            </div>
-          </div>
-          <div class="col-xs-4 module">
-            <img src="/img/videochat2.jpg"></img>
-            <div class="module-bar">
-              Jessica
-            </div>
-          </div>
-          <div class="col-xs-4 module">
-            Cam 3
-          </div>
-        </div>
+  <% include partials/header_session.ejs %>
 
 
+  <div id="sidenavCollapsed" class="sidenav collapsed" onmouseleave="closeCollapsedNav()">
+  <!--<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
+<a onclick="showExpanded()">
+  <i class="fa fa-clock-o"></i>
+  <div class="sidebarItem">Session Details</div>
+</a>
+<a onclick="showExpanded()">
+  <i class="fa fa-video-camera"></i>
+  <div class="sidebarItem">Cameras</div>
+</a>
+<a onclick="showExpanded()">
+  <i class="fa fa-file"></i>
+  <div class="sidebarItem">Attachments</div>
+</a>
+<a onclick="showExpanded()">
+  <i class="fa fa-sticky-note"></i>
+  <div class="sidebarItem">Notes</div>
+</a>
+<a onclick="showExpanded()">
+  <i class="fa fa-comment"></i>
+  <div class="sidebarItem">Conversation</div>
+</a>
+</div>
 
-    <% include partials/footer.ejs %>
+<div id="sidenavExpanded" class="sidenav expanded" onmouseleave="closeExpandedNav()">
+  <button class="accordion">
+  <i class="fa fa-clock-o"></i>
+  <div class="sidebarItem">Session Details</div>
+  </button>
+  <div class="panel">
+    <p>Session details sec</p>
+  </div>
+
+  <button class="accordion">
+    <i class="fa fa-video-camera"></i>
+  <div class="sidebarItem">Cameras</div>
+  </button>
+  <div class="panel">
+    <p>Camera Sec</p>
+  </div>
+
+  <button class="accordion">
+    <i class="fa fa-file"></i>
+  <div class="sidebarItem">Attachments</div>
+  </button>
+  <div class="panel">
+    <p>Attachment Sec</p>
+  </div>
+
+    <button class="accordion">  
+    <i class="fa fa-sticky-note"></i>
+  <div class="sidebarItem">Notes</div>
+  </button>
+  <div class="panel">
+    <p>Notes Sec</p>
+  </div>
+
+    <button class="accordion">
+  <i class="fa fa-comment"></i>
+  <div class="sidebarItem">Conversation</div>
+  </button>
+  <div class="panel">
+    <p>Conversation Sec</p>
+  </div>
+</div>
+
+<!--<div id="mySidenav" class="sidenav" onmouseleave="closeNav()">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="#">About</a>
+  <a href="#">Services</a>
+  <a href="#">Clients</a>
+  <a href="#">Contact</a>
+</div>-->
+
+<!-- Use any element to open the sidenav -->
+<div class="sidebar" onmouseover="openNav()"><i class="fa fa-angle-double-left"></i></div>
+
+<div class="dim"></div>
+<div class="container session">
+  <div class="row main">
+    <div class="col-xs-12 module">
+      <img src="/img/presentation.jpg"></img>
+      <div class="module-bar">
+        1/21
+      </div>
+    </div>
+  </div>
+  <div class="row camera">
+    <div class="col-xs-4 module">
+      <img src="/img/videochat1.jpg"></img>
+      <div class="module-bar">
+        You
+      </div>
+    </div>
+    <div class="col-xs-4 module">
+      <img src="/img/videochat2.jpg"></img>
+      <div class="module-bar">
+        Jessica
+      </div>
+    </div>
+    <div class="col-xs-4 module">
+      Sub Cam
+    </div>
+  </div>
+
+
+
+  <% include partials/footer.ejs %>
 
 </body>
 
