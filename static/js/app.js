@@ -50,6 +50,19 @@ for (i = 0; i < acc.length; i++) {
     $(toggle).html($(this).text() + "<span class=\"caret\"></span>")
 });
 
+  
+  $(".disable-button").click(function() {
+    $(this).toggleClass("disable enable");
+    if($(this).hasClass("disable")) {
+      $(this).html("Disable Camera");
+      $(this).parent().find(".dropdown-toggle").removeClass("disabled");
+    } else {
+       $(this).html("Enable Camera");
+       $(this).parent().find(".dropdown-toggle").addClass("disabled");
+    }
+  });
+
+
 var text_max = 50;
 $('#count_message').html(text_max + " / " + text_max);
 
@@ -88,8 +101,6 @@ window.onclick = function(event) {
     }
 }
   
-  
-
   //carousel
   $('#myCarousel').carousel({
     interval: false

@@ -28,8 +28,9 @@
   <% include partials/header_session.ejs %>
 
 
-  <div id="sidenavCollapsed" class="sidenav collapsed" onmouseleave="closeCollapsedNav()">
-  <!--<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
+  <div id="sidenavCollapsed" class="sidenav collapsed" >
+  <!-- onmouseleave="closeCollapsedNav()"
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
 <a onclick="showExpanded()">
   <i class="fa fa-clock-o"></i>
   <div class="sidebarItem">Session Details</div>
@@ -52,13 +53,43 @@
 </a>
 </div>
 
-<div id="sidenavExpanded" class="sidenav expanded" onmouseleave="closeExpandedNav()">
+<div id="sidenavExpanded" class="sidenav expanded" > <!-- onmouseleave="closeExpandedNav()"-->
   <button class="accordion">
   <i class="fa fa-clock-o"></i>
   <div class="sidebarItem">Session Details</div>
   </button>
   <div class="panel">
-    <p>Session details sec</p>
+    <div class="section">
+
+
+<!--<article class="clock">
+  <div class="hours-container">
+    <div class="hours"></div>
+  </div>
+  <div class="minutes-container">
+    <div class="minutes"></div>
+  </div>
+  <div class="seconds-container">
+    <div class="seconds"></div>
+  </div>
+</article>-->
+
+<div class="section-item">
+  <div class="title">60 MINUTES SESSION</div>
+  <div class="content time"><span class="big">39:23</span> remaining</div>
+</div>
+<div class="section-item">
+  <div class="title">Session Fee</div>
+  <div class="content"><span class="big">$120</span></div>
+</div>
+<div class="section-item">
+  <div class="title">Client</div>
+  <div class="content"><div class="big">Jessis S.</div> 
+    <div>jessieS@gmail.com</div>
+  <div>New Client</div></div>
+</div>
+
+    </div>
   </div>
 
   <button class="accordion">
@@ -66,7 +97,32 @@
   <div class="sidebarItem">Cameras</div>
   </button>
   <div class="panel">
-    <p>Camera Sec</p>
+    <div class="section">
+    <div class="section-item">
+      <div class="title">You (Main Camera)</div>
+      <div class="dropdown">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Camera 1<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+        <li>Camera 1</li>
+        <li>Camera 2</li>
+        <li>Camera 3</li>
+    </ul>
+</div>
+    <div class="sub-text disable disable-button">Disable Camera</div>
+    </div>
+    <div class="section-item">
+    <div class="title">Sub Camera</div>
+<div class="dropdown">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Camera 1<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+        <li>Camera 1</li>
+        <li>Camera 2</li>
+        <li>Camera 3</li>
+    </ul>
+</div>
+    <div class="sub-text disable disable-button">Disable Camera</div>
+    </div>
+    </div>
   </div>
 
   <button class="accordion">
@@ -94,15 +150,6 @@
   </div>
 </div>
 
-<!--<div id="mySidenav" class="sidenav" onmouseleave="closeNav()">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="#">About</a>
-  <a href="#">Services</a>
-  <a href="#">Clients</a>
-  <a href="#">Contact</a>
-</div>-->
-
-<!-- Use any element to open the sidenav -->
 <div class="sidebar" onmouseover="openNav()"><i class="fa fa-angle-double-left"></i></div>
 
 <div class="dim"></div>
