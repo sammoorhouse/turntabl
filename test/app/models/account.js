@@ -1,10 +1,10 @@
 var chai = require('chai');
 var expect = chai.expect;
 
+var sinon = require('sinon');
+
 var mockAccount = function () {
-  this.save = function (cb) {
-      cb(false)
-    } 
+  this.save = sinon.stub().yields(false)
 }
 
 var mongooseMock = {
@@ -23,7 +23,7 @@ describe('Account', function () {
         expect(acc.id).to.equal(12);
         done()
       }, () => {
-        throw "error"
+        throw new Error("fail")
       })
 
     })
@@ -31,22 +31,18 @@ describe('Account', function () {
 
   describe('accountExists', function () {
     it('should return true if an account with the given id exists in the database', (done) => {
-      mockAccount.findOne = function (_, cb) {
-        cb(false, {})
-      }
+      mockAccount.findOne = sinon.stub().callsArgWith(1, false, {}) //stub out database
       AccountModule.accountExists(12, () => {
         done()
       }, () => {
-        throw "error"
+        throw new Error("fail")
       })
     })
 
     it('should return false if an account with the given id does not exist', (done) => {
-      mockAccount.findOne = function (_, cb) {
-        cb(true, {})
-      };
+      mockAccount.findOne = sinon.stub().callsArgWith(1, true, {}) //stub out database
       AccountModule.accountExists(12, () => {
-        throw "error"
+        throw new Error("fail")
       }, () => {
         done()
       })
@@ -55,16 +51,14 @@ describe('Account', function () {
 
   describe('getAccountById', function () {
     it('should get an existing account by ID', (done) => {
-      mockAccount.findOne = function (_, cb) {
-        cb(false, {
-          name: "foo"
-        })
-      }
+      mockAccount.findOne = sinon.stub().callsArgWith(1, false, {
+        name: "foo"
+      }); //return a mock account
       AccountModule.getAccountById(12, (acc) => {
         expect(acc.name).to.equal("foo")
         done()
       }, () => {
-        throw "error"
+        throw new Error("fail")
       })
 
     })
