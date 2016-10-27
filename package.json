@@ -29,6 +29,9 @@
   "engines": {
     "node": ">=0.8.0"
   },
+"scripts": {
+  "test": "mocha test --recursive"
+},
   "devDependencies": {
     "mocha": "^3.1.2",
     "sinon": "^1.17.6",
