@@ -23,26 +23,25 @@ describe('Account', function () {
         expect(acc.id).to.equal(12);
         done()
       }, () => {
-        throw new Error("fail")
+        done(new Error("fail"))
       })
-
     })
   })
 
   describe('accountExists', function () {
     it('should return true if an account with the given id exists in the database', (done) => {
-      mockAccount.findOne = sinon.stub().callsArgWith(1, false, {}) //stub out database
+      mockAccount.count = sinon.stub().callsArgWith(1, false, 1) //stub out database
       AccountModule.accountExists(12, () => {
         done()
       }, () => {
-        throw new Error("fail")
+        done(new Error("fail"))
       })
     })
 
     it('should return false if an account with the given id does not exist', (done) => {
-      mockAccount.findOne = sinon.stub().callsArgWith(1, true, {}) //stub out database
+      mockAccount.count = sinon.stub().callsArgWith(1, false, 0) //stub out database
       AccountModule.accountExists(12, () => {
-        throw new Error("fail")
+        done(new Error("fail"))
       }, () => {
         done()
       })
@@ -58,7 +57,7 @@ describe('Account', function () {
         expect(acc.name).to.equal("foo")
         done()
       }, () => {
-        throw new Error("fail")
+        done(new Error("fail"))
       })
 
     })

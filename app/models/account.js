@@ -22,10 +22,10 @@ module.exports = function (mongoose) {
   }
 
   var accountExists = function (id, success, failure) {
-    AccountModel.findOne({
+    AccountModel.count({
       "id": id
-    }, (err, acc) => {
-      if (!err && acc) {
+    }, (err, count) => {
+      if (!err && count > 0) {
         success()
       } else {
         failure()

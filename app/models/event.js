@@ -30,10 +30,10 @@ module.exports = function (mongoose) {
   }
 
   var eventExists = function (id, success, failure) {
-    EventModel.findOne({
+    EventModel.count({
       "id": id
-    }, (err, evt) => {
-      if (!err && evt) {
+    }, (err, count) => {
+      if (!err && count > 0) {
         success()
       } else {
         failure()
@@ -53,18 +53,56 @@ module.exports = function (mongoose) {
     })
   }
 
-  var addEventResource = function (id, name, url, resourceKey, success, failure) {
+  var addEventResource = function (eventId, name, url, resourceKey, success, failure) {
+    getEventById(eventId, (event) => {
+      event.resources.push({
+        "name": name,
+        "url": url,
+        "resourceKey": resourceKey,
+        "active": true,
+      })
+      event.save(function (error) {
+        if (error) {
+          failure(error)
+        } else {
+          success()
+        }
+      })
+    }, () => {
+      failure()
+    })
+  }
+
+  var removeEventResource = function (eventId, resourceKey, success, failure) {
+    EventModel.findOne({
+      "id": eventId
+    }, (err, event) => {
+      if (!err && event) {
+        var resources = event.resources.filter(r => r.resourceKey == resourceKey)
+
+        resources.forEach(resource => {
+          resource.active = false;
+        });
+        
+        event.save(function (error) {
+          if (error) {
+            failure(error)
+          } else
+            success()
+        })
+      } else {
+        failure(error)
+      }
+    })
+  }
+
+  var updateEndTime = function (id, endTime, success, failure) {
     EventModel.findOne({
       "id": id
     }, (err, evt) => {
       if (!err && evt) {
-        evt.resources.push({
-          "name": name,
-          "url": url,
-          "resourceKey": resourceKey,
-          "active": true,
-        })
-        event.save(function (error) {
+        evt.endTime = endTime
+        evt.save(function (error) {
           if (error) {
             failure(error)
           } else {
@@ -77,30 +115,12 @@ module.exports = function (mongoose) {
     })
   }
 
-  var updateEndTime = function(id, endTime, success, failure){
-    EventModel.findOne({
-      "id": id
-    }, (err, evt)=>{
-      if(!err && evt){
-        evt.endTime = endTime
-        evt.save(function (error){
-          if(error){
-            failure(error)
-          }else{
-            success()
-          }
-        })
-      }else{
-        failure()
-      }
-    })
-  }
-
   return {
+    "eventExists": eventExists,
     "createNewEvent": createNewEvent,
     "getEventById": getEventById,
     "addEventResource": addEventResource,
-
+    "removeEventResource": removeEventResource
   }
 
 }

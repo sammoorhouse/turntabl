@@ -119,27 +119,17 @@ module.exports = function (app, log, stormpathApp) {
     var eventId = req.params['eventId']
     var resourceKey = req.params['resourceKey']
 
-    //update events table
-    Event.getById(eventId, (event) => {
-      event.resources.filter(function (res) {
-        res.resourceKey === resourceKey
-      }).forEach(function (res) {
-        res.active = false
+    //update event
+    Event.removeEventResource(eventId, resourceKey,
+      () => {
+        res.writeHead(200);
+        res.end()
+      },
+      (err) => {
+        log.info("error updating event " + eventId + ": " + err)
+        res.writeHead(400);
+        res.end()
       })
-      event.save(function (error) {
-        if (error) {
-          log.info("error updating event " + eventId + ": " + error)
-          res.writeHead(400);
-          res.end()
-        } else {
-          res.writeHead(200);
-          res.end()
-        }
-      })
-    }, (err) => {
-      res.writeHead(400);
-      res.end()
-    })
   })
 
   app.post('/addSessionResource', function (req, res) {
@@ -153,9 +143,11 @@ module.exports = function (app, log, stormpathApp) {
 
     //update events table
     Event.addEventResource(eventId, name, s3Key, resourceKey, () => {
+      res.writeHead(200);
       res.end();
     }, () => {
       log.error("error updating event " + eventId + ": " + error)
+      res.writeHead(400);
       res.end();
     })
   })
@@ -174,7 +166,7 @@ module.exports = function (app, log, stormpathApp) {
         //never started!
         var endTime = proposedEndTimeMillis
 
-        Event.updateEndTime(endTime, () => {}, (error) => {
+        Event.updateEndTime(eventId, endTime, () => {}, (error) => {
           log.info("error updating event " + eventId + ": " + error)
         })
       }
