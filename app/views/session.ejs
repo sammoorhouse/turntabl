@@ -31,39 +31,39 @@
   <% include partials/header_session.ejs %>
 
 
-  <div id="sidenavCollapsed" class="sidenav collapsed" >
-  <!-- onmouseleave="closeCollapsedNav()"
+  <div id="sidenavCollapsed" class="sidenav collapsed" onmouseleave="closeCollapsedNav()">
+  <!--
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
-<a onclick="showExpanded()">
+<a onclick="showExpanded('session')">
   <i class="fa fa-clock-o"></i>
   <div class="sidebarItem">Session Details</div>
 </a>
-<a onclick="showExpanded()">
+<a onclick="showExpanded('camera')">
   <i class="fa fa-video-camera"></i>
   <div class="sidebarItem">Cameras</div>
 </a>
-<a onclick="showExpanded()">
+<a onclick="showExpanded('attachment')">
   <i class="fa fa-file"></i>
   <div class="sidebarItem">Attachments</div>
 </a>
-<a onclick="showExpanded()">
+<a onclick="showExpanded('note')">
   <i class="fa fa-sticky-note"></i>
   <div class="sidebarItem">Notes</div>
 </a>
-<a onclick="showExpanded()">
+<a onclick="showExpanded('conversation')">
   <i class="fa fa-comment"></i>
   <div class="sidebarItem">Conversation</div>
 </a>
 </div>
 
-<div id="sidenavExpanded" class="sidenav expanded" > <!-- onmouseleave="closeExpandedNav()"-->
-  <button class="accordion">
+<div id="sidenavExpanded" class="sidenav expanded">
+  <div id="close-button" class="fa fa-times" onclick="closeExpandedNav()"></div>
+  <button id="session-button" class="accordion">
   <i class="fa fa-clock-o"></i>
   <div class="sidebarItem">Session Details</div>
   </button>
   <div class="panel">
     <div class="section">
-
 
 <!--<article class="clock">
   <div class="hours-container">
@@ -95,7 +95,7 @@
     </div>
   </div>
 
-  <button class="accordion">
+  <button class="accordion" id="camera-button">
     <i class="fa fa-video-camera"></i>
   <div class="sidebarItem">Cameras</div>
   </button>
@@ -128,30 +128,46 @@
     </div>
   </div>
 
-  <button class="accordion">
+  <button class="accordion" id="attachment-button">
     <i class="fa fa-file"></i>
   <div class="sidebarItem">Attachments</div>
   </button>
   <div class="panel">
-    <form action="/file-upload"
-      class="dropzone"
-      id="dropzone"></form>
+    <form action="/file-upload" class="dropzone" id="dropzone"></form>
   </div>
 
-    <button class="accordion">  
+    <button class="accordion" id="note-button">  
     <i class="fa fa-sticky-note"></i>
   <div class="sidebarItem">Notes</div>
   </button>
   <div class="panel">
-    <p>Notes Sec</p>
+   <textarea method='post' class="notes-area" rows="4" cols="30" placeholder="Add notes here"></textarea>
   </div>
 
-    <button class="accordion">
+    <button class="accordion" id="conversation-button">
   <i class="fa fa-comment"></i>
   <div class="sidebarItem">Conversation</div>
   </button>
   <div class="panel">
-    <p>Conversation Sec</p>
+    
+    <ol class="chat">
+    <li class="other">
+        <div class="avatar"><img src="http://www2.artcenter.edu/dot/images/dotLogo_OrangeDot.png" draggable="false"/></div>
+      <div class="msg">
+          <p>Hi there!</p>
+        <time>18:08</time>
+      </div>
+    </li>
+    <li class="self">
+        <div class="avatar"><img src="http://bluedot.ca/wp-content/themes/dsf-blue-dot-campaign-theme/src/images/marker-circle.png" draggable="false"/></div>
+      <div class="msg">
+        <p>Hi nice to meet you!</p>
+        <time>18:09</time>
+      </div>
+    </li>
+    </ol>
+    <input class="textarea" type="text" placeholder="Type here!"/><div class="emojis"></div>
+    
   </div>
 </div>
 

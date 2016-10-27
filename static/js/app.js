@@ -25,24 +25,21 @@ for (i = 0; i < acc.length; i++) {
     }
 }
 
-  
  document.onmousemove = function(e){
     y=e.clientY;
-
     if(!sidebarCollapsedOut && !sidebarExpandedOut) {
     if (y < 50) {
        document.getElementById('sessionNav').style.top = "0px";
-       document.getElementById('sessionNav').style.position = "static";
-    }
-
-    if (y > 50) {
+    } else if (y > 50) {
         document.getElementById('sessionNav').style.top = "-62px";
-        document.getElementById('sessionNav').style.position = "absolute";
     }
   }
 
-   }
+}
 
+$(".dim").click(function() {
+  closeExpandedNav();
+})
 
     $(".dropdown-toggle").dropdown();
     $('.dropdown-menu > li').click(function() {
@@ -63,7 +60,7 @@ for (i = 0; i < acc.length; i++) {
     }
   });
 
-  $("#dropzone").dropzone({ url: "../" });
+ // $("#dropzone").dropzone();
 
 var text_max = 50;
 $('#count_message').html(text_max + " / " + text_max);
@@ -113,92 +110,7 @@ window.onclick = function(event) {
   chatTemplate.id = ""
   chatTemplateNode.parentNode.removeChild(chatTemplateNode)
 
-  Dropzone.autoDiscover = false;
-  // Get the template HTML and remove it from the document
-  var previewNode = document.querySelector("#template");
-  var previewTemplate = previewNode.outerHTML;
-  previewTemplate.id = ""
-  previewNode.parentNode.removeChild(previewNode);
-
-  var myDropzone = new Dropzone('footer', {
-    url: "https://" + s3Bucket,
-    // Set the url
-    //paramName: "file", // The name that will be used to transfer the file
-    method: "post",
-    HiddenFilesPath: 'body',
-    createImageThumbnails: true,
-    uploadMultiple: false,
-    thumbnailWidth: 150,
-    thumbnailHeight: 150,
-    parallelUploads: 20,
-    previewTemplate: previewTemplate,
-    acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
-    autoProcessQueue: true,
-    previewsContainer: ".dropzone-previews", // Define the container to display the previews
-    clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
-    accept: dropzoneAccept
-  });
-
-  myDropzone.on("sending", function (file, xhr, formData) {
-    console.log("dropzone sending")
-    $.each(file.postData, function (k, v) {
-      formData.append(k, v)
-    })
-    formData.append('Content-type', '')
-    formData.append('Content-length', '')
-    formData.append('acl', 'public-read')
-    //formData.append('eventId', eventId);
-  });
-
-  myDropzone.on("complete", function (file) {
-    $(file.previewTemplate).removeClass('uploading')
-
-    $.post("/addSessionResource", {
-      eventId: eventId,
-      name: file.name,
-      s3Key: file.s3
-    },
-      function (result) {
-        if (result.result === "begin") {
-          session.signal({
-            type: "beginSession",
-            proposedStartTimeMillis: result.proposedStartTimeMillis
-          })
-        }
-      },
-      "json")
-  })
-
-  function dropzoneAccept(file, done) {
-    file.postData = []
-    $.ajax({
-      url: '/sign-s3',
-      data: {
-        name: file.name,
-        type: file.type,
-        size: file.size
-      },
-      success: function (response) {
-        response = JSON.parse(response)
-        file.custom_status = 'ready'
-        file.postData = response
-        file.s3 = response.key
-        $(file.previewTemplate).addClass('uploading')
-        done()
-      },
-      error: function (response) {
-        file.custom_status = 'rejected'
-        if (response.responseText) {
-          response = JSON.parse(response.responseText)
-        }
-        if (response.message) {
-          done(response.message)
-          return
-        }
-        done('error preparing the upload')
-      }
-    })
-  }
+ 
 
   //nanobar
   nanobar = new Nanobar({
@@ -274,26 +186,45 @@ function tick() {
 function openNav() {
     document.getElementById("sidenavCollapsed").style.left = "90%";
     sidebarCollapsedOut = true;
-    $('.dim').fadeIn(200);
+    //$('.dim').fadeIn(200);
 }
 
 /* Set the width of the side navigation to 0 */
 function closeCollapsedNav() {
     document.getElementById("sidenavCollapsed").style.left = "100%";
     sidebarCollapsedOut = false;
-    if(!sidebarExpandedOut){$('.dim').fadeOut(200);}
+    //if(!sidebarExpandedOut){$('.dim').fadeOut(200);}
+}
+
+function closeAllPanel() {
+  var acc = document.getElementsByClassName("accordion");
+  for (var i = 0; i < acc.length; i++) {
+    var panel = acc[i];
+    if (panel.classList.contains("active")) {
+      togglePanel(panel);
+    }
+}
 }
 
 function closeExpandedNav() {
   document.getElementById("sidenavExpanded").style.left = "100%";
+  closeAllPanel();
   sidebarExpandedOut = false;
   $('.dim').fadeOut(200);
 }
 
-function showExpanded() {
+function showExpanded(section) {
   document.getElementById("sidenavExpanded").style.left = "80%";
   sidebarExpandedOut = true;
   closeCollapsedNav();
+  openSection(section);
+  $('.dim').fadeIn(200);
+}
+
+function openSection(name) {
+  var panelName = name + "-button";
+  var elem = document.getElementById(panelName);
+  togglePanel(elem);
 }
 
 function togglePanel(panel) {
