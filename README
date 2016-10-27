@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sammoorhouse/turntabl.svg?branch=master)](https://travis-ci.org/sammoorhouse/turntabl)
+
 # Installation
 
 1. Install:
