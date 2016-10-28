@@ -38,47 +38,14 @@ module.exports = function (app, log, stormpathApp) {
 
     var user = req.user
     var eventId = utils.generateID(8)
-    var formData = typeform.generateForm(user, eventId)
 
-    typeform.createAndRenderForm(formData,
-      function (formUrl) {
-        res.render('create-event.ejs', {
-          typeformUrl: formUrl,
-          eventId: eventId,
-          user: user
-        });
-      },
-      function (err) {
-        return console.error(err);
-      })
+    //render form
   })
-
-  function ensureAccount(user) {
-    user.getCustomData(function (err, customData) {
-      var accountId = customData.accountId;
-      Account.accountExists(accountId, () => {
-        //account does exist...
-      }, () => {
-        //account doesn't exist, create it
-        var newAccountId = utils.generateID(8);
-        var newAccount = Account.createNewAccount(newAccountId, (acc) => {
-          customData.accountId = newAccountId;
-        }, () => {
-          console.error("failed to save account " + newAccountId + ": " + err);
-        });
-      })
-
-      //var newEvent = new Event();
-      //create new account, link stormpath ID
-      //return newacc
-
-    })
-  }
 
   app.get("/account/profile", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/profile')
     var user = req.user
-    var account = ensureAccount(user)
+    var account = utils.ensureAccount(user)
 
     return res.render('account-profile.ejs', {
       user: user
@@ -88,7 +55,7 @@ module.exports = function (app, log, stormpathApp) {
   app.get("/account/sessions", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/sessions')
     var user = req.user
-    var account = ensureAccount(user)
+    var account = utils.ensureAccount(user)
 
     return res.render('account-sessions.ejs', {
       user: user
@@ -99,7 +66,7 @@ module.exports = function (app, log, stormpathApp) {
   app.get("/account/payment", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/payment')
     var user = req.user
-    var account = ensureAccount(user)
+    var account = utils.ensureAccount(user)
 
     return res.render('account-payment.ejs', {
       user: user

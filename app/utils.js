@@ -1,4 +1,5 @@
-module.exports = function(log) {
+module.exports = function (log) {
+    var Account = require('../app/models/account')(mongoose)
 
     function generateID(length) {
         var ALPHABET = '23456789abdegjkmnpqrvwxyz';
@@ -24,8 +25,27 @@ module.exports = function(log) {
             return value;
         }
     }
+
+    function ensureAccount(user) {
+        user.getCustomData(function (err, customData) {
+            var accountId = customData.accountId;
+            Account.accountExists(accountId, () => {
+                //account does exist...
+            }, () => {
+                //account doesn't exist, create it
+                var newAccountId = utils.generateID(8);
+                var newAccount = Account.createNewAccount(newAccountId, (acc) => {
+                    customData.accountId = newAccountId;
+                }, () => {
+                    console.error("failed to save account " + newAccountId + ": " + err);
+                });
+            })
+        })
+    }
+
     return {
         generateID: generateID,
-        censor: censor
+        censor: censor,
+        ensureAccount: ensureAccount,
     }
 }
