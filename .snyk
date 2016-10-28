@@ -3,9 +3,9 @@ ignore: {}
 patch:
   'npm:moment:20161019':
     - stormpath > moment:
-        patched: '2016-10-28T04:41:24.519Z'
+        patched: '2016-10-28T04:41:45.620Z'
     - express-stormpath > stormpath > moment:
-        patched: '2016-10-28T04:41:24.519Z'
+        patched: '2016-10-28T04:41:45.620Z'
   'npm:uglify-js:20151024':
     - express-stormpath > jade > transformers > uglify-js:
-        patched: '2016-10-28T04:41:24.519Z'
+        patched: '2016-10-28T04:41:45.620Z'
