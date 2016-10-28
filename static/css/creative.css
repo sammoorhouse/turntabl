@@ -11,6 +11,7 @@ body {
 }
 body {
   font-family: 'Merriweather', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #fff;
 }
 hr {
   border-color: #f05f40;
@@ -74,7 +75,7 @@ aside {
 .navbar-default .navbar-header .navbar-brand {
   color: #07708a;
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
-   font-weight: 100;
+  font-weight: 100;
 }
 
 .navbar-default .navbar-header .navbar-brand:hover,
@@ -156,7 +157,7 @@ header {
   background-image: url('../img/header3.png');
   text-align: center;
   color: white;
-  margin-top: 30px;
+  padding-top: 30px;
 }
 header .header-content {
   position: relative;
@@ -451,6 +452,7 @@ body {
 
 .navbar-brand img {
 	width: 150px;
+  margin: 10px 0px 0px 0px;
 }
 
 .navbar-brand-subpage img {
@@ -467,7 +469,7 @@ body {
 }
 
 .navbar-fixed-top {
-  /*padding: 30px 0px 0px 0px;*/
+  margin-top: 10px;
   padding-bottom: 0px;
   margin-bottom: 0px;
 }
@@ -484,7 +486,7 @@ body {
 }
 
 .navbar-fixed-top.subpage {
-	/*padding: 10px;*/
+	margin-top: 0px;
 }
 
 .navbar-default.subpage .nav> li > a,
@@ -561,7 +563,7 @@ body {
 } 
 
 .form-wrapper .dropdown.inline {
-  min-width: 80px;
+  /*min-width: 80px;*/
 }
 
 
@@ -589,6 +591,8 @@ body {
 	font-size: 20px;
 	font-weight: 100;
 	color: #bcbec0;
+  width: 100%;
+    display: block;
 }
 
 .form-wrapper .dropdown li{
@@ -1049,11 +1053,6 @@ div.panel.show {
 @import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700);
 @import url(http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
 
-html, body {
-    background: #e5e5e5;
-    font-family: 'Lato', sans-serif;
-    margin: 0px auto;
-}
 ::selection{
   background: rgba(82,179,217,0.3);
   color: inherit;
@@ -1064,20 +1063,6 @@ a{
 
 /* M E N U */
 
-.menu {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    width: 100%;
-    height: 50px;
-    background: rgba(82,179,217,0.9);
-    z-index: 100;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
 
 .back {
     position: absolute;
@@ -1252,7 +1237,8 @@ a{
     transition: all .4s cubic-bezier(0.565, -0.260, 0.255, 1.410);
     cursor: default;
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
+}
+   /* -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
 }
@@ -1323,7 +1309,7 @@ a{
 ::-webkit-scrollbar-button {
     display: block;
     height: 26px;
-}
+}*/
 
 /* T Y P E */
 
@@ -1344,88 +1330,6 @@ input.textarea {
     font-weight: 400;
 }
 
-
-/*
-.clock {
-  border-radius: 50%;
-  background: #fff url("../img/ios_clock.svg") no-repeat center;
-  background-size: 88%;
-  height: 30%;
-  padding-bottom: 31%;
-  position: relative;
-  width: 30%;
-}
-
-.clock.simple:after {
-  background: #000;
-  border-radius: 50%;
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 5%;
-  height: 5%;
-  z-index: 10;
-}
-
-.minutes-container, .hours-container, .seconds-container {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.hours {
-  background: #000;
-  height: 20%;
-  left: 48.75%;
-  position: absolute;
-  top: 30%;
-  transform-origin: 50% 100%;
-  width: 2.5%;
-}
-
-.minutes {
-  background: #000;
-  height: 40%;
-  left: 49%;
-  position: absolute;
-  top: 10%;
-  transform-origin: 50% 100%;
-  width: 2%;
-}
-
-.seconds {
-  background: #000;
-  height: 45%;
-  left: 49.5%;
-  position: absolute;
-  top: 14%;
-  transform-origin: 50% 80%;
-  width: 1%;
-  z-index: 8;
-}
-
-@keyframes rotate {
-  100% {
-    transform: rotateZ(360deg);
-  }
-}
-
-.hours-container {
-  animation: rotate 43200s infinite linear;
-}
-.minutes-container {
-  animation: rotate 3600s infinite linear;
-}
-.seconds-container {
-  animation: rotate 60s infinite linear;
-}
-*/
-
-
 .dim {
     width: 100%;
     height: 100%;
@@ -1436,4 +1340,35 @@ input.textarea {
     top: 0;
     left: 0;
     background: rgba(0,0,0,0.7);
+}
+
+html {
+    -webkit-transition: background-color 1s;
+    transition: background-color 1s;
+}
+html, body {
+    /* For the loading indicator to be vertically centered ensure */
+    /* the html and body elements take up the full viewport */
+    min-height: 100%;
+}
+html.loading {
+    /* Replace #333 with the background-color of your choice */
+    /* Replace loading.gif with the loading image of your choice */
+    background: rgba(0, 0, 0, 1) url('/img/ring.gif') no-repeat 50% 50%;
+
+    /* Ensures that the transition only runs in one direction */
+    -webkit-transition: background-color 0;
+    transition: background-color 0;
+}
+body {
+    -webkit-transition: opacity 1s ease-in;
+    transition: opacity 1s ease-in;
+}
+html.loading body {
+    /* Make the contents of the body opaque during loading */
+    opacity: 0;
+
+    /* Ensures that the transition only runs in one direction */
+    -webkit-transition: opacity 0;
+    transition: opacity 0;
 }

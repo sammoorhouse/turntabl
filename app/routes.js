@@ -146,6 +146,7 @@ module.exports = function (app, log, stormpathApp) {
     })
   }
 
+
   app.get("/account/profile", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/profile')
     var user = req.user
