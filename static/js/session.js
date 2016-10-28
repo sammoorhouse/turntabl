@@ -57,14 +57,16 @@ $(".dim").click(function() {
  // $("#dropzone").dropzone();
 
 function openNav() {
-    document.getElementById("sidenavCollapsed").style.left = "90%";
+    document.getElementById("sidenavCollapsed").style.width = "10%";
+    document.getElementById("sidenavCollapsed").style.minWidth = "100px";
     sidebarCollapsedOut = true;
     //$('.dim').fadeIn(200);
 }
 
 /* Set the width of the side navigation to 0 */
 function closeCollapsedNav() {
-    document.getElementById("sidenavCollapsed").style.left = "100%";
+    document.getElementById("sidenavCollapsed").style.width = "0%";
+    document.getElementById("sidenavCollapsed").style.minWidth = "0px";
     sidebarCollapsedOut = false;
     //if(!sidebarExpandedOut){$('.dim').fadeOut(200);}
 }
@@ -80,14 +82,16 @@ function closeAllPanel() {
 }
 
 function closeExpandedNav() {
-  document.getElementById("sidenavExpanded").style.left = "100%";
+  document.getElementById("sidenavExpanded").style.width = "0%";
+  document.getElementById("sidenavExpanded").style.minWidth = "0px";
   closeAllPanel();
   sidebarExpandedOut = false;
   $('.dim').fadeOut(200);
 }
 
 function showExpanded(section) {
-  document.getElementById("sidenavExpanded").style.left = "80%";
+  document.getElementById("sidenavExpanded").style.width = "20%";
+  document.getElementById("sidenavExpanded").style.minWidth = "200px";
   sidebarExpandedOut = true;
   closeCollapsedNav();
   openSection(section);

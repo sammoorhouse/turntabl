@@ -148,7 +148,7 @@ aside {
 header {
   position: relative;
   width: 100%;
-  min-height: 400px;
+  min-height: 350px;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
@@ -196,7 +196,7 @@ header .header-content .header-content-inner p {
 
 @media (min-width: 768px) {
   header {
-    min-height: 100%;
+    /*min-height: 100%;*/
   }
   header .header-content {
     position: absolute;
@@ -411,13 +411,13 @@ fieldset[disabled] .btn-primary.active {
   font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
   border: none;
   border-radius: 5px;
-  padding: 10px 50px;
   font-weight: 400;
   text-transform: uppercase;
-  font-size: 150%;
+  font-size: 120%;
+  padding: 10px 40px;
 }
 .btn-xl {
-  padding: 20px 50px;
+  padding: 15px 40px;
 }
 ::-moz-selection {
   color: white;
@@ -476,7 +476,7 @@ body {
 
 .header-content-text {
 	font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
-	font-size: 250%;
+	font-size: 200%;
 	padding: 20px 0px 50px;
 }
 
@@ -523,13 +523,12 @@ body {
 }
 
 .form-wrapper .question {
-	padding: 20px 0px 30px 0px;
+	padding: 15px 0px;
 }
 
 .form-wrapper .title {
-	font-size: 25px;
+	font-size: 20px;
 	font-weight: 100;
-	margin-bottom: 10px;
 }
 
 .form-wrapper input {
@@ -538,17 +537,17 @@ body {
     border-bottom: 0.5px solid #000;
     border-radius: 0px;
     font-weight: 100;
-	font-size: 20px;
+	font-size: 18px;
 }
 
 .form-wrapper .inline-wrapper {
 	display: table;
-	border-spacing: 20px;
+	border-spacing: 10px;
 	width: 100%;
 }
 
 .form-wrapper .inline-wrapper .inline:first-child {
-	left: -20px;
+	left: -10px;
 }
 
 
@@ -563,7 +562,7 @@ body {
 } 
 
 .form-wrapper .dropdown.inline {
-  /*min-width: 80px;*/
+  min-width: 60px;
 }
 
 
@@ -572,7 +571,7 @@ body {
 } 
 
 .form-wrapper input::-webkit-input-placeholder{
-	font-size: 20px;
+	font-size: 15px;
 	font-weight: 100;
 	color: #bcbec0;
 }
@@ -588,7 +587,7 @@ body {
 }
 
 .form-wrapper .dropdown-toggle{
-	font-size: 20px;
+	font-size: 15px;
 	font-weight: 100;
 	color: #bcbec0;
   width: 100%;
@@ -596,7 +595,7 @@ body {
 }
 
 .form-wrapper .dropdown li{
-	font-size: 20px;
+	font-size: 15px;
 	padding: 5px 10px;
 }
 
@@ -699,9 +698,9 @@ body {
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
+    padding: 40px;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
+    width: 70%; /* Could be more or less, depending on screen size */
 }
 
 /* The Close Button */
@@ -721,7 +720,7 @@ body {
 
 .modal-title {
   text-align: center;
-  font-size: 2em;
+  font-size: 1.8em;
   font-weight: bold;
 }
 
@@ -843,9 +842,10 @@ body {
 }
 
 .sidenav.collapsed {
-  width: 10%; 
-  min-width: 100px;
-  left: 100%;
+  width: 0%;
+  min-width: 0px;
+  position: absolute;
+  right: 0;
   text-align: center;
 }
 
@@ -859,8 +859,11 @@ body {
 }
 
 .sidenav.expanded {
-  width: 20%;
-  left: 100%;
+  width: 0%;
+  min-width: 0px;
+  position: absolute;
+  right: 0;
+  /*left: 100%;*/
 }
 
 .sidenav.expanded .fa{
