@@ -2,16 +2,15 @@ var mongoose = require('mongoose');
 
 var Event = require('../app/models/event')(mongoose);
 var Account = require('../app/models/account')(mongoose)
+
 var OpenTok = require('opentok');
-var path = require('path')
-var os = require('os')
 var fs = require('fs')
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
 var stormpath = require('express-stormpath');
 var request = require('request');
 var stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-var util = require('util');
+//var util = require('util');
 
 module.exports = function (app, log, stormpathApp) {
   var s3 = require('./3rd/s3.js')(log);
@@ -45,7 +44,7 @@ module.exports = function (app, log, stormpathApp) {
   app.get("/account/profile", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/profile')
     var user = req.user
-    var account = utils.ensureAccount(user)
+    var account = Account.ensureAccount(user)
 
     return res.render('account-profile.ejs', {
       user: user
@@ -55,7 +54,7 @@ module.exports = function (app, log, stormpathApp) {
   app.get("/account/sessions", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/sessions')
     var user = req.user
-    var account = utils.ensureAccount(user)
+    var account = Account.ensureAccount(user)
 
     return res.render('account-sessions.ejs', {
       user: user
@@ -66,7 +65,7 @@ module.exports = function (app, log, stormpathApp) {
   app.get("/account/payment", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/payment')
     var user = req.user
-    var account = utils.ensureAccount(user)
+    var account = Account.ensureAccount(user)
 
     return res.render('account-payment.ejs', {
       user: user

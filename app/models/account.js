@@ -1,4 +1,5 @@
 module.exports = function (mongoose) {
+var util = require('../utils.js');
 
   var accountSchema = mongoose.Schema({
     id: String,
@@ -8,6 +9,23 @@ module.exports = function (mongoose) {
   });
 
   var AccountModel = mongoose.model('Account', accountSchema);
+
+  function ensureAccount(user) {
+    user.getCustomData(function (err, customData) {
+      var accountId = customData.accountId;
+      accountExists(accountId, () => {
+        //account does exist...
+      }, () => {
+        //account doesn't exist, create it
+        var newAccountId = util.generateID(8);
+        var newAccount = createNewAccount(newAccountId, (acc) => {
+          customData.accountId = newAccountId;
+        }, () => {
+          console.error("failed to save account " + newAccountId + ": " + err);
+        });
+      })
+    })
+  }
 
   var createNewAccount = function (id, success, failure) {
     var newAccount = new AccountModel();
@@ -49,5 +67,6 @@ module.exports = function (mongoose) {
     "createNewAccount": createNewAccount,
     "accountExists": accountExists,
     "getAccountById": getAccountById,
+    "ensureAccount": ensureAccount,
   }
 }
