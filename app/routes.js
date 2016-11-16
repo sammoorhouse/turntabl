@@ -27,7 +27,6 @@ module.exports = function (app, log, stormpathApp) {
     }
   });
 
-  // create-event SECTION =========================
   app.get('/session', stormpath.loginRequired, function (req, res) {
     log.info('GET /session')
 
@@ -35,6 +34,7 @@ module.exports = function (app, log, stormpathApp) {
   });
 
 
+  // create-event SECTION =========================
   app.get('/create-event', stormpath.loginRequired, function (req, res) {
     log.info('GET /create-event')
 
@@ -44,6 +44,10 @@ module.exports = function (app, log, stormpathApp) {
     //render form
   })
 
+  app.post('/create-event', stormpath.loginRequired, function (req, res) {
+
+  })
+
   app.get('/account', (req, res) => {
     res.redirect('/account/profile')
   })
@@ -51,33 +55,45 @@ module.exports = function (app, log, stormpathApp) {
   app.get("/account/profile", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/profile')
     var user = req.user
-    var account = Account.ensureAccount(user)
+    var account = Account.ensureAccount(user, () => {
+        res.render('account-profile.ejs', {
+          user: user
+        })
+      },
+      () => {
+        res.redirect('/')
+      })
 
-    return res.render('account-profile.ejs', {
-      user: user
-    })
+
   })
 
   app.get("/account/sessions", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/sessions')
     var user = req.user
-    var account = Account.ensureAccount(user)
-
-    return res.render('account-sessions.ejs', {
-      user: user
-    })
-
+    var account = Account.ensureAccount(user, () => {
+        var customData = user.getCustomData();
+        var events = customData.events;
+        res.render('account-sessions.ejs', {
+          user: user,
+          events: events
+        })
+      },
+      () => {
+        res.redirect('/')
+      })
   })
 
   app.get("/account/payment", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/payment')
     var user = req.user
-    var account = Account.ensureAccount(user)
-
-    return res.render('account-payment.ejs', {
-      user: user
-    })
-
+    var account = Account.ensureAccount(user, () => {
+        res.render('account-payment.ejs', {
+          user: user
+        })
+      },
+      () => {
+        res.redirect('/')
+      })
   })
 
   app.get("/sign-s3", (req, res) => {

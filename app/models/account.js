@@ -10,18 +10,21 @@ var util = require('../utils.js');
 
   var AccountModel = mongoose.model('Account', accountSchema);
 
-  function ensureAccount(user) {
+  function ensureAccount(user, success, failure) {
     user.getCustomData(function (err, customData) {
       var accountId = customData.accountId;
       accountExists(accountId, () => {
         //account does exist...
+        success()
       }, () => {
         //account doesn't exist, create it
         var newAccountId = util.generateID(8);
         var newAccount = createNewAccount(newAccountId, (acc) => {
           customData.accountId = newAccountId;
+          success()
         }, () => {
           console.error("failed to save account " + newAccountId + ": " + err);
+          failure()
         });
       })
     })
