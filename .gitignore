@@ -4,11 +4,11 @@
 /.sass-cache
 /.vscode
 /config/auth.js
-
+/journal
 =0.9
 =1.0.0-rc.1.1
 
-.env
+.env*
 .editorconfit
 .jscsrc
 .jshintrc
@@ -20,3 +20,4 @@ Gruntfile.js
 local.ns
 mongod.lock
 storage.bson
+.DS_Store

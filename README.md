@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sammoorhouse/turntabl.svg?branch=master)](https://travis-ci.org/sammoorhouse/turntabl)
+
 # Installation
 
 1. Install:
@@ -17,5 +19,5 @@
 
 # Local db
 
-If you want a local copy of the accounts/events database, install & run mongodb, and edit the 'MONGODB_URI' value in your .env
+If you want a local copy of the accounts/events database, install & run `mongod --dbpath .`, and edit the 'MONGODB_URI' value in your .env
 

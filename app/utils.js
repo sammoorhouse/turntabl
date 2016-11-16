@@ -1,4 +1,4 @@
-module.exports = function(log) {
+module.exports = function (log) {
 
     function generateID(length) {
         var ALPHABET = '23456789abdegjkmnpqrvwxyz';
@@ -24,6 +24,7 @@ module.exports = function(log) {
             return value;
         }
     }
+
     return {
         generateID: generateID,
         censor: censor
