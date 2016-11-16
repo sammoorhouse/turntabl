@@ -3,53 +3,17 @@ var timerToken = 0
 var sessionEndTimeMillis
 var nanobar
 
- var sidebarCollapsedOut = false;
- var sidebarExpandedOut = false;
-
 $(function () { //on load
 
-var acc = document.getElementsByClassName("accordion");
-var i;
 
-for (i = 0; i < acc.length; i++) {
-    acc[i].onclick = function(){
-      togglePanel(this);
-        if(this.classList.contains("active")) {
-          var siblings = $(this).siblings();
-          for(var j = 0; j < siblings.length; j++) {
-            if(siblings[j].classList.contains("active")) {
-              togglePanel(siblings[j]);
-            }
-          }
-        }
-    }
-}
+  $(".dropdown-toggle").dropdown();
+ $('.dropdown-menu > li').click(function() {
+    var toggle = $(this).parent().siblings('.dropdown-toggle');
+    $(toggle).html($(this).text() + "<span class=\"caret\"></span>");
+    $(toggle).css("color", "#000");
+})
 
   
- document.onmousemove = function(e){
-    y=e.clientY;
-
-    if(!sidebarCollapsedOut && !sidebarExpandedOut) {
-    if (y < 50) {
-       document.getElementById('sessionNav').style.top = "0px";
-       document.getElementById('sessionNav').style.position = "static";
-    }
-
-    if (y > 50) {
-        document.getElementById('sessionNav').style.top = "-62px";
-        document.getElementById('sessionNav').style.position = "absolute";
-    }
-  }
-
-   }
-
-
-    $(".dropdown-toggle").dropdown();
-    $('.dropdown-menu > li').click(function() {
-    var toggle = $(this).parent().siblings('.dropdown-toggle');
-    $(toggle).html($(this).text() + "<span class=\"caret\"></span>")
-});
-
 var text_max = 50;
 $('#count_message').html(text_max + " / " + text_max);
 
@@ -59,6 +23,19 @@ $('#sessionName').keyup(function() {
   
   $('#count_message').html(text_remaining + " / " + text_max);
 });
+
+
+
+
+var GET = {};
+var query = window.location.search.substring(1).split("&");
+for (var i = 0, max = query.length; i < max; i++)
+{
+    if (query[i] === "") // check for trailing & with no param
+        continue;
+    var param = query[i].split("=");
+    GET[decodeURIComponent(param[0])] = decodeURIComponent(param[1] || "");
+}
 
 
 //modal
@@ -71,10 +48,12 @@ var btn = document.getElementById("myBtn");
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
+if (GET["modal"] == "1"){
 // When the user clicks on the button, open the modal 
 //btn.onclick = function() {
     modal.style.display = "block";
 //}
+} else {modal.style.display = "none";}
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
@@ -88,8 +67,6 @@ window.onclick = function(event) {
     }
 }
   
-  
-
   //carousel
   $('#myCarousel').carousel({
     interval: false
@@ -100,92 +77,7 @@ window.onclick = function(event) {
   chatTemplate.id = ""
   chatTemplateNode.parentNode.removeChild(chatTemplateNode)
 
-  Dropzone.autoDiscover = false;
-  // Get the template HTML and remove it from the document
-  var previewNode = document.querySelector("#template");
-  var previewTemplate = previewNode.outerHTML;
-  previewTemplate.id = ""
-  previewNode.parentNode.removeChild(previewNode);
-
-  var myDropzone = new Dropzone('footer', {
-    url: "https://" + s3Bucket,
-    // Set the url
-    //paramName: "file", // The name that will be used to transfer the file
-    method: "post",
-    HiddenFilesPath: 'body',
-    createImageThumbnails: true,
-    uploadMultiple: false,
-    thumbnailWidth: 150,
-    thumbnailHeight: 150,
-    parallelUploads: 20,
-    previewTemplate: previewTemplate,
-    acceptedMimeTypes: "image/bmp,image/gif,image/jpg,image/jpeg,image/png",
-    autoProcessQueue: true,
-    previewsContainer: ".dropzone-previews", // Define the container to display the previews
-    clickable: ".fileinput-thumbnail", // Define the element that should be used as click trigger to select files.
-    accept: dropzoneAccept
-  });
-
-  myDropzone.on("sending", function (file, xhr, formData) {
-    console.log("dropzone sending")
-    $.each(file.postData, function (k, v) {
-      formData.append(k, v)
-    })
-    formData.append('Content-type', '')
-    formData.append('Content-length', '')
-    formData.append('acl', 'public-read')
-    //formData.append('eventId', eventId);
-  });
-
-  myDropzone.on("complete", function (file) {
-    $(file.previewTemplate).removeClass('uploading')
-
-    $.post("/addSessionResource", {
-      eventId: eventId,
-      name: file.name,
-      s3Key: file.s3
-    },
-      function (result) {
-        if (result.result === "begin") {
-          session.signal({
-            type: "beginSession",
-            proposedStartTimeMillis: result.proposedStartTimeMillis
-          })
-        }
-      },
-      "json")
-  })
-
-  function dropzoneAccept(file, done) {
-    file.postData = []
-    $.ajax({
-      url: '/sign-s3',
-      data: {
-        name: file.name,
-        type: file.type,
-        size: file.size
-      },
-      success: function (response) {
-        response = JSON.parse(response)
-        file.custom_status = 'ready'
-        file.postData = response
-        file.s3 = response.key
-        $(file.previewTemplate).addClass('uploading')
-        done()
-      },
-      error: function (response) {
-        file.custom_status = 'rejected'
-        if (response.responseText) {
-          response = JSON.parse(response.responseText)
-        }
-        if (response.message) {
-          done(response.message)
-          return
-        }
-        done('error preparing the upload')
-      }
-    })
-  }
+ 
 
   //nanobar
   nanobar = new Nanobar({
@@ -256,39 +148,4 @@ function tick() {
 
   var timeRemainingHuman = moment.duration(timeRemainingMillis).humanize()
   $('#countdownClock').text(timeRemainingHuman)
-}
-
-function openNav() {
-    document.getElementById("sidenavCollapsed").style.left = "90%";
-    sidebarCollapsedOut = true;
-    $('.dim').fadeIn(200);
-}
-
-/* Set the width of the side navigation to 0 */
-function closeCollapsedNav() {
-    document.getElementById("sidenavCollapsed").style.left = "100%";
-    sidebarCollapsedOut = false;
-    if(!sidebarExpandedOut){$('.dim').fadeOut(200);}
-}
-
-function closeExpandedNav() {
-  document.getElementById("sidenavExpanded").style.left = "100%";
-  sidebarExpandedOut = false;
-  $('.dim').fadeOut(200);
-}
-
-function showExpanded() {
-  document.getElementById("sidenavExpanded").style.left = "80%";
-  sidebarExpandedOut = true;
-  closeCollapsedNav();
-}
-
-function togglePanel(panel) {
-        panel.classList.toggle("active");
-        panel.nextElementSibling.classList.toggle("show");
-}
-
-function closePanel(panel) {
-        panel.classList.remove("active");
-        panel.nextElementSibling.classList.remove("show");
 }
