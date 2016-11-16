@@ -13,15 +13,18 @@ var stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 //var util = require('util');
 
 module.exports = function (app, log, stormpathApp) {
-  var s3 = require('./3rd/s3.js')(log);
-  var typeform = require('./3rd/typeform.js')(log);
-  var utils = require('./utils.js')(log);
+  var s3 = require('./3rd/s3.js');
+  var utils = require('./utils.js');
 
   app.get('/', stormpath.getUser, function (req, res) {
     var user = req.user
-    res.render('index.ejs', {
-      user: user
-    });
+    if (typeof user == "undefined") {
+      res.render('index.ejs', {
+        user: user
+      });
+    } else {
+      res.redirect('/account/profile');
+    }
   });
 
   // create-event SECTION =========================
@@ -39,6 +42,10 @@ module.exports = function (app, log, stormpathApp) {
     var eventId = utils.generateID(8)
 
     //render form
+  })
+
+  app.get('/account', (req, res) => {
+    res.redirect('/account/profile')
   })
 
   app.get("/account/profile", stormpath.loginRequired, (req, res) => {
