@@ -10,7 +10,7 @@
   <script>
   var user = <%= user %>
       var eventResources = [
-      <% user.events.forEach(function(event){ %> {
+      <% events.forEach(function(event){ %> {
         date: "<%= event.date %>",
         length: "<%= event.length %>",
         client: "<%= event.client %>",

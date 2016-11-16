@@ -73,7 +73,7 @@
           			Name
           		</div>
           		<div class="col-xs-9 field info">
-          			John Doe
+          			<%= user.fullName %>
           		</div>
           	</div>
 			<div class="row">
@@ -81,10 +81,10 @@
           			Email
           		</div>
           		<div class="col-xs-9 field info">
-          			john.doe@gmail.com
+          			<%= user.email %>
           		</div>
           	</div>
-          	<div class="row">
+<!--          	<div class="row">
           		<div class="col-xs-3 field title">
           			Phone
           		</div>
@@ -107,7 +107,7 @@
           		<div class="col-xs-9 field info">
           			&#x25CF; &#x25CF; &#x25CF; &#x25CF; &#x25CF; &#x25CF;
           		</div>
-          	</div>
+          	</div>-->
           	<div class="row">
           		<div class="col-xs-3 field title">
           			Bio
@@ -119,10 +119,6 @@
           </div>
         </div>
       </div>
-
-<p>Name: <%= user.givenName %>
-<p>Email: <%= user.email %>
-<p>Bio: <%= user.givenName %>
 
     <% include partials/footer.ejs %>
 
