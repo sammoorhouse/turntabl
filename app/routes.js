@@ -50,7 +50,7 @@ module.exports = function (app, log, stormpathApp) {
       var sessionCostCcy = body.session_cost_ccy;
       var sessionCostValue = body.session_cost_value;
       
-      EventModel.createEvent(id, sessionName, creationDate, sessionDuration,
+      Event.createEvent(id, sessionName, creationDate, sessionDuration,
       sessionDate, leaderAccountId, sessionClientFirstName, sessionClientLastName,
       sessionClientEmail, clientPaid, leaderPaid, openTokSessionId,
       sessionCostCcy, sessionCostValue, ()=>{
