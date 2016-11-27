@@ -1,5 +1,5 @@
 module.exports = function (mongoose) {
-var util = require('../utils.js');
+  var util = require('../utils.js');
 
   var accountSchema = mongoose.Schema({
     id: String,
@@ -13,6 +13,7 @@ var util = require('../utils.js');
   function ensureAccount(user, success, failure) {
     user.getCustomData(function (err, customData) {
       var accountId = customData.accountId;
+      console.log("accountid is " + accountId);
       accountExists(accountId, () => {
         //account does exist...
         success()
@@ -21,7 +22,13 @@ var util = require('../utils.js');
         var newAccountId = util.generateID(8);
         var newAccount = createNewAccount(newAccountId, (acc) => {
           customData.accountId = newAccountId;
-          success()
+          customData.save(function (err) {
+            if (!err) {
+              success()
+            } else {
+              failure()
+            }
+          });
         }, () => {
           console.error("failed to save account " + newAccountId + ": " + err);
           failure()

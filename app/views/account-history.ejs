@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<link rel="stylesheet" type="text/css" href="/css/history.css" />
+
+  <% include partials/head.ejs %>
+      <script>
+  $(function(){highlightHeader('.header-history')})
+
+  <% if (typeof events != 'undefined') { %>
+
+      var eventResources = [
+      <% events.forEach(function(event){ %> {
+        date: "<%= event.date %>",
+        length: "<%= event.length %>",
+        client: "<%= event.client %>",
+        hourly rate: "<%= event.hourlyrate %>",
+        completed: "<%= event.completed %>"
+      },
+      <%})%>
+
+      <% } %>
+  </script>
+</head>
+
+<body id="page-top">
+  <% include partials/header_collapsed.ejs %>
+  <div id="wrap">
+    <div class="container m-t-3"></div>
+    <div class="container">
+      <h2>Session history</h2>
+      <div class="panel">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Client name</th>
+                <th>Description</th>
+                <th>Value</th>
+                <th>Fee</th>
+                <th>Payment status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2016-11-29</td>
+                <td>Steve Massingham</td>
+                <td>Introduction to public speaking</td>
+                <td>$150</td>
+                <td>$15</td>
+                <td><i class="fa fa-check fa-fw fa-lg payment-status-paid" aria-hidden="true"></i>Paid</td>
+              </tr>
+              <tr>
+                <td>2016-11-28</td>
+                <td>John Stephenson</td>
+                <td>Novice to Mastery</td>
+                <td>$500</td>
+                <td>$30</td>
+                <td><i class="fa fa-ellipsis-h fa-fw fa-lg payment-status-pending" aria-hidden="true"></i>Pending</td>
+              </tr>
+              <tr>
+                <td>2016-11-30</td>
+                <td>Rob Stewart</td>
+                <td>First steps</td>
+                <td>$100</td>
+                <td>$10</td>
+                <td><i class="fa fa-times fa-fw fa-lg payment-status-error" aria-hidden="true"></i>Blocked</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% include partials/sitewide_footer.ejs %>
+</body>
+</html>

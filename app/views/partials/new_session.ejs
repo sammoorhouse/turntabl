@@ -1,97 +1,83 @@
-<div class="modal-title">Create Your Session</div>
-<div class="modal-subtitle">Please enter a few details on your session</div>
 
-<div class="form-wrapper">
+<div class="media">
+    <div class="media-left user-icon">
+        <img class="media-object" src="/img/logo.png" width="64px" alt="turntabl.io">
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading">Create a new turntabl Session</h4>
+    </div>
+</div>
 
-    <div class="form-group question">
-        <div class="title">What shall we call this session?</div>
-    <input type="text" class="form-control required" id="sessionName" placeholder="Eg. Guitar Lession with John">
-    <div id="count_message"></div>
+<form role="form" action="/create_session" method="POST">
+    <div class="row">
+        <p class="form-header">Realtime video chat and document sharing for your client mentoring and teaching sessions</p>
+    </div>
+    <div class="form-group">
+        <label for="session_name" class="form-control-label">Name of the session</label>
+        <div class="row">
+            <div class="col-sm-8">
+                <input type="text" name="session_name" class="form-control required" id="session_name" placeholder="Piano Lession with Jules"></input>
+            </div>
+            <div class="col-sm-2">
+                <p id="count_message"></p>
+            </div>
+        </div>
     </div>
 
-<div id="sessionLength" class="question">
-<div class="title">How long is this session?</div>
+    <hr />
 
-<div class="inline-wrapper">
-<div class="dropdown inline">
-    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Hours<b class="caret"></b></a>
-    <ul class="dropdown-menu">
-        <li>1 hour</li>
-        <li>2 hours</li>
-        <li>3 hours</li>
-    </ul>
-</div>
+    <div class="form-group">
+        <div class="row">
+            <label for="session_duration" class="form-control-label col-sm-1">For</label>
+            <div class="col-sm-4">
+                <input id="session_duration" name="session_duration" type="text" aria-described-by"sessionLengthHelp" class="custom-select form-control" placeholder="30 minutes"></input>
+            </div>
+            <label for="session_date" class="form-control-label col-sm-1">On</label>
+            <div class="col-sm-4">
+                <input class="form-control" type="date" id="session_date" name="session_date">
+            </div>
+        </div>
+    </div>
 
-<div class="dropdown inline">
-    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Minutes<b class="caret"></b></a>
-    <ul class="dropdown-menu">
-        <li>15 minutes</li>
-        <li>30 minutes</li>
-        <li>45 minutes</li>
-        <li>60 minutes</li>
-    </ul>
-</div>
+    <hr />
 
-<div class="form-check inline">
-  <label class="form-check-label">
-    <input class="form-check-input" type="checkbox" value="">
-    It's flexible
-  </label>
-</div>
-</div>
+    <div class="form-group">
+        <label class="form-control-label">How much will this session cost?</label>
+        <div class="row">
+            <div class="col-sm-2">
+                <select id="session_cost_ccy" name="session_cost_ccy" class="custom-select form-control">
+                <% currencies.forEach(ccy => { %>
+                    <option value=<%= ccy.short_name %> ><%= ccy.symbol %> </option>
+                <% }) %>
+                </select>
+            </div>
+            <div class="col-sm-8">
+                <input type="number" class="form-control required" id="session_cost_value" name="session_cost_value" placeholder="130">
+            </div>
+        </div>
+    </div>
+    
+    <hr />
 
-</div>
+    <div class="form-group">
+        <label for="invite-client" class="form-control-label">Invite Client</label>
+        <div id="invite-client" class="row">
+            <div class="col-sm-3">
+                <label class="sr-only" for="clientFirst">First Name</label>
+                <input type="text" class="form-control" id="session_client_firstname" name="session_client_firstName" placeholder="Jules">
+            </div>
+            <div class="col-sm-3">
+                <label class="sr-only" for="clientLast">Last Name</label>
+                <input type="text" class="form-control" id="session_client_lastName" name="session_client_lastName" placeholder="McKenzie">
+            </div>
+            <div class="col-sm-4">
+                <label class="sr-only" for="clientEmail">Email address</label>
+                <input type="email" class="form-control required" id="session_client_email" name="session_client_email" aria-describedby="emailHelp" placeholder="jules.mckenzie@eg.com">
+            </div>
+        </div>
+            <small id="emailHelp" class="form-text text-muted">We'll never share your clients details with anyone.</small>
+    </div>
 
-<div id="sessionCost" class="question">
-<div class="title">How much is this session?</div>
+    <button type="submit" class="btn btn-primary">Go!</button>
 
-<div class="inline-wrapper">
-<div class="dropdown inline">
-    <a href="#" data-toggle="dropdown" class="dropdown-toggle">£<b class="caret"></b></a>
-    <ul class="dropdown-menu">
-    <li>£</li>
-        <li>$</li>
-    </ul>
-</div>
-
-<div class="form-group inline">
-    <input type="number" class="form-control required" id="price" placeholder="Total Price of the Session">
-  </div>
-
-</div>
-</div>
-
-<div id="inviteClient" class="question">
-<div class="title">Invite Client</div>
-
-<div class="inline-wrapper">
-<div class="dropdown inline">
-    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Title<b class="caret"></b></a>
-    <ul class="dropdown-menu">
-    <li>Mr.</li>
-        <li>Mrs.</li>
-        <li>Ms.</li>
-    </ul>
-</div>
-
-<div class="form-group inline">
-    <input type="text" class="form-control" id="clientFirst" placeholder="First Name">
-  </div>
-  <div class="form-group inline">
-    <input type="text" class="form-control" id="clientLast" placeholder="Last Name">
-  </div>
-  </div>
-  
-  <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control required" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-  </div>
-
-</div>
-
-<div class="button-wrapper">
-    <a class="btn btn-primary" href="/session">Start</a>
-</div>
-
-</div>
+</form>

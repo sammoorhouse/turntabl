@@ -3,10 +3,13 @@
 
 <head>
   <% include partials/head.ejs %>
+    <script>
+  $(function(){highlightHeader('.header-payment')})
+  </script>
 </head>
 
 <body id="page-top">
-  <% include partials/header.ejs %>
+  <% include partials/header_collapsed.ejs %>
   <script>
   var user = <%= user %>
   </script>

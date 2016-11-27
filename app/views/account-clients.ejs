@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include partials/head.ejs %>
+      <script>
+  $(function(){highlightHeader('.header-clients')})
+
+  <% if (typeof events != 'undefined') { %>
+
+      var eventResources = [
+      <% events.forEach(function(event){ %> {
+        date: "<%= event.date %>",
+        length: "<%= event.length %>",
+        client: "<%= event.client %>",
+        hourly rate: "<%= event.hourlyrate %>",
+        completed: "<%= event.completed %>"
+      },
+      <%})%>
+
+      <% } %>
+  </script>
+</head>
+
+<body id="page-top">
+  <% include partials/header_collapsed.ejs %>
+  <div id="wrap">
+    <div class="container m-t-3"></div>
+    <div class="container">
+      <h2>My clients</h2>
+      <div class="panel">
+        <ul class="list-group">
+          <li class="list-group-item p-a-0">
+
+
+            <div class="media">
+              <div class="media-left user-icon">
+                <i class="fa fa-user fa-3x fa-fw tt-icon" aria-hidden="true"></i>
+              </div>
+              <div class="media-body">
+                <h5 class="media-heading list-group-item-heading text-max-width">
+                  <strong class="p-l-1 ng-binding">M.J Ma</strong>
+                </h5>
+              </div>
+            </div><!--/media-->
+
+
+            <div class="p-l-panel p-r-panel p-b-panel">
+              <div class="media">
+
+                <div class="media-left">
+                  <div class="circle circle-sm circle-inverse circle-responsive invisible">
+                  </div>
+                </div>
+                <div class="media-body">
+                  <hr class="m-t-0" />
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <dl>
+                        <dt>Email</dt> 
+                        <dd>
+                          <span class="separator"></span>
+                          <span>missjumping@gmail.com</span>
+                        </dd>
+                      </dl>
+                    </div>
+                  </div><!--/.row-->            
+                </div><!--/.media-body-->
+
+              </div><!--/.media-->
+            </div><!--/.panel-->
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <% include partials/sitewide_footer.ejs %>
+</body>
+</html>

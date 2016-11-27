@@ -1,0 +1,9 @@
+.payment-status-paid{
+    color:#3c763d;
+}
+.payment-status-pending{
+    color: #8a6d3b;
+}
+.payment-status-error{
+    color: #a94442;
+}

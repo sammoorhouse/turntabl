@@ -16,15 +16,7 @@
       </ul>
     	<a class="navbar-brand page-scroll" href="#page-top"><img src="../img/logo_b.png"></img></a>
       <ul class="nav navbar-nav navbar-right">
-
-        <% if (typeof user != 'undefined') { %>
-          <form action="/logout" method="POST" id="logout_form"></form>
-          <li><a>Welcome, <%= user.givenName %>!</a></li>
-          <li><a onclick="document.getElementById('logout_form').submit();" style="cursor:pointer;">Log out</a></li>
-          <%} else {%>
-            <li><a href="/account/profile">log in!</a></li>
-            <%}%>
-
+        <li><a href="/account/profile">log in!</a></li>
       </ul>
     </div>
   </div>

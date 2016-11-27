@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<% include partials/head.ejs %>
+	<script>
+	$(function(){highlightHeader('.header-main')})
+	</script>
+
+ <!-- Plugin CSS -->
+	<link rel="stylesheet" type="text/css" href="/css/animate.min.css" />
+
+	<link href="/js/bfh/css/bootstrap-formhelpers.min.css" rel="stylesheet" />
+	<link href="/css/newSession.css" rel="stylesheet" />
+	<script src="/js/bfh/js/bootstrap-formhelpers.js"></script>
+	<script type="text/javascript" src="/js/newSession.js"></script>
+</head>
+
+<body id="page-top">
+ <% include partials/header_collapsed.ejs %>
+	<!-- The Modal -->
+	<div id="myModal" class="modal">
+		<!-- Modal content -->
+		<div class="modal-content container">
+			<span id="btn-close"><i class="fa fa-times fa-fw" aria-hidden="true"></i></span>
+			<% include partials/new_session.ejs %>
+		</div>
+	</div>
+	<div id="wrap">
+		<div class="bg-primary p-t-4 p-b-5 header">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<h2 class="m-b-0 h2"><%= fullName %></h2>
+						<p class="m-b-0 small">Membership number <%= accountId %></p>
+						<p class="m-b-0 small">Registered <span id="registered"></span>  </p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container m-t-3"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 m-b-0">
+					<div class="tile tile-inverse main-tile" tabindex="0" role="button">
+						<div class="media">
+							<div class="media-left text-info">
+								<i class="fa fa-user fa-3x fa-fw" aria-hidden="true"></i>
+							</div>
+							<div class="media-body text-xs-left">
+								<h3 class="h5 m-b-0">Fill out your profile</h3>
+								<p>Tell your clients more about you and your skillset. <a href="/account/profile">Fill out your profile</a></p>
+							</div>
+						</div>
+					</div>
+					<div class="tile tile-inverse main-tile" tabindex="0" role="button">
+						<div class="media">
+							<div class="media-left text-info">
+								<i class="fa fa-desktop fa-3x fa-fw" aria-hidden="true"></i>
+							</div>
+							<div class="media-body text-xs-left">
+								<h3 class="h5 m-b-0">Create a new session</h3>
+								<p>Engage with a new client in a turntabl mentoring session. <a href="#" id="new-session-link">Set up a new session</a></p>
+							</div>
+						</div>
+					</div>
+					<div class="tile tile-inverse main-tile" tabindex="0" role="button">
+						<div class="media">
+							<div class="media-left text-info">
+								<i class="fa fa-question fa-3x fa-fw" aria-hidden="true"></i>
+							</div>
+							<div class="media-body text-xs-left">
+								<h3 class="h5 m-b-0">Learn more</h3>
+								<p>We know loads about mentoring, training and coaching. <a href="/faq">Learn more</a></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+  	<% include partials/sitewide_footer.ejs %>
+    <% include partials/footer.ejs %>
+<script>
+var since = '<%= since%>'
+var niceSince = moment(since , 'YYYYMMDD').fromNow()
+$('#registered').text(niceSince)
+</script>
+</body>
+
+</html>

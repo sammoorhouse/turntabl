@@ -1,0 +1,47 @@
+[
+    {
+        "short_name": "GBP",
+        "full_name": "British Pound",
+        "symbol": "£"
+    },
+    {
+        "short_name": "USD",
+        "full_name": "United States Dollar",
+        "symbol": "$US"
+    },
+    {
+        "short_name": "SGD",
+        "full_name": "Singapore Dollar",
+        "symbol": "$ (SGD)"
+    },
+    {
+        "short_name": "CAD",
+        "full_name": "Canadian Dollar",
+        "symbol": "$ (CAD)"
+    },
+    {
+        "short_name": "EUR",
+        "full_name": "Euro",
+        "symbol": "€"
+    },
+    {
+        "short_name": "DKK",
+        "full_name": "Danish Krone",
+        "symbol": "kr (DKK)"
+    },
+    {
+        "short_name": "NOK",
+        "full_name": "Norwegian Krone",
+        "symbol": "kr (NOK)"
+    },
+    {
+        "short_name": "SEK",
+        "full_name": "Swedish Krona",
+        "symbol": "kr (SEK)"
+    },
+    {
+        "short_name": "JPY",
+        "full_name": "Japanese Yen",
+        "symbol": "¥"
+    }
+]

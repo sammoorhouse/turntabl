@@ -5,21 +5,43 @@ module.exports = function (mongoose) {
     id: String,
     name: String,
     creationDate: Date,
-    durationMins: Number,
-    endTime: Date,
+    duration: String,
+    sessionDate: Date,
     leader: String,
+    clientFirstname: String,
+    clientLastname: String,
+    clientEmail: String,
     clientPaid: Boolean,
     leaderPaid: Boolean,
     openTokSessionId: String,
-    eventPrice: Number,
+    sessionCcy: Number,
+    sessionPrice: Number,
     resources: []
   });
 
   var EventModel = mongoose.model('Event', eventSchema);
 
-  var createNewEvent = function (id, success, failure) {
+  var createNewEvent = function (id, name, creationDate,
+  duration, sessionDate, leader, clientFirstname,
+  clientLastname, clientEmail, clientPaid, leaderPaid,
+  openTokSessionId, sessionCcy, sessionPrice, success, failure) {
     var newEvent = new EventModel();
     newEvent.id = id;
+    newEvent.name = name;
+    newEvent.creationDate = creationDate;
+    newEvent.duration = duration;
+    newEvent.sessionDate = sessionDate;
+    newEvent.leader = leader;
+    newEvent.clientFirstname = clientFirstname;
+    newEvent.clientLastname = clientLastname;
+    newEvent.clientEmail = clientEmail;
+    newEvent.clientPaid = clientPaid;
+    newEvent.leaderPaid = leaderPaid;
+    newEvent.openTokSessionId = openTokSessionId;
+    newEvent.sessionCcy = sessionCcy;
+    newEvent.sessionPrice = sessionPrice;
+    newEvent.resources = [];
+    
     newEvent.save(function (err) {
       if (err) {
         failure(err)

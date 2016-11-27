@@ -1,0 +1,87 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  padding-top: 25px;
+}
+body {
+  font-family: "Averta","Avenir W02","Avenir",Helvetica,Arial,sans-serif;
+  background-color: rgb(245, 247, 249)
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by its height */
+  margin: 0 auto -150px;
+  /* Pad bottom by footer height */
+  padding: 0 0 150px;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+  height: 150px;
+  background-color: #07708a;
+  color: #fff;
+}
+
+footer .h2,
+footer h2,
+.header .h2{
+    color: #7ecdc8;
+}
+
+h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5, .tt-icon{
+    color: #07708a;
+}
+.h5, h5{
+    font-size: 16px;
+    line-height: 24px;
+    color: #07708a;
+}
+p{
+    font-size: 16px;
+    margin: 0 0 24px;
+}
+a {
+  -webkit-transition: all 0.25s;
+  -moz-transition: all 0.25s;
+  transition: all 0.25s;
+}
+p > a{
+    color: #07708a;
+}
+.bg-primary{
+    background-color: #07708a;
+}
+.tile-inverse{
+    background-color:#fff;
+    border-radius: 3px;
+    margin-bottom: 24px;
+}
+.tile{
+    padding: 32px;
+    border: 1px solid #fff;
+}
+a:focus,
+.tile:focus{
+    outline: 0;
+}
+.main-tile.tile:hover{
+    border-color: #7ecdc8;
+}
+.m-t-3{
+    margin-top: 24px;
+}
+.media-left{
+    padding-top: 10px;
+}
+.media-left.user-icon{
+    padding-top: 0px;
+    padding-right: 24px;
+}
+.media-heading{
+    margin-bottom:0;
+}
