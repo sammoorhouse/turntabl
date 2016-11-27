@@ -42,7 +42,10 @@ describe('Event', function () {
   })
   describe('createEvent', function () {
     it('should create an event with the given id', (done) => {
-      var acc = EventModule.createNewEvent(12, (acc) => {
+      var acc = EventModule.createNewEvent(
+        12, "name", Date(), "12 mins", Date(), 123, "sam",
+        "moorhouse", "email", false, false, 123, "GBP", 12
+        , (acc) => {
         expect(acc.id).to.equal(12);
         done()
       }, () => {
