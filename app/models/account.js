@@ -1,82 +1,71 @@
-module.exports = function (mongoose) {
+module.exports = function (client) {
   var util = require('../utils.js');
 
-  var accountSchema = mongoose.Schema({
-    id: String,
-    bio: String,
-    creationDate: Date,
-    sessions: []
-  });
-
-  var AccountModel = mongoose.model('Account', accountSchema);
-
-  function ensureAccount(user, success, failure) {
-    user.getCustomData(function (err, customData) {
-      var accountId = customData.accountId;
-      console.log("accountid is " + accountId);
-      accountExists(accountId, () => {
-        //account does exist...
-        success()
-      }, () => {
-        //account doesn't exist, create it
-        var newAccountId = util.generateID(8);
-        var newAccount = createNewAccount(newAccountId, (acc) => {
-          customData.accountId = newAccountId;
-          customData.save(function (err) {
-            if (!err) {
-              success()
-            } else {
-              failure()
-            }
-          });
-        }, () => {
-          console.error("failed to save account " + newAccountId + ": " + err);
-          failure()
-        });
-      })
-    })
-  }
-
   var createNewAccount = function (id, success, failure) {
-    var newAccount = new AccountModel();
-    newAccount.id = id;
-    newAccount.save(function (err) {
-      if (err) {
+    client.query('INSERT INTO accounts(account_id, bio) VALUES \
+    ($1::text, $2::text)', [id, ""], function(err, result){
+      if(err){
+        console.log('INSERT failed: ' + err)
         failure(err)
-      } else {
-        success(newAccount)
+      }else{
+        console.log('INSERT succeeded for ' + id)
+        console.log('adding country as a required_field for ' + id)
+        client.query('INSERT INTO required_fields(account_id, field_name) VALUES \
+        ($1::text, $2::text)', [id, 'country'], function(err, result){
+          if(err){
+            console.log('adding required_field failed for ' + id)
+            failure(err)
+          }else{
+            console.log('adding required_field failed for ' + id)
+            success()
+          }
+        })
       }
     })
   }
 
   var accountExists = function (id, success, failure) {
-    AccountModel.count({
-      "id": id
-    }, (err, count) => {
-      if (!err && count > 0) {
-        success()
-      } else {
-        failure()
+    client.query('SELECT COUNT(account_id) as cnt FROM accounts WHERE account_id = $1::text', [id], function(err, result){
+      if(err){
+        failure(err);
+      }else{
+        (result.rows[0].cnt == 0 ) ? failure() : success()
       }
-    });
+    })
   }
 
   var getAccountById = function (id, success, failure) {
-    AccountModel.findOne({
-      "id": id
-    }, (err, acc) => {
-      if (!err && acc) {
-        success(acc)
-      } else {
+    client.query('SELECT account_id, bio \
+    FROM accounts \
+    WHERE account_id = $1::text', [id], function(err, result){
+      if(err){
         failure(err)
+      }else{
+        success({
+          accountId: results.rows[0].account_id,
+          bio: results.rows[0].bio
+        })
       }
     })
+  }
+
+  var getRequiredFieldsById = function(id, success, failure){
+    client.query('SELECT field_name from required_fields where account_id = $1::text', [id], function(err, result){
+      if(err){
+        failure(err)
+      }else{
+        success(result.rows)
+      }
+    })
+  }
+
+  var createStripeAccount = function(id, country, success, failure){
+    //do the stripe business here; link to account
   }
 
   return {
     "createNewAccount": createNewAccount,
     "accountExists": accountExists,
     "getAccountById": getAccountById,
-    "ensureAccount": ensureAccount,
   }
 }

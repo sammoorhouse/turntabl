@@ -1,138 +1,124 @@
-module.exports = function (mongoose) {
-
-
-  var eventSchema = mongoose.Schema({
-    id: String,
-    name: String,
-    creationDate: Date,
-    duration: String,
-    sessionDate: Date,
-    leader: String,
-    clientFirstname: String,
-    clientLastname: String,
-    clientEmail: String,
-    clientPaid: Boolean,
-    leaderPaid: Boolean,
-    openTokSessionId: String,
-    sessionCcy: Number,
-    sessionPrice: Number,
-    resources: []
-  });
-
-  var EventModel = mongoose.model('Event', eventSchema);
+module.exports = function (client) {
 
   var createNewEvent = function (id, name, creationDate,
-  duration, sessionDate, leader, clientFirstname,
-  clientLastname, clientEmail, clientPaid, leaderPaid,
-  openTokSessionId, sessionCcy, sessionPrice, success, failure) {
-    var newEvent = new EventModel();
-    newEvent.id = id;
-    newEvent.name = name;
-    newEvent.creationDate = creationDate;
-    newEvent.duration = duration;
-    newEvent.sessionDate = sessionDate;
-    newEvent.leader = leader;
-    newEvent.clientFirstname = clientFirstname;
-    newEvent.clientLastname = clientLastname;
-    newEvent.clientEmail = clientEmail;
-    newEvent.clientPaid = clientPaid;
-    newEvent.leaderPaid = leaderPaid;
-    newEvent.openTokSessionId = openTokSessionId;
-    newEvent.sessionCcy = sessionCcy;
-    newEvent.sessionPrice = sessionPrice;
-    newEvent.resources = [];
-    
-    newEvent.save(function (err) {
+    duration, sessionDate, leader, clientFirstname,
+    clientLastname, clientEmail, clientPaid, leaderPaid,
+    openTokSessionId, sessionCcy, sessionPrice, success, failure) {
+    client.query('INSERT INTO sessions(session_id, \
+    session_name, creation_date, duration, session_date, \
+    leader_account_id, client_firstname, client_lastname, client_email, \
+    client_paid, leader_paid, opentok_session_id, session_ccy, \
+    session_price, session_started) \
+    values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, \
+    $13, $14, $15)', [id, name, creationDate, duration,
+      sessionDate, leader, clientFirstname, clientLastname,
+      clientEmail, clientPaid, leaderPaid, openTokSessionId,
+      sessionCcy, sessionPrice, false
+    ], function (err, results) {
       if (err) {
         failure(err)
       } else {
         success(newEvent)
       }
     })
-  }
+  };
 
   var eventExists = function (id, success, failure) {
-    EventModel.count({
-      "id": id
-    }, (err, count) => {
-      if (!err && count > 0) {
-        success()
+    client.query('SELECT COUNT(session_id) as cnt FROM sessions WHERE session_id = $1::text', [id], function (err, result) {
+      if (err) {
+        failure(err);
       } else {
-        failure()
+        (result.rows[0].cnt == 0) ? success(): failure()
       }
-    });
+    })
   }
 
   var getEventById = function (id, success, failure) {
-    EventModel.findOne({
-      "id": id
-    }, (err, evt) => {
-      if (!err && evt) {
-        success(evt)
-      } else {
+    client.query('SELECT session_id, \
+    session_name, creation_date, duration, session_date, \
+    leader_account_id, client_firstname, client_lastname, client_email, \
+    client_paid, leader_paid, opentok_session_id, session_ccy, \
+    session_price \
+    FROM sessions \
+    WHERE session_id = $1::text', [id], function (err, result) {
+      if (err) {
         failure(err)
-      }
-    })
-  }
-
-  var addEventResource = function (eventId, name, url, resourceKey, success, failure) {
-    getEventById(eventId, (event) => {
-      event.resources.push({
-        "name": name,
-        "url": url,
-        "resourceKey": resourceKey,
-        "active": true,
-      })
-      event.save(function (error) {
-        if (error) {
-          failure(error)
-        } else {
-          success()
-        }
-      })
-    }, () => {
-      failure()
-    })
-  }
-
-  var removeEventResource = function (eventId, resourceKey, success, failure) {
-    EventModel.findOne({
-      "id": eventId
-    }, (err, event) => {
-      if (!err && event) {
-        var resources = event.resources.filter(r => r.resourceKey == resourceKey)
-
-        resources.forEach(resource => {
-          resource.active = false;
-        });
-        
-        event.save(function (error) {
-          if (error) {
-            failure(error)
-          } else
-            success()
-        })
       } else {
-        failure(error)
+        var row = results.rows[0];
+        success({
+          sessionId: row.account_id,
+          sessionName: row.session_name,
+          creationDate: row.creation_date,
+          duration: row.duration,
+          sessionData: row.session_date,
+          clientPaid: row.client_paid,
+          leaderPaid: row.leader_paid,
+          openTokSessionId: row.opentok_session_id,
+          sessionCcy: row.session_ccy,
+          sessionPrice: row.session_price
+        })
       }
     })
   }
 
-  var updateEndTime = function (id, endTime, success, failure) {
-    EventModel.findOne({
-      "id": id
-    }, (err, evt) => {
-      if (!err && evt) {
-        evt.endTime = endTime
-        evt.save(function (error) {
-          if (error) {
-            failure(error)
-          } else {
-            success()
+  getPendingEventsByAccountId = function (accountId, success, failure) {
+    client.query('SELECT session_id, \
+    session_name, creation_date, duration, session_date, \
+    leader_account_id, client_firstname, client_lastname, client_email, \
+    client_paid, leader_paid, opentok_session_id, session_ccy, \
+    session_price \
+    FROM sessions \
+    WHERE leader_account_id = $1::text \
+    AND session_started = false', [accountId], function (err, results) {
+      if (err) {
+        failure(err)
+      } else {
+        var events = results.rows.map(function (row) {
+          return {
+            sessionId: row.account_id,
+            sessionName: row.session_name,
+            creationDate: row.creation_date,
+            duration: row.duration,
+            sessionData: row.session_date,
+            clientPaid: row.client_paid,
+            leaderPaid: row.leader_paid,
+            openTokSessionId: row.opentok_session_id,
+            sessionCcy: row.session_ccy,
+            sessionPrice: row.session_price
           }
         })
+        success(events)
+      }
+    })
+  }
+
+  getHistoricEventsByAccountId = function (accountId, success, failure) {
+    client.query('SELECT session_id, \
+    session_name, creation_date, duration, session_date, \
+    leader_account_id, client_firstname, client_lastname, client_email, \
+    client_paid, leader_paid, opentok_session_id, session_ccy, \
+    session_price \
+    FROM sessions \
+    WHERE leader_account_id = $1::text \
+    AND session_started = true', [accountId], function (err, results) {
+      if (err) {
+        failure(err)
       } else {
-        failure()
+        var events = results.rows.map(function (row) {
+          return {
+            sessionId: row.account_id,
+            sessionName: row.session_name,
+            creationDate: row.creation_date,
+            duration: row.duration,
+            sessionData: row.session_date,
+            clientPaid: row.client_paid,
+            leaderPaid: row.leader_paid,
+            openTokSessionId: row.opentok_session_id,
+            sessionCcy: row.session_ccy,
+            sessionPrice: row.session_price
+          }
+        })
+        success(events)
       }
     })
   }
@@ -141,8 +127,8 @@ module.exports = function (mongoose) {
     "eventExists": eventExists,
     "createNewEvent": createNewEvent,
     "getEventById": getEventById,
-    "addEventResource": addEventResource,
-    "removeEventResource": removeEventResource
+    "getHistoricEventsByAccountId": getHistoricEventsByAccountId,
+    "getPendingEventsByAccountId": getPendingEventsByAccountId
   }
 
 }
