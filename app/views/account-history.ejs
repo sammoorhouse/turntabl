@@ -5,22 +5,8 @@
 <link rel="stylesheet" type="text/css" href="/css/history.css" />
 
   <% include partials/head.ejs %>
-      <script>
-  $(function(){highlightHeader('.header-history')})
-
-  <% if (typeof events != 'undefined') { %>
-
-      var eventResources = [
-      <% events.forEach(function(event){ %> {
-        date: "<%= event.date %>",
-        length: "<%= event.length %>",
-        client: "<%= event.client %>",
-        hourly rate: "<%= event.hourlyrate %>",
-        completed: "<%= event.completed %>"
-      },
-      <%})%>
-
-      <% } %>
+  <script>
+    $(function(){highlightHeader('.header-history')})
   </script>
 </head>
 
@@ -31,6 +17,9 @@
     <div class="container">
       <h2>Session history</h2>
       <div class="panel">
+
+      <% if (events.length > 0) { %>
+
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
@@ -44,6 +33,9 @@
               </tr>
             </thead>
             <tbody>
+
+             <!-- <% events.forEach(function(event){ %>
+
               <tr>
                 <td>2016-11-29</td>
                 <td>Steve Massingham</td>
@@ -52,25 +44,33 @@
                 <td>$15</td>
                 <td><i class="fa fa-check fa-fw fa-lg payment-status-paid" aria-hidden="true"></i>Paid</td>
               </tr>
-              <tr>
-                <td>2016-11-28</td>
-                <td>John Stephenson</td>
-                <td>Novice to Mastery</td>
-                <td>$500</td>
-                <td>$30</td>
-                <td><i class="fa fa-ellipsis-h fa-fw fa-lg payment-status-pending" aria-hidden="true"></i>Pending</td>
-              </tr>
-              <tr>
-                <td>2016-11-30</td>
-                <td>Rob Stewart</td>
-                <td>First steps</td>
-                <td>$100</td>
-                <td>$10</td>
-                <td><i class="fa fa-times fa-fw fa-lg payment-status-error" aria-hidden="true"></i>Blocked</td>
-              </tr>
+
+              <% }) %> -->
+
             </tbody>
           </table>
-        </div>
+        </div> <!-- /.table-responsive -->
+
+      <% } else { %>
+
+        <div class="row">
+          <div class="col-lg-12 m-b-0">
+            <div class="tile tile-inverse" tabindex="0">
+              <div class="media">
+                <div class="media-left text-info">
+                  <i class="fa  fa-smile-o fa-3x fa-fw tt-icon" aria-hidden="true"></i>
+                </div>
+                <div class="media-body text-xs-left">
+                  <h3 class="h5 m-b-0">You have no historic sessions</h3>
+                  <p>Create a new mentoring session and start to make money! <a href="/account/main?modal=1">Set up a new session</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /.row -->
+
+      <% } %>
+
       </div>
     </div>
   </div>

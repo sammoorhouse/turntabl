@@ -3,22 +3,8 @@
 
 <head>
   <% include partials/head.ejs %>
-      <script>
-  $(function(){highlightHeader('.header-pending')})
-
-  <% if (typeof events != 'undefined') { %>
-
-      var eventResources = [
-      <% events.forEach(function(event){ %> {
-        date: "<%= event.date %>",
-        length: "<%= event.length %>",
-        client: "<%= event.client %>",
-        hourly rate: "<%= event.hourlyrate %>",
-        completed: "<%= event.completed %>"
-      },
-      <%})%>
-
-      <% } %>
+  <script>
+    $(function(){highlightHeader('.header-pending')})
   </script>
 </head>
 
@@ -29,6 +15,10 @@
     <div class="container">
       <h2>Pending sessions</h2>
       <div class="panel">
+      <% if (events.length > 0) { %>
+
+      <% } else { %>
+
         <div class="row">
           <div class="col-lg-12 m-b-0">
             <div class="tile tile-inverse" tabindex="0">
@@ -43,7 +33,9 @@
               </div>
             </div>
           </div>
-        </div>
+        </div><!-- /.row -->
+
+        <% } %>
       </div>
     </div>
   </div>
