@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
 
-var Event = require('../app/models/event')(mongoose);
-var Account = require('../app/models/account')(mongoose)
-
+var s3 = require('./3rd/s3.js');
+var utils = require('./utils.js');
 var OpenTok = require('opentok');
 var fs = require('fs')
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
@@ -12,11 +11,10 @@ var stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 var currencies = require('./config/currencies.json');
 var supportedCountries = require('./config/supportedCountries.json');
 
-//var util = require('util');
+module.exports = function (app, log, pgClient) {
 
-module.exports = function (app, log, stormpathApp) {
-  var s3 = require('./3rd/s3.js');
-  var utils = require('./utils.js');
+  var Event = require('../app/models/event')(pgClient);
+  var Account = require('../app/models/account')(pgClient);
 
   app.get('/', stormpath.getUser, function (req, res) {
     var user = req.user
@@ -29,36 +27,35 @@ module.exports = function (app, log, stormpathApp) {
     }
   });
 
-  app.post('/create_session', stormpath.loginRequired, function(req, res){
+  app.post('/create_session', stormpath.loginRequired, function (req, res) {
     var id = utils.generateID(8);
     var openTokSessionId = 3; //TODO OBVIOUSLY
     var user = req.user
-    user.getCustomData(function(err, customData){
-      var leaderAccountId = customData.accountId;
+    var leaderAccountId = user.customData.accountId;
 
-      var body = req.body;
+    var body = req.body;
 
-      var sessionName = body.session_name;
-      var creationDate = new Date();//now
-      var sessionDuration = body.session_duration;
-      var sessionDate = body.session_date;
-      var sessionClientFirstName = body.session_client_firstName;
-      var sessionClientLastName = body.session_client_lastName;
-      var sessionClientEmail = body.session_client_email;
-      var clientPaid = false;
-      var leaderPaid = false;
-      var sessionCostCcy = body.session_cost_ccy;
-      var sessionCostValue = body.session_cost_value;
-      
-      Event.createEvent(id, sessionName, creationDate, sessionDuration,
+    var sessionName = body.session_name;
+    var creationDate = new Date(); //now
+    var sessionDuration = body.session_duration;
+    var sessionDate = body.session_date;
+    var sessionClientFirstName = body.session_client_firstName;
+    var sessionClientLastName = body.session_client_lastName;
+    var sessionClientEmail = body.session_client_email;
+    var clientPaid = false;
+    var leaderPaid = false;
+    var sessionCostCcy = body.session_cost_ccy;
+    var sessionCostValue = body.session_cost_value;
+
+    Event.createNewEvent(id, sessionName, creationDate, sessionDuration,
       sessionDate, leaderAccountId, sessionClientFirstName, sessionClientLastName,
       sessionClientEmail, clientPaid, leaderPaid, openTokSessionId,
-      sessionCostCcy, sessionCostValue, ()=>{
-        response.redirect('/session/' + id)
-      }, ()=>{
-        response.redirect('/sessionCreationFailure/' + id)
+      sessionCostCcy, sessionCostValue, () => {
+        res.redirect('/session/' + id)
+      }, (err) => {
+        console.log(err)
+        res.redirect('/sessionCreationFailure/' + id)
       })
-    })
   })
 
   app.get('/session', stormpath.loginRequired, function (req, res) {
@@ -74,42 +71,29 @@ module.exports = function (app, log, stormpathApp) {
   app.get("/account/profile", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/profile')
     var user = req.user
-    Account.ensureAccount(user, () => {
-        res.render('account-profile.ejs', {
-          fullName: utils.toTitleCase(user.fullName)
-        })
-      },
-      () => {
-        res.redirect('/')
-      })
+    res.render('account-profile.ejs', {
+      fullName: utils.toTitleCase(user.fullName)
+    })
   })
 
   app.get("/account/main", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/main')
     var user = req.user
-    Account.ensureAccount(user, () => {
-        user.getCustomData(function(err, customData){
-          var events = customData.events;
-          var accountId = customData.accountId;
-          res.render('account-main.ejs', {
-            currencies: currencies,
-            since: user.createdAt,
-            accountId: accountId,
-            fullName: utils.toTitleCase(user.fullName)
-          })
-        });
-      },
-      () => {
-        res.redirect('/')
-      })
+    var accountId = user.customData.accountId;
+    res.render('account-main.ejs', {
+      currencies: currencies,
+      since: user.createdAt,
+      accountId: accountId,
+      fullName: utils.toTitleCase(user.fullName)
+    })
   })
 
   app.get("/account/pending", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/pending')
     var user = req.user
-    Account.ensureAccount(user, () => {
-        var customData = user.getCustomData();
-        var events = customData.events;
+    var accountId = user.customData.accountId;
+    var events = Event.getPendingEventsByAccountId(accountId,
+      (events) => {
         res.render('account-pending.ejs', {
           fullName: utils.toTitleCase(user.fullName),
           events: events
@@ -123,9 +107,9 @@ module.exports = function (app, log, stormpathApp) {
   app.get("/account/history", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/history')
     var user = req.user
-    Account.ensureAccount(user, () => {
-        var customData = user.getCustomData();
-        var events = customData.events;
+    var accountId = user.customData.accountId;
+    var events = Event.getHistoricEventsByAccountId(accountId,
+      (events) => {
         res.render('account-history.ejs', {
           fullName: utils.toTitleCase(user.fullName),
           events: events
@@ -139,31 +123,20 @@ module.exports = function (app, log, stormpathApp) {
   app.get("/account/clients", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/clients')
     var user = req.user
-    Account.ensureAccount(user, () => {
-        var customData = user.getCustomData();
-        var events = customData.events;
-        res.render('account-clients.ejs', {
-          fullName: utils.toTitleCase(user.fullName),
-          events: events
-        })
-      },
-      () => {
-        res.redirect('/')
-      })
+    var events = user.customData.events;
+    res.render('account-clients.ejs', {
+      fullName: utils.toTitleCase(user.fullName),
+      events: events
+    })
   })
 
   app.get("/account/payment", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/payment')
     var user = req.user
-    Account.ensureAccount(user, () => {
-        res.render('account-payment.ejs', {
-          user: user,
-          fullName: utils.toTitleCase(user.fullName)
-        })
-      },
-      () => {
-        res.redirect('/')
-      })
+    res.render('account-payment.ejs', {
+      user: user,
+      fullName: utils.toTitleCase(user.fullName)
+    })
   })
 
   app.get("/sign-s3", (req, res) => {
@@ -253,37 +226,6 @@ module.exports = function (app, log, stormpathApp) {
     console.log(JSON.stringify(req.body))
     res.writeHead(200);
     res.end()
-  })
-
-  app.post('/account/init', stormpath.loginRequired, function (req, res) {
-    //this is called for new accounts. All we need
-    //at this stage is the country for stripe
-    var user = req.user
-    var countryCode = req.country;
-    //one from https://stripe.com/global
-    var stripeResponse = stripe.accounts.create({
-      country: countryCode,
-      managed: true
-    });
-
-    user.getCustomData(function (err, customData) {
-      customData.stripeAccountId = stripeResponse.id;
-      customData.save(function (err) {
-        if (!err) {
-          console.log("user custom data saved with id " + stripeResponse.id);
-        } else {
-          console.error("failed to save custom data for id " + stripeResponse.id);
-        }
-      })
-    })
-
-    res.redirect("/account-newevent")
-  })
-
-  app.get('/account-newevent', stormpath.loginRequired, function (req, res) {
-    //on first login, once the stripe account is setup.
-    //subsequently, whenever the client creates a new event.
-
   })
 
   app.get('/event/:id', stormpath.loginRequired, function (req, res) {
