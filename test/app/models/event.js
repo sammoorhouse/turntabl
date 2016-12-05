@@ -40,7 +40,7 @@ describe('Event', function () {
       )
     })
   })
-  describe('createEvent', function () {
+  describe('createNewEvent', function () {
     it('should create an event with the given id', (done) => {
       var acc = EventModule.createNewEvent(
         12, "name", Date(), "12 mins", Date(), 123, "sam",
