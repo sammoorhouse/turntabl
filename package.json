@@ -16,14 +16,14 @@
     "express": "4.14.0",
     "express-session": "~1.11.2",
     "express-stormpath": "^3.1.2",
-    "mongoose": "4.5.4",
     "opentok": "^2.3.2",
+    "pg": "6.1.0",
     "pug": "^2.0.0-beta5",
     "request": "^2.72.0",
     "s3-policy": "^0.2.0",
+    "snyk": "^1.19.1",
     "stormpath": "^0.18.2",
-    "stripe": "^4.10.0",
-    "snyk": "^1.19.1"
+    "stripe": "^4.10.0"
   },
   "main": "server.js",
   "engines": {
