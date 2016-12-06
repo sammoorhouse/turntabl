@@ -30,7 +30,9 @@ pg.connect(process.env.DATABASE_URL, function (err, pgClient) {
   var stormpathApp = stormpath.init(app, {
     debug: 'debug',
     website: true,
-    expandCustomData: true,
+    expand: {
+      customData: true,
+    },
     sessionDuration: 1000 * 60 * 60 * 24 * 30, //30 days
     enableAccountVerification: false, //don't require email validation
     enableForgotPassword: true, //allow password reset workflow
@@ -52,18 +54,20 @@ pg.connect(process.env.DATABASE_URL, function (err, pgClient) {
     postRegistrationHandler: function (account, req, res, next) {
       var TTAccount = require('./app/models/account.js')(pgClient);
 
-      account.getCustomData(function(err, customData){
-        if(err) return next(err);
+      account.getCustomData(function (err, customData) {
+        if (err) return next(err);
         var newAccountId = util.generateID(8);
         console.log("creating new account for " + newAccountId)
         var newAccount = TTAccount.createNewAccount(newAccountId, (acc) => {
-          customData.accountId = newAccountId;
-          console.log("saving account data")
-          customData.save(next)
-        },
-        (err)=>{return next(err)}
+            customData.accountId = newAccountId;
+            console.log("saving account data")
+            customData.save(next)
+          },
+          (err) => {
+            return next(err)
+          }
         )
-        
+
       })
 
 

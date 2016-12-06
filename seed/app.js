@@ -12,24 +12,6 @@ pg.connect(process.env.DATABASE_URL, function (err, client) {
     if (err) throw err;
     console.log('Connected to postgres! Getting schemas...');
 
-    console.log('dropping sessions table')
-    client.query('DROP TABLE IF EXISTS sessions CASCADE', function (err) {
-        if (err) {
-            throw err;
-        } else {
-            console.log('dropped sessions table')
-        }
-    })
-
-    console.log('dropping required_fields table')
-    client.query('DROP TABLE IF EXISTS required_fields CASCADE', function (err) {
-        if (err) {
-            throw err;
-        } else {
-            console.log('dropped required_fields table')
-        }
-    })
-
     console.log('dropping accounts table')
     client.query('DROP TABLE IF EXISTS accounts CASCADE', function (err) {
         if (err) {
@@ -39,12 +21,12 @@ pg.connect(process.env.DATABASE_URL, function (err, client) {
         }
     })
 
-    console.log('dropping field_names table')
-    client.query('DROP TABLE IF EXISTS field_names CASCADE', function (err) {
+    console.log('dropping sessions table')
+    client.query('DROP TABLE IF EXISTS sessions CASCADE', function (err) {
         if (err) {
             throw err;
         } else {
-            console.log('dropped field_names table')
+            console.log('dropped sessions table')
         }
     })
 
@@ -52,7 +34,8 @@ pg.connect(process.env.DATABASE_URL, function (err, client) {
     client.query('CREATE TABLE accounts( \
     account_id varchar(8) PRIMARY KEY, \
     bio varchar(2000) NOT NULL, \
-    stripe_account_id varchar(50) \
+    stripe_account_id varchar(50), \
+    country_code varchar(2) \
   )', function (err, result) {
         if (err) {
             throw err;
@@ -83,31 +66,6 @@ pg.connect(process.env.DATABASE_URL, function (err, client) {
             throw err;
         } else {
             console.log('created sessions table')
-        }
-    })
-
-    console.log('creating field_names table')
-    client.query('CREATE TABLE field_names( \
-    field_name varchar(50) PRIMARY KEY, \
-    display_name varchar(50) \
-    )', function (err, result) {
-        if (err) {
-            throw err;
-        } else {
-            console.log('created field_names table')
-            client.query('INSERT INTO field_names(field_name, display_name) VALUES (\'country\', \'country\')')
-        }
-    })
-
-    console.log('creating required_fields table')
-    client.query('CREATE TABLE required_fields( \
-        account_id varchar(8) NOT NULL REFERENCES accounts(account_id), \
-        field_name varchar(20) NOT NULL REFERENCES field_names(field_name) \
-    )', function (err, result) {
-        if (err) {
-            throw err;
-        } else {
-            console.log('created required_fields table')
         }
     })
 });

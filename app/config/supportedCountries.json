@@ -1,54 +1,67 @@
 [
     {
+    "country_name": "United States",
+    "a2": "US",
+    "supported_account_ccys": ["USD"]
+    },
+    {
+    "country_name": "United Kingdom",
+    "a2": "UK",
+    "supported_account_ccys": ["EUR", "GBP", "USD", "DKK", "NOK", "SEK"]
+    },
+    {
     "country_name": "Australia",
+    "a2": "AU",
     "supported_account_ccys": ["AUD"]
     },
     {
     "country_name": "Canada",
+    "a2": "CA",
     "supported_account_ccys": ["CAD", "USD"]
     },
     {
     "country_name": "Denmark",
+    "a2": "DK",
     "supported_account_ccys": ["EUR", "GBP", "USD", "DKK", "NOK", "SEK"]
     },
     {
     "country_name": "Finland",
+    "a2": "FI",
     "supported_account_ccys": ["EUR", "GBP", "USD", "DKK", "NOK", "SEK"]
     },
     {
     "country_name": "France",
+    "a2": "FR",
     "supported_account_ccys": ["EUR", "GBP", "USD", "DKK", "NOK", "SEK"]
     },
     {
     "country_name": "Ireland",
+    "a2": "IE",
     "supported_account_ccys": ["EUR", "GBP", "USD", "DKK", "NOK", "SEK"]
     },
     {
     "country_name": "Japan",
+    "a2": "JP",
     "supported_account_ccys": ["JPY"]
     },
     {
     "country_name": "Norway",
+    "a2": "NO",
     "supported_account_ccys": ["EUR", "GBP", "USD", "DKK", "NOK", "SEK"]
     },
     {
     "country_name": "Singapore",
+    "a2": "SG",
     "supported_account_ccys": ["SGD"]
     },
     {
     "country_name": "Sweden",
+    "a2": "SE",
     "supported_account_ccys": ["EUR", "GBP", "USD", "DKK", "NOK", "SEK"]
-    },
-    {
-    "country_name": "United Kingdom",
-    "supported_account_ccys": ["EUR", "GBP", "USD", "DKK", "NOK", "SEK"]
-    },
-    {
-    "country_name": "United States",
-    "supported_account_ccys": ["USD"]
     },
     {
     "country_name": "Spain",
+    "a2": "ES",
     "supported_account_ccys": ["EUR", "GBP", "USD", "DKK", "NOK", "SEK"]
     }
 ]

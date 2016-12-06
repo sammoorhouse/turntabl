@@ -19,7 +19,7 @@
     <div class="container">
 			<div class="row m-t-3">
 				<div class="col-md-3">
-					<h3>Sam Moorhouse</h3>
+					<h3><%= fullName %></h3>
 					<p>sam.j.moorhouse@gmail.com</p>
 				</div>
 				<div class="col-md-9">
@@ -38,9 +38,29 @@
 							<p>We handle your money and so we take security very seriously.</p>
 							<p>We never store your account details or verification data on our servers; it all goes straight to our payment provider, who use industry-standard security rules for retention of financial data.</p>
 							<p>Sometimes we might ask you for additional information, such as proof of address or identity. This helps us reduce fraud and ensure your money and data is safe.</p>
+						<% if(countryCode != "") { %>
 							<div class="alert alert-success">We don't need any more data from you!</div>
 						</div>
+					</div>
+						<% } else { %>
+							<div class="alert alert-warning">We need some more details from you!</div>
+						</div>
 					</div><!-- /.panel -->
+
+				<% if(countryCode == "") { %>
+					<div class="form-group">
+						<label for="country" class="form-control-label"><%= utils.toTitleCase(field.display_name) %></label>
+						<div class="row">
+							<div class="col-sm-10">
+								<select id="country" name="country" class="custom-select form-control">
+								<% countries.forEach(country => { %>
+									<option value=<%= country.a2 %> ><%= country.country_name %> </option>
+								<% }) %>
+								</select>
+							</div>
+						</div>
+					</div>
+				<% } /* /if */ %>
 				</div>
 			</div>
 		</div><!-- /.container -->

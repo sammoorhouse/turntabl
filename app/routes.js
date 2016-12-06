@@ -71,14 +71,26 @@ module.exports = function (app, log, pgClient) {
   app.get("/account/profile", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/profile')
     var user = req.user
-    res.render('account-profile.ejs', {
-      fullName: utils.toTitleCase(user.fullName)
-    })
+    var accountId = user.customData.accountId;
+    Account.getAccountById(accountId,
+      (account) =>{
+        res.render('account-profile.ejs', {
+          utils: utils,
+          countries: supportedCountries,
+          fullName: utils.toTitleCase(user.fullName),
+          email: user.email,
+          countryCode: account.country_code,
+        })
+      },
+      (err)=>{
+        console.error(err)
+        res.redirect('/')
+      })
   })
 
   app.get("/account/main", stormpath.loginRequired, (req, res) => {
     log.info('GET /account/main')
-    var user = req.user
+    var user = req.user;
     var accountId = user.customData.accountId;
     res.render('account-main.ejs', {
       currencies: currencies,
@@ -92,7 +104,7 @@ module.exports = function (app, log, pgClient) {
     log.info('GET /account/pending')
     var user = req.user
     var accountId = user.customData.accountId;
-    var events = Event.getPendingEventsByAccountId(accountId,
+    Event.getPendingEventsByAccountId(accountId,
       (events) => {
         res.render('account-pending.ejs', {
           fullName: utils.toTitleCase(user.fullName),
@@ -108,7 +120,7 @@ module.exports = function (app, log, pgClient) {
     log.info('GET /account/history')
     var user = req.user
     var accountId = user.customData.accountId;
-    var events = Event.getHistoricEventsByAccountId(accountId,
+    Event.getHistoricEventsByAccountId(accountId,
       (events) => {
         res.render('account-history.ejs', {
           fullName: utils.toTitleCase(user.fullName),
@@ -137,6 +149,32 @@ module.exports = function (app, log, pgClient) {
       user: user,
       fullName: utils.toTitleCase(user.fullName)
     })
+  })
+
+  app.post('/update_details', (req, res) =>{
+    //get required fields
+    Account.getRequiredFieldsById(accountId,
+      (requiredFields) =>{
+        var formData = requiredFields.map(field =>{
+          var fieldName = field.field_name
+          var fieldValue = req.data[fieldName]
+          return (fieldName, fieldValue)
+        })
+        //update stripe
+        //Account.createStripeAccount(accountId, )
+
+        //update db
+        removeRequiredFieldsById(req.user.customData.accountId, formData.map(fd => fd.fieldName), ()=>{
+          res.redirect('/account/profile')
+        }, (err)=>{
+          console.error(err)
+          res.redirect('/')
+        })
+      },
+      (err)=>{
+        console.error(err)
+        res.redirect('/')
+      })
   })
 
   app.get("/sign-s3", (req, res) => {

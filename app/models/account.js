@@ -9,17 +9,17 @@ module.exports = function (client) {
         failure(err)
       }else{
         console.log('INSERT succeeded for ' + id)
-        console.log('adding country as a required_field for ' + id)
-        client.query('INSERT INTO required_fields(account_id, field_name) VALUES \
-        ($1::text, $2::text)', [id, 'country'], function(err, result){
-          if(err){
-            console.log('adding required_field failed for ' + id)
-            failure(err)
-          }else{
-            console.log('adding required_field failed for ' + id)
-            success()
-          }
-        })
+      }
+    })
+  }
+
+  var setCountryCode = function(id, countryCode, success, failure){
+    client.query("UPDATE accounts SET country_code=$1::text WHERE account_id=$2::text", [countryCode, id],
+    function(err, result){
+      if(err){
+        failure(err)
+      }else{
+        success()
       }
     })
   }
@@ -43,29 +43,24 @@ module.exports = function (client) {
       }else{
         success({
           accountId: results.rows[0].account_id,
-          bio: results.rows[0].bio
+          bio: results.rows[0].bio,
+          countryCode: results.rows[0].country_code,
         })
-      }
-    })
-  }
-
-  var getRequiredFieldsById = function(id, success, failure){
-    client.query('SELECT field_name from required_fields where account_id = $1::text', [id], function(err, result){
-      if(err){
-        failure(err)
-      }else{
-        success(result.rows)
       }
     })
   }
 
   var createStripeAccount = function(id, country, success, failure){
     //do the stripe business here; link to account
+            stripe.accounts.update(
+          req.user.customData.stripe_id,
+          formData)
   }
 
   return {
     "createNewAccount": createNewAccount,
     "accountExists": accountExists,
     "getAccountById": getAccountById,
+    "createStripeAccount": createStripeAccount,
   }
 }
