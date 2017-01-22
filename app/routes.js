@@ -74,13 +74,43 @@ module.exports = function (app, log, pgClient) {
     var accountId = user.customData.accountId;
     Account.getAccountById(accountId,
       (account) =>{
-        res.render('account-profile.ejs', {
-          utils: utils,
-          countries: supportedCountries,
-          fullName: utils.toTitleCase(user.fullName),
-          email: user.email,
-          countryCode: account.country_code,
-        })
+        if(account.stripeAccountNumber != undefined){
+          console.log("found stripe account number " + account.stripeAccountNumber + " for account " + accountId)
+          stripe.accounts.retrieve(
+            account.stripeAccountNumber,
+            function(err, accountDetails) {
+              if(err){
+                console.error("error retrieving account details: " + err)
+                res.redirect('/')
+              }else{
+                console.log("retrieved details for stripe account " + accountDetails.id)
+                if((typeof accountDetails.verification != "undefined")
+                && (accountDetails.verification.disabled_reason == "fields_needed")){
+                  console.log("account is disabled; fields needed: " + accountDetails.verification.fields_needed)
+                  var requiredFields = accountDetails.verification.fields_needed
+                }
+                res.render('account-profile.ejs', {
+                  utils: utils,
+                  countries: supportedCountries,
+                  fullName: utils.toTitleCase(user.fullName),
+                  email: user.email,
+                  stripeAccountNumber: account.stripeAccountNumber,
+                  transfers_enabled: accountDetails.transfers_enabled,
+                  required_fields: requiredFields,
+                })
+              }
+            }
+          );
+        }else{
+          console.error("couldn't find stripe account for account " + accountId)
+          res.render('account-profile.ejs', {
+            utils: utils,
+            countries: supportedCountries,
+            fullName: utils.toTitleCase(user.fullName),
+            email: user.email,
+            stripeAccountNumber: account.stripeAccountNumber
+          })
+        }
       },
       (err)=>{
         console.error(err)
@@ -151,8 +181,53 @@ module.exports = function (app, log, pgClient) {
     })
   })
 
-  app.post('/update_details', (req, res) =>{
+  app.post('/update_basic_details', stormpath.loginRequired, (req, res) =>{
     //get required fields
+    var accountId = req.user.customData.accountId
+    var country = req.body.country
+    var firstName = req.body.first_name
+    var lastName = req.body.last_name
+    var dob = req.body.dob.split(/[.,\/ -]/)
+    var stripeaccount = stripe.accounts.create(
+      {
+        "country": "US",
+        "managed": true,
+        "legal_entity": {
+          "first_name": firstName,
+          "last_name": lastName,
+          "dob":{
+            "year": dob[0],
+            "month": dob[1],
+            "day": dob[2]
+          }
+        }
+      }
+    ).then(
+      function(result) {
+        console.log(result)
+        var stripeAccountId = result.id
+        Account.addStripeAccount(accountId, stripeAccountId, ()=>{
+          console.log("successfully added stripe ID " + stripeAccountId + " to account " + accountId)
+          res.redirect('/account/profile')
+        },
+        (err)=>{
+          console.error("failed to add stripe ID " + stripeAccountId + " to account " + accountId)
+          res.redirect('/')
+        })
+      },
+      function(err) {
+        console.log(err)
+      }
+    )
+/*
+    if(typeof country != undefined){
+      //set the country in the db
+
+      //then create a new stripe account
+
+      //then set the stripe account in the db.
+    }
+    //we don't handle other fields just yet.
     Account.getRequiredFieldsById(accountId,
       (requiredFields) =>{
         var formData = requiredFields.map(field =>{
@@ -174,7 +249,7 @@ module.exports = function (app, log, pgClient) {
       (err)=>{
         console.error(err)
         res.redirect('/')
-      })
+      })*/
   })
 
   app.get("/sign-s3", (req, res) => {

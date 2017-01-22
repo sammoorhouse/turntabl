@@ -9,12 +9,13 @@ module.exports = function (client) {
         failure(err)
       }else{
         console.log('INSERT succeeded for ' + id)
+        success()
       }
     })
   }
 
-  var setCountryCode = function(id, countryCode, success, failure){
-    client.query("UPDATE accounts SET country_code=$1::text WHERE account_id=$2::text", [countryCode, id],
+  var addStripeAccount = function(id, stripeAccountId, success, failure){
+    client.query("UPDATE accounts SET stripe_account_id=$1::text WHERE account_id=$2::text", [stripeAccountId, id],
     function(err, result){
       if(err){
         failure(err)
@@ -35,32 +36,25 @@ module.exports = function (client) {
   }
 
   var getAccountById = function (id, success, failure) {
-    client.query('SELECT account_id, bio \
+    client.query('SELECT account_id, bio, stripe_account_id \
     FROM accounts \
     WHERE account_id = $1::text', [id], function(err, result){
       if(err){
         failure(err)
       }else{
         success({
-          accountId: results.rows[0].account_id,
-          bio: results.rows[0].bio,
-          countryCode: results.rows[0].country_code,
+          accountId: result.rows[0].account_id,
+          bio: result.rows[0].bio,
+          stripeAccountNumber: result.rows[0].stripe_account_id,
         })
       }
     })
-  }
-
-  var createStripeAccount = function(id, country, success, failure){
-    //do the stripe business here; link to account
-            stripe.accounts.update(
-          req.user.customData.stripe_id,
-          formData)
   }
 
   return {
     "createNewAccount": createNewAccount,
     "accountExists": accountExists,
     "getAccountById": getAccountById,
-    "createStripeAccount": createStripeAccount,
+    "addStripeAccount": addStripeAccount,
   }
 }
