@@ -39,18 +39,17 @@ module.exports = function (app, log, pgClient) {
     var creationDate = new Date(); //now
     var sessionDuration = body.session_duration;
     var sessionDate = body.session_date;
-    var sessionClientFirstName = body.session_client_firstName;
-    var sessionClientLastName = body.session_client_lastName;
-    var sessionClientEmail = body.session_client_email;
+    var sessionClientName = body.client_name;
     var clientPaid = false;
     var leaderPaid = false;
     var sessionCostCcy = body.session_cost_ccy;
     var sessionCostValue = body.session_cost_value;
+    var sessionStarted = false;
 
     Event.createNewEvent(id, sessionName, creationDate, sessionDuration,
-      sessionDate, leaderAccountId, sessionClientFirstName, sessionClientLastName,
-      sessionClientEmail, clientPaid, leaderPaid, openTokSessionId,
-      sessionCostCcy, sessionCostValue, () => {
+      sessionDate, leaderAccountId, sessionClientName,
+      clientPaid, leaderPaid, openTokSessionId,
+      sessionCostCcy, sessionCostValue, sessionStarted, () => {
         res.redirect('/session/' + id)
       }, (err) => {
         console.log(err)
@@ -58,10 +57,18 @@ module.exports = function (app, log, pgClient) {
       })
   })
 
-  app.get('/session', stormpath.loginRequired, function (req, res) {
+  app.get('/session/:id', stormpath.loginRequired, function (req, res) {
     log.info('GET /session')
+    var id = req.params.id;
+    var user = req.user
 
-    res.render('session.ejs', {});
+    res.render('session.ejs', {
+      sessionId: id,
+      utils: utils,
+      countries: supportedCountries,
+      fullName: utils.toTitleCase(user.fullName),
+      email: user.email
+    });
   });
 
   app.get('/account', (req, res) => {
@@ -73,19 +80,19 @@ module.exports = function (app, log, pgClient) {
     var user = req.user
     var accountId = user.customData.accountId;
     Account.getAccountById(accountId,
-      (account) =>{
-        if(account.stripeAccountNumber != undefined){
+      (account) => {
+        if (account.stripeAccountNumber != undefined) {
           console.log("found stripe account number " + account.stripeAccountNumber + " for account " + accountId)
           stripe.accounts.retrieve(
             account.stripeAccountNumber,
-            function(err, accountDetails) {
-              if(err){
+            function (err, accountDetails) {
+              if (err) {
                 console.error("error retrieving account details: " + err)
                 res.redirect('/')
-              }else{
+              } else {
                 console.log("retrieved details for stripe account " + accountDetails.id)
-                if((typeof accountDetails.verification != "undefined")
-                && (accountDetails.verification.disabled_reason == "fields_needed")){
+                if ((typeof accountDetails.verification != "undefined") &&
+                  (accountDetails.verification.disabled_reason == "fields_needed")) {
                   console.log("account is disabled; fields needed: " + accountDetails.verification.fields_needed)
                   var requiredFields = accountDetails.verification.fields_needed
                 }
@@ -101,7 +108,7 @@ module.exports = function (app, log, pgClient) {
               }
             }
           );
-        }else{
+        } else {
           console.error("couldn't find stripe account for account " + accountId)
           res.render('account-profile.ejs', {
             utils: utils,
@@ -112,7 +119,7 @@ module.exports = function (app, log, pgClient) {
           })
         }
       },
-      (err)=>{
+      (err) => {
         console.error(err)
         res.redirect('/')
       })
@@ -181,75 +188,73 @@ module.exports = function (app, log, pgClient) {
     })
   })
 
-  app.post('/update_basic_details', stormpath.loginRequired, (req, res) =>{
+  app.post('/update_basic_details', stormpath.loginRequired, (req, res) => {
     //get required fields
     var accountId = req.user.customData.accountId
     var country = req.body.country
     var firstName = req.body.first_name
     var lastName = req.body.last_name
     var dob = req.body.dob.split(/[.,\/ -]/)
-    var stripeaccount = stripe.accounts.create(
-      {
+    var stripeaccount = stripe.accounts.create({
         "country": "US",
         "managed": true,
         "legal_entity": {
           "first_name": firstName,
           "last_name": lastName,
-          "dob":{
+          "dob": {
             "year": dob[0],
             "month": dob[1],
             "day": dob[2]
           }
         }
-      }
-    ).then(
-      function(result) {
-        console.log(result)
-        var stripeAccountId = result.id
-        Account.addStripeAccount(accountId, stripeAccountId, ()=>{
-          console.log("successfully added stripe ID " + stripeAccountId + " to account " + accountId)
-          res.redirect('/account/profile')
+      }).then(
+        function (result) {
+          console.log(result)
+          var stripeAccountId = result.id
+          Account.addStripeAccount(accountId, stripeAccountId, () => {
+              console.log("successfully added stripe ID " + stripeAccountId + " to account " + accountId)
+              res.redirect('/account/profile')
+            },
+            (err) => {
+              console.error("failed to add stripe ID " + stripeAccountId + " to account " + accountId)
+              res.redirect('/')
+            })
         },
-        (err)=>{
-          console.error("failed to add stripe ID " + stripeAccountId + " to account " + accountId)
-          res.redirect('/')
-        })
-      },
-      function(err) {
-        console.log(err)
-      }
-    )
-/*
-    if(typeof country != undefined){
-      //set the country in the db
+        function (err) {
+          console.log(err)
+        }
+      )
+      /*
+          if(typeof country != undefined){
+            //set the country in the db
 
-      //then create a new stripe account
+            //then create a new stripe account
 
-      //then set the stripe account in the db.
-    }
-    //we don't handle other fields just yet.
-    Account.getRequiredFieldsById(accountId,
-      (requiredFields) =>{
-        var formData = requiredFields.map(field =>{
-          var fieldName = field.field_name
-          var fieldValue = req.data[fieldName]
-          return (fieldName, fieldValue)
-        })
-        //update stripe
-        //Account.createStripeAccount(accountId, )
+            //then set the stripe account in the db.
+          }
+          //we don't handle other fields just yet.
+          Account.getRequiredFieldsById(accountId,
+            (requiredFields) =>{
+              var formData = requiredFields.map(field =>{
+                var fieldName = field.field_name
+                var fieldValue = req.data[fieldName]
+                return (fieldName, fieldValue)
+              })
+              //update stripe
+              //Account.createStripeAccount(accountId, )
 
-        //update db
-        removeRequiredFieldsById(req.user.customData.accountId, formData.map(fd => fd.fieldName), ()=>{
-          res.redirect('/account/profile')
-        }, (err)=>{
-          console.error(err)
-          res.redirect('/')
-        })
-      },
-      (err)=>{
-        console.error(err)
-        res.redirect('/')
-      })*/
+              //update db
+              removeRequiredFieldsById(req.user.customData.accountId, formData.map(fd => fd.fieldName), ()=>{
+                res.redirect('/account/profile')
+              }, (err)=>{
+                console.error(err)
+                res.redirect('/')
+              })
+            },
+            (err)=>{
+              console.error(err)
+              res.redirect('/')
+            })*/
   })
 
   app.get("/sign-s3", (req, res) => {

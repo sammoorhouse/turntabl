@@ -1,23 +1,45 @@
-<nav id="sessionNav" class="navbar session navbar-default subpage navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
 
-    <div class="collapse navbar-collapse">
-    <a class="navbar-brand-subpage page-scroll" href="/account/profile"><img src="../img/logo_s.png"></img></a>
-      <ul class="nav navbar-nav session-title">
-        <li>Piano Lession with Jessica</li>
-      </ul>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/nav.css" />
 
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="/account/profile">close</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/"><img alt="Turntabl" src="/img/logo_s.png"></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="header header-pending">E</li>
+            <li class="header header-history"><a href="/account/history">History</a></li>
+            <li class="header header-clients"><a href="/account/clients">Clients</a></li>
+
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <form action="/end-session" method="POST" id="end_session_form"></form>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cameras <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a onclick="document.getElementById('end_session_form').submit();" style="cursor:pointer;"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>Log out</a></li>
+                <li><a href="/account/profile"><i class="fa fa-sliders fa-fw" aria-hidden="true"></i>Profile</a></li>
+              </ul>
+            </li>
+
+            
+            <li>
+              <p class="navbar-btn">
+                <a class="btn btn-default" onclick="document.getElementById('end_session_form').submit();" style="cursor:pointer;"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>End Session</a>
+              </p>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>

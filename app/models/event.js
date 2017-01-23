@@ -1,24 +1,23 @@
 module.exports = function (client) {
 
   var createNewEvent = function (id, name, creationDate,
-    duration, sessionDate, leader, clientFirstname,
-    clientLastname, clientEmail, clientPaid, leaderPaid,
-    openTokSessionId, sessionCcy, sessionPrice, success, failure) {
+    duration, sessionDate, leader,
+    clientName, clientPaid, leaderPaid,
+    openTokSessionId, sessionCcy, sessionPrice, sessionStarted, success, failure) {
     client.query('INSERT INTO sessions(session_id, \
     session_name, creation_date, duration, session_date, \
-    leader_account_id, client_firstname, client_lastname, client_email, \
+    leader_account_id, client_name, \
     client_paid, leader_paid, opentok_session_id, session_ccy, \
     session_price, session_started) \
     values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, \
-    $13, $14, $15)', [id, name, creationDate, duration,
-      sessionDate, leader, clientFirstname, clientLastname,
-      clientEmail, clientPaid, leaderPaid, openTokSessionId,
-      sessionCcy, sessionPrice, false
+    $13)', [id, name, creationDate, duration,
+      sessionDate, leader, clientName, clientPaid, leaderPaid, openTokSessionId,
+      sessionCcy, sessionPrice, sessionStarted
     ], function (err, results) {
       if (err) {
         failure(err)
       } else {
-        success(newEvent)
+        success(results)
       }
     })
   };

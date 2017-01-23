@@ -44,7 +44,11 @@
 						</div>
 					</div>
 						<% } else { %>
-							<div class="alert alert-warning">We need some more details from you!</div>
+							<div class="alert alert-warning">
+								<h4>We need some more details from you!</h4>
+								<p>Our payment provider has asked for some more details about your bank account.</p>
+								<p>We can't make any payments to you until your account is complete, so please fill in the required fields below.</p>
+							</div>
 						</div>
 					</div><!-- /.panel -->
 					<div class="panel">
@@ -86,14 +90,6 @@
 										</div>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-md-12">
-									<button class="btn btn-lg btn-block btn-success submit" type="submit">Add bank account</button>
-									</div>
-								</div>
-							</form>
-						<% } else if (typeof required_fields != "undefined") { /* /if */ %>
-							<form action="/update_details" method="POST">
 								<div class="form-group">
 									<div class="row">
 										<div class="col-sm-4">
@@ -127,6 +123,7 @@
 								<div class="row">
 									<div class="col-md-12">
 									<button class="btn btn-lg btn-block btn-success submit" type="submit">Add bank account</button>
+									<small>By registering your account, you agree to our <a href="/terms_of_service">terms of service</a> and to the <a href="http://ns329958.ip-37-187-118.eu/demos/odigo.io/stripe.com/connect/account-terms.html">Stripe Connected Account Agreement</a>
 									</div>
 								</div>
 							</form>

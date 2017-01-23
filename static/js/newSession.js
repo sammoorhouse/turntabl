@@ -1,6 +1,6 @@
-$(function(){
-    
-    $("sessionDate").value = Date();
+$(function () {
+
+  $("sessionDate").value = Date();
 
   var text_max = 50;
   $('#count_message').html('(' + text_max + ')');
@@ -12,9 +12,6 @@ $(function(){
     $('#count_message').html('(' + text_remaining + ')');
   });
 
-
-
-
   var GET = {};
   var query = window.location.search.substring(1).split("&");
   for (var i = 0, max = query.length; i < max; i++) {
@@ -25,16 +22,21 @@ $(function(){
   }
 
 
-var modal = $('#myModal')
-$("#myModal").click((evt)=>{if(evt.target==modal[0]){modal.toggleClass("enabled", false)}});
-$("#btn-close").click(()=>{modal.toggleClass("enabled", false)});
-$("#new-session-link").click(()=>{modal.toggleClass("enabled", true)});
+  var modal = $('#myModal')
+  $("#myModal").click((evt) => {
+    if (evt.target == modal[0]) {
+      modal.toggleClass("enabled", false)
+    }
+  });
+  $("#btn-close").click(() => {
+    modal.toggleClass("enabled", false)
+  });
+  $("#new-session-link").click(() => {
+    modal.toggleClass("enabled", true)
+  });
 
   if (GET["modal"] == "1") {
-    // When the user clicks on the button, open the modal 
-    //btn.onclick = function() {
     modal.toggleClass("enabled", true)
-    //}
   } else {
     modal.toggleClass("enabled", false)
   }
