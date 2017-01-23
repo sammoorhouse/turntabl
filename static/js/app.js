@@ -27,6 +27,10 @@ $(function () { //on load
   nanobar.go(0)
 })
 
+function mediaSelect(elem){
+  console.log(elem)
+}
+
 function triggerSessionStart() {
   $.post("/beginSession", {
       eventId: eventId

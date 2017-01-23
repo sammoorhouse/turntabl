@@ -52,15 +52,13 @@ pg.connect(process.env.DATABASE_URL, function (err, client) {
         duration varchar(200) NOT NULL, \
         session_date date NOT NULL, \
         leader_account_id varchar(8) NOT NULL REFERENCES accounts(account_id), \
-        client_firstname varchar(200) NOT NULL, \
-        client_lastname varchar(200) NOT NULL, \
-        client_email varchar(200) NOT NULL, \
-        client_paid boolean NOT NULL, \
-        leader_paid boolean NOT NULL, \
+        client_name varchar(200) NOT NULL, \
+        client_paid boolean NOT NULL default false, \
+        leader_paid boolean NOT NULL default false, \
         opentok_session_id varchar(200) NOT NULL, \
         session_ccy varchar(5) NOT NULL, \
         session_price integer NOT NULL, \
-        session_started boolean NOT NULL \
+        session_started boolean NOT NULL default false \
     )', function (err, result) {
         if (err) {
             throw err;
