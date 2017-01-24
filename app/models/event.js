@@ -94,7 +94,7 @@ module.exports = function (client) {
   getHistoricEventsByAccountId = function (accountId, success, failure) {
     client.query('SELECT session_id, \
     session_name, creation_date, duration, session_date, \
-    leader_account_id, client_firstname, client_lastname, client_email, \
+    leader_account_id, client_name, \
     client_paid, leader_paid, opentok_session_id, session_ccy, \
     session_price \
     FROM sessions \
@@ -118,6 +118,16 @@ module.exports = function (client) {
           }
         })
         success(events)
+      }
+    })
+  }
+
+  startEvent = function(id, success, failure){
+    client.query('UPDATE sessions SET session_started=true WHERE session_id = $1', [id], function(err, results){
+      if(err){
+        failure(err)
+      }else{
+        success()
       }
     })
   }

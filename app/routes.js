@@ -162,7 +162,8 @@ module.exports = function (app, log, pgClient) {
           events: events
         })
       },
-      () => {
+      (err) => {
+        console.log(err)
         res.redirect('/')
       })
   })
@@ -305,36 +306,13 @@ module.exports = function (app, log, pgClient) {
     var eventId = req.body.eventId
 
     //update events table
-    Event.getById(eventId, (event) => {
-
-      var proposedStartTimeMillis = Date.now()
-      var proposedEndTimeMillis = proposedStartTimeMillis + event.durationMins * 60 * 1000
-
-      if (typeof event.endTime == "undefined") {
-        //never started!
-        var endTime = proposedEndTimeMillis
-
-        Event.updateEndTime(eventId, endTime, () => {}, (error) => {
-          log.info("error updating event " + eventId + ": " + error)
-        })
-      }
-      if ((typeof event.endTime != "undefined") && (proposedStartTimeMillis > event.endTime)) {
-        //already over
-        var result = {
-          'result': 'alreadyCompleted',
-        };
-        res.write(JSON.stringify(result));
-      } else {
-        var result = {
-          'result': 'begin',
-          'proposedStartTimeMillis': proposedStartTimeMillis
-        };
-        res.write(JSON.stringify(result));
-      }
-    }, () => {
-      log.info("error retrieving event " + eventId + ": " + err)
+    Event.startEvent(eventId, ()=>{
+      res.writeHead(200)
+      res.end()
+    },
+    ()=>{
+      res.redirect('/')
     })
-    res.end()
   })
 
   app.post('/stripe/update', function (req, res) {
@@ -342,6 +320,11 @@ module.exports = function (app, log, pgClient) {
     console.log(JSON.stringify(req.body))
     res.writeHead(200);
     res.end()
+  })
+
+  app.post('/end-session', function(req, res){
+    //cleanup etc
+    res.redirect('/')
   })
 
   app.get('/event/:id', stormpath.loginRequired, function (req, res) {

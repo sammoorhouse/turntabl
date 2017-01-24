@@ -11,3 +11,9 @@
 li#camera_input_template{
   display:none;
 }
+
+#publisher{
+  position: fixed;
+left: 0;
+bottom: 0;
+}

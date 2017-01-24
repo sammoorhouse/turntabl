@@ -8,9 +8,11 @@
   <script src="https://static.opentok.com/v2/js/opentok.js" charset="utf-8"></script>
     
   <script>
+    var sessionName = "<%= sessionName %>"
     var openTokApiKey = "<%= openTokApiKey %>"
     var openTokSessionId = "<%= openTokSessionId %>"
     var openTokToken = "<%= openTokToken %>"
+    var isLeader = "<%= isLeader %>"
   </script>
 
   <script src="/js/opentok.js" charset="utf-8"></script>
@@ -26,8 +28,8 @@
         <p>You're the only person here right now.</p> 
       </div>
     </div>
-    <div id="publisher"></div>
   </div>
+  <div id="publisher"></div>
 
  <% include partials/footer.ejs %>
 
