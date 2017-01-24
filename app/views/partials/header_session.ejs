@@ -4,7 +4,6 @@
     <link rel="stylesheet" type="text/css" href="/css/nav.css" />
     <link rel="stylesheet" type="text/css" href="/css/app.css" />
 
-
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -25,64 +24,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span></a>
               
             
-              <ul class="dropdown-menu dropdown">
-
-
-
-                <li>
-                  <a onclick="mediaSelect(this)">
-                    <div class="media">
-                      <div class="media-left">
-                        <img class="input-thumbnail" src="/img/videochat2.jpg" />
-                      </div>
-                      <div class="media-body">
-                        <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">Camera #1</h5>
-                        <small>3 days ago</small>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-
-
-
-                <li>
-                  <a onclick="mediaSelect(this)">
-                    <div class="media">
-                      <div class="media-left">
-                        <img class="input-thumbnail" src="/img/videochat2.jpg" />
-                      </div>
-                      <div class="media-body">
-                        <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">Camera #1</h5>
-                        <small>3 days ago</small>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-
-
-
-                <li>
-                  <a onclick="mediaSelect(this)">
-                    <div class="media">
-                      <div class="media-left">
-                        <img class="input-thumbnail" src="/img/videochat2.jpg" />
-                      </div>
-                      <div class="media-body">
-                        <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">Camera #1</h5>
-                        <small>3 days ago</small>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-
-
-              </ul>
+              <!--<ul id="camera_input_device_list" class="dropdown-menu dropdown"></ul>-->
             </li>
 
             
@@ -94,4 +36,20 @@
           </ul>
         </div><!--/.nav-collapse -->
       </div>
+
+      <li id="camera_input_template" class="camera-selector">
+        <a class="camera_input_template_link" onclick="selectCamera(this)">
+          <div class="media">
+            <div class="media-left">
+              <div class="device-thumbnail"></div>
+            </div>
+            <div class="media-body">
+              <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1 device-name"></h5>
+              </div>
+            </div>
+          </div>
+        </a>
+      </li>
+
     </nav>

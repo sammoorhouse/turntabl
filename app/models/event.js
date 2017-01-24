@@ -35,7 +35,7 @@ module.exports = function (client) {
   var getEventById = function (id, success, failure) {
     client.query('SELECT session_id, \
     session_name, creation_date, duration, session_date, \
-    leader_account_id, client_firstname, client_lastname, client_email, \
+    leader_account_id, client_name, \
     client_paid, leader_paid, opentok_session_id, session_ccy, \
     session_price \
     FROM sessions \
@@ -43,7 +43,7 @@ module.exports = function (client) {
       if (err) {
         failure(err)
       } else {
-        var row = results.rows[0];
+        var row = result.rows[0];
         success({
           sessionId: row.account_id,
           sessionName: row.session_name,
@@ -63,7 +63,7 @@ module.exports = function (client) {
   getPendingEventsByAccountId = function (accountId, success, failure) {
     client.query('SELECT session_id, \
     session_name, creation_date, duration, session_date, \
-    leader_account_id, client_firstname, client_lastname, client_email, \
+    leader_account_id, client_name, \
     client_paid, leader_paid, opentok_session_id, session_ccy, \
     session_price \
     FROM sessions \

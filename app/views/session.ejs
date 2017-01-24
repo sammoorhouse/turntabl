@@ -4,17 +4,31 @@
 <head>
   <% include partials/head.ejs %>
 
-
-  <script type="text/javascript" src="/js/session.js"></script>
   <script type="text/javascript" src="/js/app.js"></script>
+  <script src="https://static.opentok.com/v2/js/opentok.js" charset="utf-8"></script>
+    
   <script>
-  $(function(){highlightHeader('.header-profile')})
+    var openTokApiKey = "<%= openTokApiKey %>"
+    var openTokSessionId = "<%= openTokSessionId %>"
+    var openTokToken = "<%= openTokToken %>"
   </script>
 
+  <script src="/js/opentok.js" charset="utf-8"></script>
 </head>
 
 <body id="page-top">
  <% include partials/header_session.ejs %>
+
+  <div class="fill session" id="subscribers">
+    <div class="container text-center">
+      <div class="jumbotron vertical-center">
+        <h1><%= sessionName %></h1> 
+        <p>You're the only person here right now.</p> 
+      </div>
+    </div>
+    <div id="publisher"></div>
+  </div>
+
  <% include partials/footer.ejs %>
 
 </body>

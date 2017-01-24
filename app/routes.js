@@ -29,47 +29,45 @@ module.exports = function (app, log, pgClient) {
 
   app.post('/create_session', stormpath.loginRequired, function (req, res) {
     var id = utils.generateID(8);
-    var openTokSessionId = 3; //TODO OBVIOUSLY
-    var user = req.user
-    var leaderAccountId = user.customData.accountId;
 
-    var body = req.body;
-
-    var sessionName = body.session_name;
-    var creationDate = new Date(); //now
-    var sessionDuration = body.session_duration;
-    var sessionDate = body.session_date;
-    var sessionClientName = body.client_name;
-    var clientPaid = false;
-    var leaderPaid = false;
-    var sessionCostCcy = body.session_cost_ccy;
-    var sessionCostValue = body.session_cost_value;
-    var sessionStarted = false;
-
-    Event.createNewEvent(id, sessionName, creationDate, sessionDuration,
-      sessionDate, leaderAccountId, sessionClientName,
-      clientPaid, leaderPaid, openTokSessionId,
-      sessionCostCcy, sessionCostValue, sessionStarted, () => {
-        res.redirect('/session/' + id)
-      }, (err) => {
-        console.log(err)
+    opentok.createSession({
+      mediaMode: "routed"
+    }, function (error, session) {
+      if (error) {
+        console.log("Error creating session:", error)
         res.redirect('/sessionCreationFailure/' + id)
-      })
-  })
+      } else {
+        var openTokSessionId = session.sessionId;
+        console.log("Session ID: " + openTokSessionId);
 
-  app.get('/session/:id', stormpath.loginRequired, function (req, res) {
-    log.info('GET /session')
-    var id = req.params.id;
-    var user = req.user
+        var user = req.user
+        var leaderAccountId = user.customData.accountId;
 
-    res.render('session.ejs', {
-      sessionId: id,
-      utils: utils,
-      countries: supportedCountries,
-      fullName: utils.toTitleCase(user.fullName),
-      email: user.email
+        var body = req.body;
+
+        var sessionName = body.session_name;
+        var creationDate = new Date(); //now
+        var sessionDuration = body.session_duration;
+        var sessionDate = body.session_date;
+        var sessionClientName = body.client_name;
+        var clientPaid = false;
+        var leaderPaid = false;
+        var sessionCostCcy = body.session_cost_ccy;
+        var sessionCostValue = body.session_cost_value;
+        var sessionStarted = false;
+
+        Event.createNewEvent(id, sessionName, creationDate, sessionDuration,
+          sessionDate, leaderAccountId, sessionClientName,
+          clientPaid, leaderPaid, openTokSessionId,
+          sessionCostCcy, sessionCostValue, sessionStarted, () => {
+            res.redirect('/event/' + id)
+          }, (err) => {
+            console.log(err)
+            res.redirect('/sessionCreationFailure/' + id)
+          })
+      }
     });
-  });
+  })
 
   app.get('/account', (req, res) => {
     res.redirect('/account/main')
@@ -352,13 +350,14 @@ module.exports = function (app, log, pgClient) {
     var evtId = req.params['id']
     var fakeclient = req.params['fakeclient']
     log.info("evtId: " + evtId)
-    Event.getById(evtId, (event) => {
+    Event.getEventById(evtId, (event) => {
       var user = req.user
       var userEmail = user.email
       var sessionId = event.openTokSessionId
       var token = opentok.generateToken(sessionId)
       var eventValue = event.eventValue
-      return res.render('event.ejs', {
+      return res.render('session.ejs', {
+        sessionName: event.sessionName,
         s3Bucket: s3.bucketUrl,
         isLeader: event.leader === userEmail,
         user: req.user,
@@ -368,7 +367,7 @@ module.exports = function (app, log, pgClient) {
         openTokToken: token,
         eventValue: eventValue,
       });
-    }, (error) => {
+    }, (err) => {
       log.info("err: " + err)
       res.redirect('/');
     })

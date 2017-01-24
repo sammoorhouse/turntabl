@@ -1,4 +1,13 @@
-.input-thumbnail{
+.device-thumbnail{
   width: 196px;
   height: 100px; /* robbed from YouTube */
+}
+
+.session.fill { 
+    min-height: 100%;
+    height: 100%;
+}
+
+li#camera_input_template{
+  display:none;
 }

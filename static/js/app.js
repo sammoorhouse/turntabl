@@ -4,27 +4,7 @@ var sessionEndTimeMillis
 var nanobar
 
 $(function () { //on load
-
-
-  //carousel
-  $('#myCarousel').carousel({
-    interval: false
-  })
-
-  var chatTemplateNode = document.querySelector("#chat-message-template");
-  var chatTemplate = chatTemplateNode.outerHTML;
-  chatTemplate.id = ""
-  chatTemplateNode.parentNode.removeChild(chatTemplateNode)
-
-
-
-  //nanobar
-  nanobar = new Nanobar({
-    id: "event-progress-nanobar",
-    className: "nanobar"
-  });
-
-  nanobar.go(0)
+  
 })
 
 function mediaSelect(elem){

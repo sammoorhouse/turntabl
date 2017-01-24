@@ -2,82 +2,34 @@
 //  OT.setLogLevel(OT.DEBUG);
 
 var session = OT.initSession(openTokSessionId);
-var publisher = OT.initPublisher(openTokApiKey, 'publisher', {
-  width: 150,
-  height: 150
-});
+var publisherOptions = {
+  width: '100%',
+  height: '100%'
+};
 
-// Receive a message and append it to the history
-var msgHistory = document.querySelector('#history');
-var msgTxt = document.querySelector('#msgTxt');
-var button = document.querySelector('#btn-chat');
 
 // Attach event handlers
 session.on({
   sessionConnected: function(event) {
     console.log("session connected")
-    session.publish(publisher);
 
-    // Send a signal once the user enters data in the form
-    button.addEventListener('click', function(event) {
-      event.preventDefault();
-
-      session.signal({
-        type: 'msg',
-        data: msgTxt.value
-      }, function(error) {
-        if (!error) {
-          msgTxt.value = '';
-        }
-      });
-    });
+    publisher = OT.initPublisher('publisher');
+    session.publish(publisher, publisherOptions);
   },
   streamCreated: function(event) {
     console.log("stream created")
     var subContainer = document.createElement('div');
     subContainer.id = 'stream-' + event.stream.streamId;
     document.getElementById('subscribers').appendChild(subContainer);
-    session.subscribe(event.stream, subContainer);
+    //session.subscribe(event.stream, subContainer);
+    session.subscribe(event.stream, document.getElementById('subscribers'));
   },
-  signal: function(event) {
-    console.log("signal")
-    var msgTemplate = $('#chat-message-template')
-    msgTemplate.addClass(event.from.connectionId === session.connection.connectionId ? 'right' : 'left')
-    msgTemplate.find('#chat-message-image').attr('src', "https://placeholdit.imgix.net/~text?txtsize=13&bg=fa6f57&txtclr=fff%26text%3Dme&txt=ME&w=50&h=50")
-    msgTemplate.find('#chat-body-text').text(event.data)
-    msgHistory.append(msgTemplate)
-    msgTemplate.scrollIntoView();
-
-    /*<li class="right clearfix"><span class="chat-img pull-right">
-                  <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-              </span>
-      <div class="chat-body clearfix">
-        <div class="header">
-          <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>13 mins ago</small>
-          <strong class="pull-right primary-font">Bhaumik Patel</strong>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-        </p>
-      </div>
-    </li>*/
-
-
-
-
-    /*
-        var msg = document.createElement('p');
-        msg.innerHTML = event.data;
-        msg.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
-        msgHistory.appendChild(msg);
-        msg.scrollIntoView();*/
-  },
-  connectionCreated: function(event) {
+  /*connectionCreated: function(event) {
     if ((event.connection.connectionId != session.connection.connectionId) && (isLeader)) {
       console.log('Another client connected, start the session');
       triggerSessionStart()
     }
-  },
+  },*/
 });
 
 session.on("signal:beginSession", function(event) {
@@ -85,5 +37,73 @@ session.on("signal:beginSession", function(event) {
   sessionEndTimeMillis = sessionStartTimeMillis + sessionDurationMillis
 })
 
-// Connect to the Session using the 'apiKey' of the application and a 'token' for permission
-session.connect(openTokApiKey, openTokToken);
+$(function(){
+/*
+  OT.getDevices(function(error, devices) {
+    initialiseDeviceList(devices);
+  });
+  */
+  session.connect(openTokApiKey, openTokToken);
+})
+
+
+//--------------
+
+
+/*function initialiseDeviceList(devices){
+  var videoInputDevices = devices.filter(function(element) {
+    return element.kind == "videoInput";
+  });
+
+  publishers = videoInputDevices.map(function(device, idx){
+    var pubOptions = { 
+      //videoSource: device.deviceId,
+      width: 196,
+      height: 100
+    };
+
+    console.log("video device: " + device.deviceId);
+    
+    $( "#camera_input_template" )
+      .clone()
+      .attr("id", device.deviceId)
+      .appendTo( "#camera_input_device_list" );
+
+    var thumbnailId = "device-thumbnail" + device.deviceId
+    $("#"+device.deviceId+" .camera_input_template_link").attr("id", device.deviceId);
+    $("#"+device.deviceId+" .device-thumbnail").attr("id", thumbnailId);
+    $("#"+device.deviceId+" .device-name").text("Camera #" + idx+1)
+
+    //publisher = OT.initPublisher(thumbnailId, pubOptions, function(error) {
+    publisher = OT.initPublisher("publisher", pubOptions, function(error) {
+      if (error) {
+        // The client cannot publish.
+        // You may want to notify the user.
+      } else {
+        console.log('Publisher initialized.');
+      }
+    });
+
+    return publisher;
+  })
+}
+
+function selectCamera(element){
+  var id = element.id
+  selectedPublisherId = id
+  highlightSelectedPublisher(selectedPublisherId)
+  var publisher = publishers.find(function(publisher){publisher.id == selectedPublisherId})
+  session.publish(publisher, function(error) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Publishing a stream.');
+    }
+  });
+}
+
+
+highlightSelectedPublisher = function(id){
+  $('camera-selector').toggleClass('active', false);
+  $("#"+id).toggleClass('active', true)
+}*/
