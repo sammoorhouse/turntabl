@@ -13,7 +13,7 @@
   <div id="wrap">
     <div class="container m-t-3"></div>
     <div class="container">
-      <h2>Pending sessions</h2>
+      <h4>Pending sessions</h4>
       <div class="panel">
       <% if (events.length > 0) { %>
 
@@ -24,9 +24,10 @@
                 <th>Date</th>
                 <th>Client name</th>
                 <th>Description</th>
+                <th>Duration</th>
                 <th>Value</th>
                 <th>Fee</th>
-                <th>Payment status</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -34,15 +35,16 @@
               <% events.forEach(function(event){ %>
 
               <tr>
-                <td>2016-11-29</td>
-                <td>Steve Massingham</td>
-                <td>Introduction to public speaking</td>
-                <td>$150</td>
-                <td>$15</td>
-                <td><i class="fa fa-check fa-fw fa-lg payment-status-paid" aria-hidden="true"></i>Paid</td>
+                <td><%= event.sessionDate.toDateString() %></td>
+                <td><%= event.clientName %></td>
+                <td><%= event.sessionName %></td>
+                <td><%= event.duration %></td>
+                <td><%= event.sessionCcy + " " + event.sessionPrice %></td>
+                <td>5%</td>
+                <td><a href="/event/<%= event.sessionId %>">Enter session</a></td>
               </tr>
 
-              <% }) %> 
+              <% }) %>
 
             </tbody>
           </table>

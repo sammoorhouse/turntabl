@@ -36,7 +36,7 @@ module.exports = function (client) {
   }
 
   var getAccountById = function (id, success, failure) {
-    client.query('SELECT account_id, bio, stripe_account_id \
+    client.query('SELECT account_id, bio \
     FROM accounts \
     WHERE account_id = $1::text', [id], function(err, result){
       if(err){
@@ -45,7 +45,6 @@ module.exports = function (client) {
         success({
           accountId: result.rows[0].account_id,
           bio: result.rows[0].bio,
-          stripeAccountNumber: result.rows[0].stripe_account_id,
         })
       }
     })

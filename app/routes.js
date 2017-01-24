@@ -48,6 +48,7 @@ module.exports = function (app, log, pgClient) {
         var sessionName = body.session_name;
         var creationDate = new Date(); //now
         var sessionDuration = body.session_duration;
+        var sessionLeaderEmail = body.session_leader_email;
         var sessionDate = body.session_date;
         var sessionClientName = body.client_name;
         var clientPaid = false;
@@ -69,7 +70,7 @@ module.exports = function (app, log, pgClient) {
     });
   })
 
-  app.get('/account', (req, res) => {
+  app.get('/account', stormpath.loginRequired, (req, res) => {
     res.redirect('/account/main')
   })
 
@@ -79,43 +80,11 @@ module.exports = function (app, log, pgClient) {
     var accountId = user.customData.accountId;
     Account.getAccountById(accountId,
       (account) => {
-        if (account.stripeAccountNumber != undefined) {
-          console.log("found stripe account number " + account.stripeAccountNumber + " for account " + accountId)
-          stripe.accounts.retrieve(
-            account.stripeAccountNumber,
-            function (err, accountDetails) {
-              if (err) {
-                console.error("error retrieving account details: " + err)
-                res.redirect('/')
-              } else {
-                console.log("retrieved details for stripe account " + accountDetails.id)
-                if ((typeof accountDetails.verification != "undefined") &&
-                  (accountDetails.verification.disabled_reason == "fields_needed")) {
-                  console.log("account is disabled; fields needed: " + accountDetails.verification.fields_needed)
-                  var requiredFields = accountDetails.verification.fields_needed
-                }
-                res.render('account-profile.ejs', {
-                  utils: utils,
-                  countries: supportedCountries,
-                  fullName: utils.toTitleCase(user.fullName),
-                  email: user.email,
-                  stripeAccountNumber: account.stripeAccountNumber,
-                  transfers_enabled: accountDetails.transfers_enabled,
-                  required_fields: requiredFields,
-                })
-              }
-            }
-          );
-        } else {
-          console.error("couldn't find stripe account for account " + accountId)
-          res.render('account-profile.ejs', {
-            utils: utils,
-            countries: supportedCountries,
-            fullName: utils.toTitleCase(user.fullName),
-            email: user.email,
-            stripeAccountNumber: account.stripeAccountNumber
-          })
-        }
+        res.render('account-profile.ejs', {
+          utils: utils,
+          fullName: utils.toTitleCase(user.fullName),
+          email: user.email,
+        })
       },
       (err) => {
         console.error(err)
@@ -127,12 +96,26 @@ module.exports = function (app, log, pgClient) {
     log.info('GET /account/main')
     var user = req.user;
     var accountId = user.customData.accountId;
-    res.render('account-main.ejs', {
-      currencies: currencies,
-      since: user.createdAt,
-      accountId: accountId,
-      fullName: utils.toTitleCase(user.fullName)
-    })
+    Event.getTodaysEvents(accountId,
+      (events) => {
+        res.render('account-main.ejs', {
+          currencies: currencies,
+          since: user.createdAt,
+          accountId: accountId,
+          fullName: utils.toTitleCase(user.fullName),
+          todaysEvents: events
+        })
+      },
+      () => {
+        res.render('account-main.ejs', {
+          currencies: currencies,
+          since: user.createdAt,
+          accountId: accountId,
+          fullName: utils.toTitleCase(user.fullName),
+          todaysEvents: []
+        })
+      })
+
   })
 
   app.get("/account/pending", stormpath.loginRequired, (req, res) => {
@@ -188,13 +171,13 @@ module.exports = function (app, log, pgClient) {
   })
 
   app.post('/update_basic_details', stormpath.loginRequired, (req, res) => {
-    //get required fields
-    var accountId = req.user.customData.accountId
-    var country = req.body.country
-    var firstName = req.body.first_name
-    var lastName = req.body.last_name
-    var dob = req.body.dob.split(/[.,\/ -]/)
-    var stripeaccount = stripe.accounts.create({
+      //get required fields
+      var accountId = req.user.customData.accountId
+      var country = req.body.country
+      var firstName = req.body.first_name
+      var lastName = req.body.last_name
+      var dob = req.body.dob.split(/[.,\/ -]/)
+      var stripeaccount = stripe.accounts.create({
         "country": "US",
         "managed": true,
         "legal_entity": {
@@ -223,96 +206,66 @@ module.exports = function (app, log, pgClient) {
           console.log(err)
         }
       )
-      /*
-          if(typeof country != undefined){
-            //set the country in the db
-
-            //then create a new stripe account
-
-            //then set the stripe account in the db.
-          }
-          //we don't handle other fields just yet.
-          Account.getRequiredFieldsById(accountId,
-            (requiredFields) =>{
-              var formData = requiredFields.map(field =>{
-                var fieldName = field.field_name
-                var fieldValue = req.data[fieldName]
-                return (fieldName, fieldValue)
-              })
-              //update stripe
-              //Account.createStripeAccount(accountId, )
-
-              //update db
-              removeRequiredFieldsById(req.user.customData.accountId, formData.map(fd => fd.fieldName), ()=>{
-                res.redirect('/account/profile')
-              }, (err)=>{
-                console.error(err)
-                res.redirect('/')
-              })
-            },
-            (err)=>{
-              console.error(err)
-              res.redirect('/')
-            })*/
-  })
-
-  app.get("/sign-s3", (req, res) => {
-    log.info('GET /sign-s3')
-    var sig = s3.generateSignature(utils.generateID(8))
-    res.write(JSON.stringify(sig));
-    res.end()
-  })
-
-  app.delete('/sessionResource', function (req, res) {
-    log.info('DELETE /sessionResource')
-    var eventId = req.params['eventId']
-    var resourceKey = req.params['resourceKey']
-
-    //update event
-    Event.removeEventResource(eventId, resourceKey,
-      () => {
-        res.writeHead(200);
-        res.end()
-      },
-      (err) => {
-        log.info("error updating event " + eventId + ": " + err)
-        res.writeHead(400);
+    })
+    /*
+      app.get("/sign-s3", (req, res) => {
+        log.info('GET /sign-s3')
+        var sig = s3.generateSignature(utils.generateID(8))
+        res.write(JSON.stringify(sig));
         res.end()
       })
-  })
 
-  app.post('/addSessionResource', function (req, res) {
-    log.info('POST /addSessionResource')
+      app.delete('/sessionResource', function (req, res) {
+        log.info('DELETE /sessionResource')
+        var eventId = req.params['eventId']
+        var resourceKey = req.params['resourceKey']
 
-    console.log("body: " + JSON.stringify(req.body))
+        //update event
+        Event.removeEventResource(eventId, resourceKey,
+          () => {
+            res.writeHead(200);
+            res.end()
+          },
+          (err) => {
+            log.info("error updating event " + eventId + ": " + err)
+            res.writeHead(400);
+            res.end()
+          })
+      })
 
-    var eventId = req.body.eventId
-    var name = req.body.name
-    var s3Key = req.body.s3Key
+      app.post('/addSessionResource', function (req, res) {
+        log.info('POST /addSessionResource')
 
-    //update events table
-    Event.addEventResource(eventId, name, s3Key, resourceKey, () => {
-      res.writeHead(200);
-      res.end();
-    }, () => {
-      log.error("error updating event " + eventId + ": " + error)
-      res.writeHead(400);
-      res.end();
-    })
-  })
+        console.log("body: " + JSON.stringify(req.body))
+
+        var eventId = req.body.eventId
+        var name = req.body.name
+        var s3Key = req.body.s3Key
+
+        //update events table
+        Event.addEventResource(eventId, name, s3Key, resourceKey, () => {
+          res.writeHead(200);
+          res.end();
+        }, () => {
+          log.error("error updating event " + eventId + ": " + error)
+          res.writeHead(400);
+          res.end();
+        })
+      })
+      */
 
   app.post('/beginSession', function (req, res) {
     log.info('POST /beginSession')
     var eventId = req.body.eventId
 
     //update events table
-    Event.startEvent(eventId, ()=>{
-      res.writeHead(200)
-      res.end()
-    },
-    ()=>{
-      res.redirect('/')
-    })
+    Event.startEvent(eventId, () => {
+        res.writeHead(200)
+        res.end()
+      },
+      () => {
+        res.redirect('/')
+      })
   })
 
   app.post('/stripe/update', function (req, res) {
@@ -322,37 +275,81 @@ module.exports = function (app, log, pgClient) {
     res.end()
   })
 
-  app.post('/end-session', function(req, res){
+  app.post('/end-session', function (req, res) {
     //cleanup etc
     res.redirect('/')
   })
 
-  app.get('/event/:id', stormpath.loginRequired, function (req, res) {
+  app.get('/mustPay/:id', function (req, res) {
+    log.info('GET /mustPay')
+
+    var sessionId = req.params['id']
+    Event.getEventById(sessionId, (event) => {
+        res.render('client-payment.ejs', {
+          sessionId: sessionId,
+          event: event,
+        })
+      },
+      (err) => {
+        console.log(err)
+        res.redirect('/')
+      })
+  })
+
+  app.get('/event/:id', stormpath.getUser, function (req, res) {
     log.info('GET /event')
 
-    var evtId = req.params['id']
-    var fakeclient = req.params['fakeclient']
-    log.info("evtId: " + evtId)
-    Event.getEventById(evtId, (event) => {
-      var user = req.user
-      var userEmail = user.email
-      var sessionId = event.openTokSessionId
-      var token = opentok.generateToken(sessionId)
-      var eventValue = event.eventValue
-      return res.render('session.ejs', {
-        sessionName: event.sessionName,
-        s3Bucket: s3.bucketUrl,
-        isLeader: event.leader === userEmail,
-        user: req.user,
-        event: event,
-        openTokApiKey: process.env.tokboxAuth_apiKey,
-        openTokSessionId: sessionId,
-        openTokToken: token,
-        eventValue: eventValue,
-      });
-    }, (err) => {
-      log.info("err: " + err)
-      res.redirect('/');
-    })
+    var user = req.user
+    if (typeof user != "undefined") {
+
+      var evtId = req.params['id']
+      log.info("evtId: " + evtId)
+      var fakeclient = req.params['fakeclient']
+      Event.getEventById(evtId, (event) => {
+        var userEmail = user.email
+        var openTokSessionId = event.openTokSessionId
+        var token = opentok.generateToken(openTokSessionId)
+        var eventValue = event.eventValue
+        var clientPaid = event.clientPaid
+        var isLeader = event.leader === userEmail
+        if (isLeader) {
+          res.render('session.ejs', {
+            sessionName: event.sessionName,
+            sessionId: evtId,
+            s3Bucket: s3.bucketUrl,
+            isLeader: isLeader,
+            user: req.user,
+            event: event,
+            openTokApiKey: process.env.tokboxAuth_apiKey,
+            openTokSessionId: openTokSessionId,
+            openTokToken: token,
+            eventValue: eventValue,
+          });
+        } else {
+          //client
+          if (!clientPaid) {
+            res.redirect('/mustPay/' + evtId)
+          } else {
+            res.render('session-client.ejs', {
+              sessionName: event.sessionName,
+              sessionId: evtId,
+              s3Bucket: s3.bucketUrl,
+              isLeader: isLeader,
+              user: req.user,
+              event: event,
+              openTokApiKey: process.env.tokboxAuth_apiKey,
+              openTokSessionId: openTokSessionId,
+              openTokToken: token,
+              eventValue: eventValue,
+            })
+          }
+        }
+      }, (err) => {
+        log.info("err: " + err)
+        res.redirect('/');
+      })
+    } else {
+      res.redirect('/mustPay/' + evtId)
+    }
   })
 }

@@ -49,6 +49,7 @@ module.exports = function (client) {
           sessionName: row.session_name,
           creationDate: row.creation_date,
           duration: row.duration,
+          clientName: row.client_name,
           sessionData: row.session_date,
           clientPaid: row.client_paid,
           leaderPaid: row.leader_paid,
@@ -68,17 +69,19 @@ module.exports = function (client) {
     session_price \
     FROM sessions \
     WHERE leader_account_id = $1::text \
-    AND session_started = false', [accountId], function (err, results) {
+    AND session_started = false \
+    ORDER BY session_date ASC', [accountId], function (err, results) {
       if (err) {
         failure(err)
       } else {
         var events = results.rows.map(function (row) {
           return {
-            sessionId: row.account_id,
+            sessionId: row.session_id,
             sessionName: row.session_name,
             creationDate: row.creation_date,
             duration: row.duration,
-            sessionData: row.session_date,
+            clientName: row.client_name,
+            sessionDate: row.session_date,
             clientPaid: row.client_paid,
             leaderPaid: row.leader_paid,
             openTokSessionId: row.opentok_session_id,
@@ -99,17 +102,53 @@ module.exports = function (client) {
     session_price \
     FROM sessions \
     WHERE leader_account_id = $1::text \
-    AND session_started = true', [accountId], function (err, results) {
+    AND session_started = true \
+    ORDER BY session_date ASC', [accountId], function (err, results) {
       if (err) {
         failure(err)
       } else {
         var events = results.rows.map(function (row) {
           return {
-            sessionId: row.account_id,
+            sessionId: row.session_id,
             sessionName: row.session_name,
             creationDate: row.creation_date,
             duration: row.duration,
-            sessionData: row.session_date,
+            clientName: row.client_name,
+            sessionDate: row.session_date,
+            clientPaid: row.client_paid,
+            leaderPaid: row.leader_paid,
+            openTokSessionId: row.opentok_session_id,
+            sessionCcy: row.session_ccy,
+            sessionPrice: row.session_price
+          }
+        })
+        success(events)
+      }
+    })
+  }
+
+  getTodaysEvents = function(accountId, success, failure){
+        client.query('SELECT session_id, \
+    session_name, creation_date, duration, session_date, \
+    leader_account_id, client_name, \
+    client_paid, leader_paid, opentok_session_id, session_ccy, \
+    session_price \
+    FROM sessions \
+    WHERE leader_account_id = $1::text \
+    AND session_date >= now()::date - interval \'1d\' \
+    AND session_date < now()::date + interval \'1d\' \
+    AND session_started = false', [accountId], function (err, results) {
+      if (err) {
+        failure(err)
+      } else {
+        var events = results.rows.map(function (row) {
+          return {
+            sessionId: row.session_id,
+            sessionName: row.session_name,
+            creationDate: row.creation_date,
+            duration: row.duration,
+            clientName: row.client_name,
+            sessionDate: row.session_date,
             clientPaid: row.client_paid,
             leaderPaid: row.leader_paid,
             openTokSessionId: row.opentok_session_id,
@@ -137,7 +176,9 @@ module.exports = function (client) {
     "createNewEvent": createNewEvent,
     "getEventById": getEventById,
     "getHistoricEventsByAccountId": getHistoricEventsByAccountId,
-    "getPendingEventsByAccountId": getPendingEventsByAccountId
+    "getPendingEventsByAccountId": getPendingEventsByAccountId,
+    "getTodaysEvents": getTodaysEvents,
+    "startEvent": startEvent
   }
 
 }

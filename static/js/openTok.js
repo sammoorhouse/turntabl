@@ -11,30 +11,30 @@ var subscriberOptions = {
   height: '100%'
 };
 
-session.on({
-  sessionConnected: function (event) {
-    console.log("session connected")
-
-    publisher = OT.initPublisher('publisher');
-    session.publish(publisher, publisherOptions);
-  },
-  streamCreated: function (event) {
-    console.log("stream created")
-
-    session.subscribe(event.stream, document.getElementById('subscribers'), subscriberOptions);
-
-    if (isLeader) {
-      $.post("/beginSession", {
-          eventId: eventId
-        },
-        function (result) {
-          //uh
-        })
-    }
-  }
-});
-
 $(function () {
   var session = OT.initSession(openTokSessionId);
   session.connect(openTokApiKey, openTokToken);
+
+  session.on({
+    sessionConnected: function (event) {
+      console.log("session connected")
+
+      publisher = OT.initPublisher('publisher');
+      session.publish(publisher, publisherOptions);
+    },
+    streamCreated: function (event) {
+      console.log("stream created")
+
+      session.subscribe(event.stream, document.getElementById('subscribers'), subscriberOptions);
+
+      if (isLeader) {
+        $.post("/beginSession", {
+            eventId: sessionId
+          },
+          function (result) {
+            //uh
+          })
+      }
+    }
+  });
 })

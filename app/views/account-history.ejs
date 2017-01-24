@@ -15,7 +15,12 @@
   <div id="wrap">
     <div class="container m-t-3"></div>
     <div class="container">
-      <h2>Session history</h2>
+      <!--<h4>Overview</h4>
+      <div class="panel">
+        <h3>6</h3>Sessions completed
+      </div>-->
+
+      <h4>Session history</h4>
       <div class="panel">
 
       <% if (events.length > 0) { %>
@@ -27,6 +32,7 @@
                 <th>Date</th>
                 <th>Client name</th>
                 <th>Description</th>
+                <th>Duration</th>
                 <th>Value</th>
                 <th>Fee</th>
                 <th>Payment status</th>
@@ -34,18 +40,25 @@
             </thead>
             <tbody>
 
-             <!-- <% events.forEach(function(event){ %>
+              <% events.forEach(function(event){ %>
 
               <tr>
-                <td>2016-11-29</td>
-                <td>Steve Massingham</td>
-                <td>Introduction to public speaking</td>
-                <td>$150</td>
-                <td>$15</td>
-                <td><i class="fa fa-check fa-fw fa-lg payment-status-paid" aria-hidden="true"></i>Paid</td>
+                <td><%= event.sessionDate.toDateString() %></td>
+                <td><%= event.clientName %></td>
+                <td><%= event.sessionName %></td>
+                <td><%= event.duration %></td>
+                <td><%= event.sessionCcy + " " + event.sessionPrice %></td>
+                <td>5%</td>
+                <td>
+                <% if(event.leaderPaid){ %>
+                <i class="fa fa-check fa-fw fa-lg payment-status-paid" aria-hidden="true"></i>Paid
+                <% } else { %>
+                Payment pending
+                <% } %>
+                </td>
               </tr>
 
-              <% }) %> -->
+              <% }) %>
 
             </tbody>
           </table>

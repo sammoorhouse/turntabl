@@ -38,99 +38,9 @@
 							<p>We handle your money and so we take security very seriously.</p>
 							<p>We never store your account details or verification data on our servers; it all goes straight to our payment provider, who use industry-standard security rules for retention of financial data.</p>
 							<p>Sometimes we might ask you for additional information, such as proof of address or identity. This helps us reduce fraud and ensure your money and data is safe.</p>
-						<% if((typeof stripeAccountNumber != "undefined") 
-						&& (typeof required_fields == "undefined")) { %>
 							<div class="alert alert-success">We don't need any more data from you!</div>
 						</div>
 					</div>
-						<% } else { %>
-							<div class="alert alert-warning">
-								<h4>We need some more details from you!</h4>
-								<p>Our payment provider has asked for some more details about your bank account.</p>
-								<p>We can't make any payments to you until your account is complete, so please fill in the required fields below.</p>
-							</div>
-						</div>
-					</div><!-- /.panel -->
-					<div class="panel">
-						<div class="panel-heading">
-							<h2>Bank details</h2>
-						</div>
-						<div class="panel-body">
-							<p>Our payment provider has asked for the following extra information before we can make payments to you.</p>
-
-						<% if(typeof stripeAccountNumber == "undefined") { %>
-							<form action="/update_basic_details" method="POST">
-								<div class="form-group">
-									<div class="row">
-										<div class="col-sm-4">
-											<input id="first_name" name="first_name" type="text" class="form-control" placeholder="First name"></input>
-										</div>
-										<div class="col-sm-4">
-											<input class="form-control" type="text" id="last_name" name="last_name" placeholder="Last name"></input>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="country" class="form-control-label">Date of Birth</label>
-									<div class="row">
-										<div class="col-sm-10">
-											<input class="form-control" type="date" id="dob" name="dob"></input>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="country" class="form-control-label">Country</label>
-									<div class="row">
-										<div class="col-sm-10">
-											<select id="country" name="country" class="custom-select form-control">
-											<% countries.forEach(country => { %>
-												<option value=<%= country.a2 %> ><%= country.country_name %> </option>
-											<% }) %>
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-sm-4">
-											<input id="first_name" name="first_name" type="text" class="form-control" placeholder="First name"></input>
-										</div>
-										<div class="col-sm-4">
-											<input class="form-control" type="text" id="last_name" name="last_name" placeholder="Last name"></input>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="country" class="form-control-label">Date of Birth</label>
-									<div class="row">
-										<div class="col-sm-10">
-											<input class="form-control" type="date" id="dob" name="dob"></input>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="country" class="form-control-label">Country</label>
-									<div class="row">
-										<div class="col-sm-10">
-											<select id="country" name="country" class="custom-select form-control">
-											<% countries.forEach(country => { %>
-												<option value=<%= country.a2 %> ><%= country.country_name %> </option>
-											<% }) %>
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12">
-									<button class="btn btn-lg btn-block btn-success submit" type="submit">Add bank account</button>
-									<small>By registering your account, you agree to our <a href="/terms_of_service">terms of service</a> and to the <a href="http://ns329958.ip-37-187-118.eu/demos/odigo.io/stripe.com/connect/account-terms.html">Stripe Connected Account Agreement</a>
-									</div>
-								</div>
-							</form>
-						<% } /* /elseif */ %>
-						</div>
-					</div>
-				<% } /* /if */ %>
 				</div>
 			</div>
 		</div><!-- /.container -->
