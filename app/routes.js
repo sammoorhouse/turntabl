@@ -169,44 +169,6 @@ module.exports = function (app, log, pgClient) {
       fullName: utils.toTitleCase(user.fullName)
     })
   })
-
-  app.post('/update_basic_details', stormpath.loginRequired, (req, res) => {
-      //get required fields
-      var accountId = req.user.customData.accountId
-      var country = req.body.country
-      var firstName = req.body.first_name
-      var lastName = req.body.last_name
-      var dob = req.body.dob.split(/[.,\/ -]/)
-      var stripeaccount = stripe.accounts.create({
-        "country": "US",
-        "managed": true,
-        "legal_entity": {
-          "first_name": firstName,
-          "last_name": lastName,
-          "dob": {
-            "year": dob[0],
-            "month": dob[1],
-            "day": dob[2]
-          }
-        }
-      }).then(
-        function (result) {
-          console.log(result)
-          var stripeAccountId = result.id
-          Account.addStripeAccount(accountId, stripeAccountId, () => {
-              console.log("successfully added stripe ID " + stripeAccountId + " to account " + accountId)
-              res.redirect('/account/profile')
-            },
-            (err) => {
-              console.error("failed to add stripe ID " + stripeAccountId + " to account " + accountId)
-              res.redirect('/')
-            })
-        },
-        function (err) {
-          console.log(err)
-        }
-      )
-    })
     /*
       app.get("/sign-s3", (req, res) => {
         log.info('GET /sign-s3')

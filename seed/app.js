@@ -33,9 +33,8 @@ pg.connect(process.env.DATABASE_URL, function (err, client) {
     console.log('creating accounts table')
     client.query('CREATE TABLE accounts( \
     account_id varchar(8) PRIMARY KEY, \
-    bio varchar(2000) NOT NULL, \
-    country_code varchar(2) \
-  )', function (err, result) {
+    bio varchar(2000) NOT NULL \
+ )', function (err, result) {
         if (err) {
             throw err;
         } else {
