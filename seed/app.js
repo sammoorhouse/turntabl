@@ -34,7 +34,6 @@ pg.connect(process.env.DATABASE_URL, function (err, client) {
     client.query('CREATE TABLE accounts( \
     account_id varchar(8) PRIMARY KEY, \
     bio varchar(2000) NOT NULL, \
-    stripe_account_id varchar(50), \
     country_code varchar(2) \
   )', function (err, result) {
         if (err) {

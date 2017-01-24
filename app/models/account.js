@@ -14,17 +14,6 @@ module.exports = function (client) {
     })
   }
 
-  var addStripeAccount = function(id, stripeAccountId, success, failure){
-    client.query("UPDATE accounts SET stripe_account_id=$1::text WHERE account_id=$2::text", [stripeAccountId, id],
-    function(err, result){
-      if(err){
-        failure(err)
-      }else{
-        success()
-      }
-    })
-  }
-
   var accountExists = function (id, success, failure) {
     client.query('SELECT COUNT(account_id) as cnt FROM accounts WHERE account_id = $1::text', [id], function(err, result){
       if(err){
@@ -54,6 +43,5 @@ module.exports = function (client) {
     "createNewAccount": createNewAccount,
     "accountExists": accountExists,
     "getAccountById": getAccountById,
-    "addStripeAccount": addStripeAccount,
   }
 }
