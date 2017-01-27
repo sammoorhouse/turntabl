@@ -162,13 +162,13 @@ module.exports = function (app, log, pgClient) {
   })
 
   app.get("/account/payment", stormpath.loginRequired, (req, res) => {
-    log.info('GET /account/payment')
-    var user = req.user
-    res.render('account-payment.ejs', {
-      user: user,
-      fullName: utils.toTitleCase(user.fullName)
+      log.info('GET /account/payment')
+      var user = req.user
+      res.render('account-payment.ejs', {
+        user: user,
+        fullName: utils.toTitleCase(user.fullName)
+      })
     })
-  })
     /*
       app.get("/sign-s3", (req, res) => {
         log.info('GET /sign-s3')
@@ -249,7 +249,7 @@ module.exports = function (app, log, pgClient) {
     Event.getEventById(sessionId, (event) => {
         res.render('client-payment.ejs', {
           sessionId: sessionId,
-          event: event,
+          sessionName: event.sessionName
         })
       },
       (err) => {
@@ -262,19 +262,24 @@ module.exports = function (app, log, pgClient) {
     log.info('GET /event')
 
     var user = req.user
-    if (typeof user != "undefined") {
+    var evtId = req.params['id']
+    Event.getEventById(evtId, (event) => {
 
-      var evtId = req.params['id']
-      log.info("evtId: " + evtId)
+
       var fakeclient = req.params['fakeclient']
-      Event.getEventById(evtId, (event) => {
-        var userEmail = user.email
-        var openTokSessionId = event.openTokSessionId
-        var token = opentok.generateToken(openTokSessionId)
-        var eventValue = event.eventValue
-        var clientPaid = event.clientPaid
-        var isLeader = event.leader === userEmail
+
+      var openTokSessionId = event.openTokSessionId
+      var token = opentok.generateToken(openTokSessionId)
+      var eventValue = event.eventValue
+      var clientPaid = event.clientPaid
+
+      if (typeof user != "undefined") {
+        var userAccountId = user.customData.accountId
+        var isLeader = event.leaderAccountId === userAccountId
+        log.info("evtId: " + evtId)
+        console.log('isLeader: ' + isLeader)
         if (isLeader) {
+          console.log("leader " + userAccountId + " entering session " + evtId)
           res.render('session.ejs', {
             sessionName: event.sessionName,
             sessionId: evtId,
@@ -289,9 +294,12 @@ module.exports = function (app, log, pgClient) {
           });
         } else {
           //client
+          console.log("client attempting to enter session " + evtId)
           if (!clientPaid) {
-            res.redirect('/mustPay/' + evtId)
+            console.log("client hasn't paid yet")
+            res.redirect('/mustPay/' + evtId);
           } else {
+            console.log("client paid; entering session " + evtId)
             res.render('session-client.ejs', {
               sessionName: event.sessionName,
               sessionId: evtId,
@@ -306,12 +314,13 @@ module.exports = function (app, log, pgClient) {
             })
           }
         }
-      }, (err) => {
-        log.info("err: " + err)
-        res.redirect('/');
-      })
-    } else {
-      res.redirect('/mustPay/' + evtId)
-    }
+      } else {
+        console.log("client (not logged in) attempting to enter session " + evtId)
+        res.redirect('/mustPay/' + evtId);
+      }
+    }, (err) => {
+      log.info("err: " + err)
+      res.redirect('/');
+    })
   })
 }

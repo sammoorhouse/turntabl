@@ -45,7 +45,7 @@ module.exports = function (client) {
       } else {
         var row = result.rows[0];
         success({
-          sessionId: row.account_id,
+          sessionId: row.session_id,
           sessionName: row.session_name,
           creationDate: row.creation_date,
           duration: row.duration,
@@ -55,7 +55,8 @@ module.exports = function (client) {
           leaderPaid: row.leader_paid,
           openTokSessionId: row.opentok_session_id,
           sessionCcy: row.session_ccy,
-          sessionPrice: row.session_price
+          sessionPrice: row.session_price,
+          leaderAccountId: row.leader_account_id
         })
       }
     })
