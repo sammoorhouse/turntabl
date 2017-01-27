@@ -14,7 +14,7 @@ body {
   background-color: #fff;
 }
 hr {
-  border-color: #f05f40;
+  border-color: #07708a;
   border-width: 3px;
   max-width: 50px;
 }
@@ -25,11 +25,11 @@ a {
   -webkit-transition: all 0.35s;
   -moz-transition: all 0.35s;
   transition: all 0.35s;
-  color: #f05f40;
+  color: #07708a;
 }
 a:hover,
 a:focus {
-  color: #eb3812;
+  color: #07708a;
 }
 h1,
 h2,
@@ -45,7 +45,7 @@ p {
   margin-bottom: 20px;
 }
 .bg-primary {
-  background-color: #f05f40;
+  background-color: #07708a;
 }
 .bg-dark {
   background-color: #222222;
@@ -307,7 +307,7 @@ header .header-content .header-content-inner p {
   margin: 0 auto 20px;
 }
 .text-primary {
-  color: #f05f40;
+  color: #07708a;
 }
 .no-gutter > [class*='col-'] {
   padding-right: 0;
