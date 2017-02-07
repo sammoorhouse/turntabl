@@ -3,6 +3,8 @@ var env = process.env.NODE_ENV || 'dev';
 var pg = require('pg');
 var util = require('./app/utils.js');
 
+var path = require('path')
+
 if (env === "dev") {
   console.log('loading .env')
   require('dotenv').config({
@@ -49,6 +51,13 @@ pg.connect(process.env.DATABASE_URL, function (err, pgClient) {
       },
       login: {
         nextUri: '/account/main',
+        //view: path.join(__dirname,'app/views/stormpath','login.jade') // My custom login view
+      },
+      me: {
+        enabled: false,
+      },
+      oauth2: {
+        enabled: false,
       }
     },
     postRegistrationHandler: function (account, req, res, next) {
@@ -107,6 +116,7 @@ pg.connect(process.env.DATABASE_URL, function (err, pgClient) {
 
   app.set('views', './app/views')
   app.set('view engine', 'ejs');
+  app.set('view engine', 'jade');
 
   require('./app/routes.js')(app, log, pgClient);
 

@@ -1,5 +1,3 @@
-var mongoose = require('mongoose');
-
 var s3 = require('./3rd/s3.js');
 var utils = require('./utils.js');
 var OpenTok = require('opentok');
