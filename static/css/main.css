@@ -53,6 +53,11 @@ a {
   -moz-transition: all 0.25s;
   transition: all 0.25s;
 }
+
+footer a {
+    color: #fff !important;
+}
+
 p > a{
     color: #07708a;
 }
