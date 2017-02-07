@@ -51,7 +51,6 @@ pg.connect(process.env.DATABASE_URL, function (err, pgClient) {
       },
       login: {
         nextUri: '/account/main',
-        //view: path.join(__dirname,'app/views/stormpath','login.jade') // My custom login view
       },
       me: {
         enabled: false,
