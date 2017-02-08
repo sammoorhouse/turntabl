@@ -25,7 +25,7 @@ module.exports = function (app, log, pgClient) {
     }
   });
 
-  app.post('/create_session', stormpath.loginRequired, function (req, res) {
+  app.post('/create_session', stormpath.authenticationRequired, function (req, res) {
     var id = utils.generateID(8);
 
     opentok.createSession({
@@ -68,11 +68,11 @@ module.exports = function (app, log, pgClient) {
     });
   })
 
-  app.get('/account', stormpath.loginRequired, (req, res) => {
+  app.get('/account', stormpath.authenticationRequired, (req, res) => {
     res.redirect('/account/main')
   })
 
-  app.get("/account/profile", stormpath.loginRequired, (req, res) => {
+  app.get("/account/profile", stormpath.authenticationRequired, (req, res) => {
     log.info('GET /account/profile')
     var user = req.user
     var accountId = user.customData.accountId;
@@ -90,7 +90,7 @@ module.exports = function (app, log, pgClient) {
       })
   })
 
-  app.get("/account/main", stormpath.loginRequired, (req, res) => {
+  app.get("/account/main", stormpath.authenticationRequired, (req, res) => {
     log.info('GET /account/main')
     var user = req.user;
     var accountId = user.customData.accountId;
@@ -116,7 +116,7 @@ module.exports = function (app, log, pgClient) {
 
   })
 
-  app.get("/account/pending", stormpath.loginRequired, (req, res) => {
+  app.get("/account/pending", stormpath.authenticationRequired, (req, res) => {
     log.info('GET /account/pending')
     var user = req.user
     var accountId = user.customData.accountId;
@@ -132,7 +132,7 @@ module.exports = function (app, log, pgClient) {
       })
   })
 
-  app.get("/account/history", stormpath.loginRequired, (req, res) => {
+  app.get("/account/history", stormpath.authenticationRequired, (req, res) => {
     log.info('GET /account/history')
     var user = req.user
     var accountId = user.customData.accountId;
@@ -149,7 +149,7 @@ module.exports = function (app, log, pgClient) {
       })
   })
 
-  app.get("/account/clients", stormpath.loginRequired, (req, res) => {
+  app.get("/account/clients", stormpath.authenticationRequired, (req, res) => {
     log.info('GET /account/clients')
     var user = req.user
     var events = user.customData.events;
@@ -159,7 +159,7 @@ module.exports = function (app, log, pgClient) {
     })
   })
 
-  app.get("/account/payment", stormpath.loginRequired, (req, res) => {
+  app.get("/account/payment", stormpath.authenticationRequired, (req, res) => {
       log.info('GET /account/payment')
       var user = req.user
       res.render('account-payment.ejs', {
