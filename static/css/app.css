@@ -19,3 +19,8 @@ li#camera_input_template {
   bottom: 0;
   z-index: 100;
 }
+
+input.session_url {
+  width:250px;
+
+}
