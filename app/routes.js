@@ -25,6 +25,14 @@ module.exports = function (app, log, pgClient) {
     }
   });
 
+  app.get('/privacy', function (req, res) {
+    res.render('privacyPolicy.ejs');
+  });
+
+  app.get('/refund', function (req, res) {
+    res.render('refundPolicy.ejs');
+  });
+
   app.post('/create_session', stormpath.authenticationRequired, function (req, res) {
     var id = utils.generateID(8);
 

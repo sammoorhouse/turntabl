@@ -55,7 +55,7 @@
             <div class="col-sm-2">
                 <select id="session_cost_ccy" name="session_cost_ccy" class="custom-select form-control">
                 <% currencies.forEach(ccy => { %>
-                    <option value=<%= ccy.short_name %> ><%= ccy.symbol %> </option>
+                    <option value="<%= ccy.short_name %>" ><%= ccy.symbol %> </option>
                 <% }) %>
                 </select>
             </div>
@@ -63,6 +63,7 @@
                 <input type="number" class="form-control required" id="session_cost_value" name="session_cost_value" placeholder="130">
             </div>
         </div>
+        <small>Our fee is 5%, which your client pays.</small>
     </div>
 
     <hr />

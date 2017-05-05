@@ -13,6 +13,17 @@ if (env === "dev") {
   pg.defaults.ssl = false;
 } else {
   pg.defaults.ssl = true;
+
+  app.use (function(req, res, next) {
+    if (req.header ['x-forwarded-proto'] != 'https'){
+      var host = req.header['host']
+      var url = req.url
+      res.redirect ("https://" + host + url)
+    }      
+    else{
+      next()
+    }
+  })
 }
 
 var bunyan = require('bunyan')
