@@ -1,5 +1,7 @@
-version: v1.5.0
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.7.1
 ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
 patch:
   'npm:moment:20161019':
     - stormpath > moment:
@@ -9,3 +11,8 @@ patch:
   'npm:uglify-js:20151024':
     - express-stormpath > jade > transformers > uglify-js:
         patched: '2016-10-28T04:41:45.620Z'
+  'npm:ms:20170412':
+    - compression > debug > ms:
+        patched: '2017-05-26T00:01:10.230Z'
+    - opentok > jsonwebtoken > ms:
+        patched: '2017-05-26T00:01:10.230Z'
