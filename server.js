@@ -32,7 +32,6 @@ var log = bunyan.createLogger({
 });
 
 var express = require('express');
-var stormpath = require('express-stormpath');
 var compression = require('compression')
 
 pg.connect(process.env.DATABASE_URL, function (err, pgClient) {
@@ -40,60 +39,6 @@ pg.connect(process.env.DATABASE_URL, function (err, pgClient) {
   console.log('Connected to postgres.');
 
   var app = express();
-  var stormpathApp = stormpath.init(app, {
-    debug: 'debug',
-    website: true,
-    expand: {
-      customData: true,
-    },
-    sessionDuration: 1000 * 60 * 60 * 24 * 30, //30 days
-    enableAccountVerification: false, //don't require email validation
-    enableForgotPassword: true, //allow password reset workflow
-    enableFacebook: true,
-    social: {
-      facebook: {
-        appId: process.env.facebookAuth_clientID,
-        appSecret: process.env.facebookAuth_clientSecret
-      }
-    },
-    web: {
-      register: {
-        nextUri: '/account/main'
-      },
-      login: {
-        nextUri: '/account/main',
-      },
-      me: {
-        enabled: false,
-      },
-      oauth2: {
-        enabled: false,
-      }
-    },
-    postRegistrationHandler: function (account, req, res, next) {
-      var TTAccount = require('./app/models/account.js')(pgClient);
-
-      account.getCustomData(function (err, customData) {
-        if (err) return next(err);
-        var newAccountId = util.generateID(8);
-        console.log("creating new account for " + newAccountId)
-        var newAccount = TTAccount.createNewAccount(newAccountId, (acc) => {
-            customData.accountId = newAccountId;
-            console.log("saving account data")
-            customData.save(next)
-          },
-          (err) => {
-            return next(err)
-          }
-        )
-
-      })
-
-
-
-    }
-  })
-  app.use(stormpathApp);
 
   var port = process.env.PORT || 8080;
   var cookieParser = require('cookie-parser');

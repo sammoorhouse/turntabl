@@ -3,7 +3,6 @@ var utils = require('./utils.js');
 var OpenTok = require('opentok');
 var fs = require('fs')
 var opentok = new OpenTok(process.env.tokboxAuth_apiKey, process.env.tokboxAuth_clientSecret)
-var stormpath = require('express-stormpath');
 var request = require('request');
 var stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 var currencies = require('./config/currencies.json');
@@ -14,11 +13,11 @@ module.exports = function (app, log, pgClient) {
   var Event = require('../app/models/event')(pgClient);
   var Account = require('../app/models/account')(pgClient);
 
-  app.get('/', stormpath.getUser, function (req, res) {
-    var user = req.user
+  app.get('/', function (req, res) {
     if (typeof user == "undefined") {
       res.render('index.ejs', {
-        user: user
+        app: app,
+        //user: {}
       });
     } else {
       res.redirect('/account/main');
@@ -33,7 +32,7 @@ module.exports = function (app, log, pgClient) {
     res.render('refundPolicy.ejs');
   });
 
-  app.post('/create_session', stormpath.authenticationRequired, function (req, res) {
+  app.post('/create_session', function (req, res) {
     var id = utils.generateID(8);
 
     opentok.createSession({
@@ -76,11 +75,11 @@ module.exports = function (app, log, pgClient) {
     });
   })
 
-  app.get('/account', stormpath.authenticationRequired, (req, res) => {
+  app.get('/account', (req, res) => {
     res.redirect('/account/main')
   })
 
-  app.get("/account/profile", stormpath.authenticationRequired, (req, res) => {
+  app.get("/account/profile", (req, res) => {
     log.info('GET /account/profile')
     var user = req.user
     var accountId = user.customData.accountId;
@@ -98,7 +97,7 @@ module.exports = function (app, log, pgClient) {
       })
   })
 
-  app.get("/account/main", stormpath.authenticationRequired, (req, res) => {
+  app.get("/account/main", (req, res) => {
     log.info('GET /account/main')
     var user = req.user;
     var accountId = user.customData.accountId;
@@ -124,7 +123,7 @@ module.exports = function (app, log, pgClient) {
 
   })
 
-  app.get("/account/pending", stormpath.authenticationRequired, (req, res) => {
+  app.get("/account/pending", (req, res) => {
     log.info('GET /account/pending')
     var user = req.user
     var accountId = user.customData.accountId;
@@ -140,7 +139,7 @@ module.exports = function (app, log, pgClient) {
       })
   })
 
-  app.get("/account/history", stormpath.authenticationRequired, (req, res) => {
+  app.get("/account/history", (req, res) => {
     log.info('GET /account/history')
     var user = req.user
     var accountId = user.customData.accountId;
@@ -157,7 +156,7 @@ module.exports = function (app, log, pgClient) {
       })
   })
 
-  app.get("/account/clients", stormpath.authenticationRequired, (req, res) => {
+  app.get("/account/clients", (req, res) => {
     log.info('GET /account/clients')
     var user = req.user
     var events = user.customData.events;
@@ -167,7 +166,7 @@ module.exports = function (app, log, pgClient) {
     })
   })
 
-  app.get("/account/payment", stormpath.authenticationRequired, (req, res) => {
+  app.get("/account/payment", (req, res) => {
       log.info('GET /account/payment')
       var user = req.user
       res.render('account-payment.ejs', {
@@ -264,7 +263,7 @@ module.exports = function (app, log, pgClient) {
       })
   })
 
-  app.get('/event/:id', stormpath.getUser, function (req, res) {
+  app.get('/event/:id', function (req, res) {
     log.info('GET /event')
 
     var user = req.user
