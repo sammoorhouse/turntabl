@@ -15,7 +15,7 @@
     "dotenv": "^2.0.0",
     "ejs": "~0.8.5",
     "express": "4.14.0",
-    "express-session": "~1.11.2",
+    "express-session": "~1.14.0",
     "opentok": "^2.3.2",
     "passport": "^0.4.0",
     "passport-auth0": "^0.6.0",
