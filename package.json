@@ -23,7 +23,7 @@
     "pug": "^2.0.0-beta5",
     "request": "^2.72.0",
     "s3-policy": "^0.2.0",
-    "snyk": "^1.19.1",
+    "snyk": "^1.76.0",
     "stripe": "^4.10.0"
   },
   "main": "server.js",
